@@ -1,0 +1,147 @@
+
+# [Method] **Dynamic Evaluation of WebQA Agents**
+
+
+We propose a method that utilizes seed graphs that anchor future question generation instead of relying on static datapoints susceptible to memorization or data contamination.
+Because every evaluation round renders a fresh QA pair from each graph, no fixed test item can be leaked ahead of time, yet all rounds remain semantically comparable via the common anchors.
+
+### Seed Graphs
+
+At round ***t***, we maintain a set St={G1(t),'85,Gnt(t)} of seed graphs. Each graph encodes the evidence trail (queries, retrieved docs, answer node, etc.) for a distinct information need. To support evolving information, graphs are constructed at evaluation time.
+
+### QA Generation
+
+The generation function Gen takes a seed graph Gi(t)*, ** *a random seed ri,tR, and a fixed generation configuration to produce one QA pair:
+
+(qi,t,ai,t)=Gen(Gi(t);ri,t,),ri,tR                (1)
+
+
+In equation (1), Gen is an LLM-based generator.bundles the frozen prompt template and all non-random decoding settings (temperature, top-p, stop tokens, etc.) and stays fixed for the entire evaluation round.ri,tis an i.i.d. draw from the base randomness source R; it injects per-sample stochasticity so each call produces a new, fluent question while remaining anchored to the same policy. Holding constant and varying only ri,tensures that every system sees independent but identically distributed QA samples.
+
+### Distributional Consistency
+
+Sampling an independent seed ri,tR for each graph yields the per-graph distribution
+
+Pi,t=Dist(Gen(Gi(t);r,))         (2)
+
+**Joint dataset distribution. **** **Because seeds are independent across graphs, the round-*t* dataset Dt={(q1,t,a1,t),'85,(qnt,t,ant,t)} is an i.i.d. sample from the product measure
+
+Pt=i=1ntPi,t(3)
+
+For a model M under evaluation, let score((q,a),M) be any per-question metric (e.g., exact-match, F1, or log-loss).
+Define the aggregate dataset score as the simple average over all ntQA pairs:
+
+Agg(Dt,M)=nt1i=1ntscore((qi,t,ai,t),M)
+
+
+Because the pairs (qi,t,ai,t) are independent and each (qi,t,ai,t)Pi,t, linearity of expectation gives
+
+EDtPt[Agg(Dt,M)]=nt1i=1ntE(q,a)Pi,t[score((q,a),M)]
+
+Hence the expected accuracy on the entire dataset is simply the average of the per-graph expectations, so every seed graph contributes equally.
+
+### Collision Bound
+
+At evaluation round *t*, we work with the refreshed seed-graph set St={G(t)1,'85,G(t)nt}, and let's assume that for every graph Gi(t)the generator can produce K distinct question'96answer pairs:
+
+Ci,t={(q,a)Pi,t((q,a))>0},Ci,t=K
+
+
+**Overlap across rounds. **** **For two rounds u<v set Ji,u,v=Ci,uCi,vand let Jmax=maxu<vJi,u,v.
+Because answers and evidence evolve, Jmaxis typically small for fast-evolving questions.
+
+**Collision bound.** Sampling one QA pair per round, the probability that seed graph i repeats the exact same pair within ***t*** rounds satisfies
+
+Pr[collision'a0within'a0t]2K2t(t1)Jmax(3)
+
+**Trade-off. **** **To guarantee that this probability is at most a desired threshold (0,1), choose the candidatepool size K such that
+
+K2t(t1)Jmax(4)
+
+Equation(4) captures the trade-offs involved:
+
+* Larger K (i.e., a richer candidate pool) leads to lower collision probability for a fixed number of evaluation rounds t.
+* Fewer number of evaluation rounds t allows a smaller K to achieve the same error tolerance .
+* Smaller maximum overlap Jmax(i.e., greater drift between graphs) reduces the required value of K.
+
+Because each seed graph is rebuilt from fresh evidence every round, its candidate set changes and Jmaxstays small. Equation 3 quantifies the collision risk, while the design formula (4) provides a direct, tunable guideline for selecting K based on requirements such as the frequency of evaluation rounds.
+
+### Cross-Round Reporting and Compatibility
+
+Because each evaluation round rebuilds the seed-graph set St*,* the underlying product distribution
+Pt=iPi,tmay drift over time, especially for graphs corresponding to questions with evolving information.
+Consequently, raw accuracies from two different rounds may not be directly comparable. To ensure fair comparisons, the following strategies can be employed.
+
+**i) Snapshot evaluation. **** **Fix a reference round t'86 and freeze its seed graphs** **St'86*****. ** *All systems are then evaluated on the same dataset Dt'86, ensuring identical test conditions.
+**ii) Macro-averaged score over rounds. **** **For longitudinal tracking, aggregate over a window {t1,'85,tT} (e.g., the most recent T rounds):
+Scoremacro=T1j=1TAgg(Dtj,M) (5)
+
+Each Dtjis an i.i.d. sample from its own distribution Ptj, so (5) summarizes a model'92s average effectiveness under the benchmark'92s natural evolution without letting a single round dominate.
+
+
+## Empirical Validation
+
+This section aims to demonstrate the following two main claims made in this project:
+(i) a static benchmark is vulnerable to leakage, and
+(ii) the proposed dynamic protocol eliminates that advantage.
+
+### Experimental Design
+
+**Models.**
+
+* Base model M: An off-the-shelf LLM checkpoint.
+* Leaked model Mleak: We continue pre-training M on a static benchmark (such as HotPotQA or FreshQA), intentionally leaking the evaluation data.
+
+**Datasets.**
+
+1. Static benchmark Dstatic: a fixed set of question'96answer pairs.
+2. Dynamic dataset rounds Dt1,'85,DtT: we build a fresh evidence graph at round tjand generate one QA pair, following the protocol described in the previous section.
+
+**Metric. **** **We report the aggregate exact-match score Agg(D,M).
+
+### Leakage Effect on the Static Benchmark
+
+aclean=Agg(Dstatic,M),aleak=Agg(Dstatic,Mleak)
+
+Continued pre-training on Dstatic is expected to noticeably inflate performance, in line with previous works on the leakage phenomenon for static datasets.
+
+### Robustness on Dynamic Rounds
+
+The key claim of our benchmark is that '97 even if the entire dataset from one evaluation round is leaked into a model '97 the next round'92s scores remain unaffected because that round is freshly generated from the same per-graph distributions. We verify this claim with a ***Leak&Test*** protocol.
+
+### ***Leak&Test Protocol***
+
+**Step 1: clean evaluation (round** t**).**
+(a) Generate the round-t dataset Dt={Gen(Gi(t);ri,t,)}i=1nt
+(b) Record the clean model'92s score Agg(Dt,M)
+
+**Step 2: leak. **** **Fine-tune M on Dtto obtain the leaked checkpoint Mtleak.
+**Step 3: new evaluation (round t+1).**
+(a) Generate a fresh dataset Dt+1={Gen(G(t+1)i;ri,t+1,)}i=1nt+1
+(b) Measure the accuracy gap
+t+1=Agg(Dt+1,Mtleak)Agg(Dt+1,M)
+Iterating this three-step cycle for T evaluation requests yields the independent set of gaps 2,3,'85,T.
+
+### Hypothesis Test
+
+Since random fluctuations can nudge scores up or down, we test whether the {average} leakage gain exceeds a small tolerance (e.g.= 0.02 for a 2-point EM margin).
+H0:'a0vs.H1:'a0>,
+where =E[].
+
+* **Null (H0).** Any advantage is no larger than the noise threshold ~; leakage is not practically meaningful.
+* **Alternative **** **(H1). Leakage yields a systematic gain that exceeds ~.
+
+### Test statistic
+
+We employ a one-sided, one-sample t-test on the (T1) observed gaps. With sample mean and standard deviation scomputed over the (T1) gaps,
+
+t=s/T1.
+
+The one'96sided p-value is obtained by comparing tobsto the Student-t distribution with (T2) degrees of freedom.
+
+### Significance test
+
+At significance level =0.05, reject H0if p<; otherwise conclude that leakage does not confer a practically relevant boost.
+
+
+

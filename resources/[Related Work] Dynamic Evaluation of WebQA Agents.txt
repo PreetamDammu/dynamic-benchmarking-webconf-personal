@@ -1,0 +1,132 @@
+
+# [Related Work] Dynamic Evaluation of WebQA Agents
+
+## Preliminaries
+
+### Benchmark Leakage
+
+Benchmark leakage refers to the contamination that occurs when a model has prior exposure to a benchmark'92s test items during pretraining, leading to inflated evaluation scores and undermining the benchmark'92s validity [16,17]. Since most LLMs are pretrained indiscriminately on publicly available web content, there is a high likelihood that they might have encountered benchmark datasets hosted on platforms like HuggingFace, GitHub, Kaggle, and similar sites. If the base LLM used in a WebQA agent has already seen the test examples during pretraining, the evaluation effectively becomes a case of testing on the training set '97 severely compromising the credibility of the reported results.
+
+### Dynamic Benchmarking
+
+Dynamic benchmarking is an emerging evaluation paradigm that generates or adapts test samples at evaluation time, so models are scored on fresh, unseen data and testset contamination is avoided [17-22]. That means the agent does not see the same test sample twice, effectively addressing issues such as LLM memorization.
+
+### Evolving Information
+
+In this work, we refer to information that can change over time, such as the stock price of Tesla, as evolving information. Arguably, this type of content could be labeled as *dynamic* content or *temporal* content, but that might cause confusion, since we are already using the term *'91dynamic'92* to describe an evaluation paradigm (dynamic benchmarking), and *'91temporal'92* might lead readers to associate it with time-series data. To avoid such confusion, we adopt the term evolving information to specifically denote factual content that may shift over time without implying a particular format or evaluation framework.
+
+## Related Work
+
+### Open-Domain QA and Retrieval-Augmented Agents
+
+Open-domain question answering traditionally involves retrieving relevant documents and extracting or generating an answer. For instance, consider DrQA [1], which combined a TF-IDF document retriever with a neural reader to answer questions using Wikipedia. Since then, large-scale datasets like Natural Questions [2], TriviaQA [3] and HotPotQA [4] have driven progress in retrieval-based QA, with models achieving impressive in-domain accuracy. The introduction of transformer-based retrievers and readers led to substantial gains '96 for example, dense passage retrieval and a fusion-in-decoder reader (FiD) improved open QA by aggregating information from multiple passages [5]. More recently, the trend has shifted to retrieval-augmented generation (RAG) systems [6], which integrate retrieval into the generative process. In a RAG model, an LLM conditions on retrieved text chunks when constructing its answer, thereby injecting fresh knowledge and reducing factual errors. RAG-based approaches have become a standard for knowledge-intensive tasks, demonstrating superior factual accuracy and generality [6].
+
+With improvements in LLM reasoning capabilities, research has shifted towards agentic frameworks where a model iteratively interacts with tools, such as search engines and knowledge graphs, to answer queries. For example, WebGPT [7] augments an LLM with the ability to issue web search queries and navigate webpages, guided by human feedback to produce high-quality answers with citations. Other works like ReAct [8] combines reasoning steps with tool use, allowing the model to plan multi-step solutions (e.g. search for a fact, then use a calculator) in a single unified prompting framework. These '93LLM-as-agent'94 approaches are promising because they mimic how humans gather and verify information, and they can handle more complex queries that require multi-hop reasoning or cross-referencing sources [15]. 
+
+### Robustness of QA Systems
+
+Robustness of QA systems has garnered a lot of interest as researchers realized that high IID (in-distribution) test scores do not guarantee real-world reliability [10]. Prior research has examined multiple facets of robustness. One line of work looks at adversarial robustness: for example, adding misleading but irrelevant sentences to a passage can confuse models that lack true understanding [9]. This revealed that many QA models rely on shallow cues and can be tricked by simple perturbations. In open-domain QA, models must also cope with naturally occurring distractions or errors in retrieved text. The HotpotQA dataset [4], which requires multi-hop reasoning across multiple Wikipedia articles and includes some irrelevant paragraphs, was an early attempt to test a model'92s ability to stay focused on relevant facts. Dense retrievers and readers have been shown to drop in accuracy when deployed on different source distributions or domains '96 for instance, a model trained on Wikipedia may struggle on biomedical articles. The BEIR benchmark [10] quantified this by evaluating retrieval models on 18 heterogeneous IR tasks: no single model performed uniformly well across all domains, highlighting generalization gaps.
+
+Another crucial aspect is temporal robustness. QA models quickly become outdated as world knowledge changes. To address this, temporal benchmarks have been proposed to evaluate systems on questions about current events or facts that change over time. RealTime QA [11], for example, continually releases new questions (on a weekly basis) about recent news and evaluates systems'92 ability to answer using up-to-date information. Similarly, FreshQA [12] is a dataset of time-sensitive questions where answers need to be periodically refreshed to remain correct. These benchmarks show that without retrieval augmentation, LLMs fail completely on questions beyond their training cutoff, and even with retrieval, systems must be robust to latency (documents may not yet reflect the latest answers) and potential contradictions between old and new information.
+
+Closely related is the challenge of conflicting evidence. In realistic web search, not all sources agree '96 some may have incorrect or outdated information. [13] introduced the QACC dataset to study how QA systems handle conflicting contexts: they found that as many as 25% of straightforward factoid questions yield conflicting answers on the web, and current LLM-based QA systems often stumble in these cases, either averaging contradictory statements or choosing incorrectly. Another recent work, RARE (Retrieval-Aware Robustness Evaluation) [14], proposes a unified framework to stress-test RAG models by introducing controlled perturbations at the query and document level. RARE generates variants of questions (e.g. paraphrases or altered facts) and of documents (inserting noise or updating facts) to evaluate if a system remains correct or can recover when its inputs change. Using a time-sensitive fixed set of documents, RARE showed that state-of-the-art RAG systems are brittle: for instance, they are most vulnerable to document perturbations (altered or conflicting content) and degrade significantly on multi-hop questions compared to single-hop ones [14]. These findings reinforce the importance of developing QA agents that maintain high fidelity in the face of distribution shifts '97 whether those are shifts in language (paraphrasing), content (new or conflicting facts), or context over time.
+
+### Dynamic Benchmarking
+
+Most of the benchmarks currently used for evaluating agentic QA systems remain predominantly static, consisting of fixed samples that are publicly accessible, such as HotPotQA [4]. Studies show significant evidence that many widely used static datasets have already been contaminated, rendering them unreliable [16,17]. In [16], the authors refer to this issue as *benchmark leakage '97 ** *a growing concern as large foundation models are trained on web-scale datasets encompassing vast portions of publicly available internet data. Studies indicate that even simple paraphrasing can degrade performance, emphasizing the brittle nature of these systems and their reliance on memorization [17].
+
+To overcome these limitations, dynamic benchmarks have emerged as a promising alternative [17-21]. Unlike their static counterparts, dynamic benchmarks are designed to resist memorization and provide a more accurate assessment of adaptive, context-aware performance in evolving scenarios [17,20,22,23]. This shift is particularly important for ensuring that reported evaluations reflect genuine advancements in capabilities rather than superficial performance gains.
+
+Early attempts at dynamic benchmarking rely on crowdsourcing for data collection[18,19], making them costly and difficult to scale. More recent approaches leverage graph-based methods to generate test samples [17,20,21], offering advantages such as controllable complexity and adaptability to evolving requirements '97 an essential feature given the rapid advancements in foundation models. While these approaches were proven to be effective in reasoning tasks [17,20,21], dynamic benchmarking for open-domain QA systems remains largely unexplored. A recent study, Dynamic-KGQA [24], represents an early attempt at dynamic evaluation of QA systems but relies on knowledge graphs (KGs), which limits the benchmark to information stored in KGs. While KGs are updated periodically, the changes are not instantaneous, and supporting fast-evolving QA pairs becomes infeasible.
+
+
+## References
+
+[1] Chen, Danqi, et al. "Reading wikipedia to answer open-domain questions." *arXiv preprint arXiv:1704.00051*(2017).
+[2] Kwiatkowski, Tom, et al. "Natural questions: a benchmark for question answering research." *Transactions of the Association for Computational Linguistics* 7 (2019): 453-466.
+[3] Joshi, Mandar, et al. "Triviaqa: A large scale distantly supervised challenge dataset for reading comprehension." *arXiv preprint arXiv:1705.03551* (2017).
+[4] Yang, Zhilin, et al. "HotpotQA: A dataset for diverse, explainable multi-hop question answering." *arXiv preprint arXiv:1809.09600* (2018).
+[5] Izacard, Gautier, and Edouard Grave. "Leveraging passage retrieval with generative models for open domain question answering." *arXiv preprint arXiv:2007.01282* (2020).
+[6] Yao, Shunyu, et al. "React: Synergizing reasoning and acting in language models." International Conference on Learning Representations (ICLR). 2023.
+[7] Nakano, Reiichiro, et al. "Webgpt: Browser-assisted question-answering with human feedback." *arXiv preprint arXiv:2112.09332* (2021).
+[8] Yao, Shunyu, et al. "React: Synergizing reasoning and acting in language models." *International Conference on Learning Representations (ICLR)*. 2023.
+[9] Jia, Robin, and Percy Liang. "Adversarial examples for evaluating reading comprehension systems." *arXiv preprint arXiv:1707.07328* (2017).
+[10] Thakur, Nandan, et al. "Beir: A heterogenous benchmark for zero-shot evaluation of information retrieval models." *arXiv preprint arXiv:2104.08663* (2021).
+[11] Kasai, Jungo, et al. "Realtime qa: What's the answer right now?." *Advances in neural information processing systems* 36 (2023): 49025-49043.
+[12] Vu, Tu, et al. "Freshllms: Refreshing large language models with search engine augmentation." *arXiv preprint arXiv:2310.03214* (2023).
+[13] Liu, Siyi, et al. "Open Domain Question Answering with Conflicting Contexts." arXiv preprint arXiv:2410.12311 (2024).
+[14] Zeng, Yixiao, et al. "RARE: Retrieval-Aware Robustness Evaluation for Retrieval-Augmented Generation Systems." *arXiv preprint arXiv:2506.00789* (2025).
+[15] Zhu, Yutao, et al. "Large language models for information retrieval: A survey." *arXiv preprint arXiv:2308.07107*(2023).
+[16] Zhou, Kun, et al. "Don't make your LLM an evaluation benchmark cheater." *arXiv preprint arXiv:2311.01964*(2023).
+[17] Zhu, Kaijie, et al. "Dyval: Dynamic evaluation of large language models for reasoning tasks." *arXiv preprint arXiv:2309.17167* (2023).
+[18] Kiela, Douwe, et al. "Dynabench: Rethinking benchmarking in NLP." *arXiv preprint arXiv:2104.14337* (2021).
+[19] Ma, Zhiyi, et al. "Dynaboard: An evaluation-as-a-service platform for holistic next-generation benchmarking." *Advances in Neural Information Processing Systems* 34 (2021): 10351-10367.
+[20] Zhu, Kaijie, et al. "Dyval 2: Dynamic evaluation of large language models by meta probing agents." *arXiv preprint arXiv:2402.14865* (2024).
+[21] Zhang, Zhehao, Jiaao Chen, and Diyi Yang. "Darg: Dynamic evaluation of large language models via adaptive reasoning graph." *arXiv preprint arXiv:2406.17271* (2024).
+[22] Rawles, Christopher, et al. "Androidworld: A dynamic benchmarking environment for autonomous agents." *arXiv preprint arXiv:2405.14573* (2024).
+[23] Yao, Shunyu, et al. "$$-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains." *arXiv preprint arXiv:2406.12045* (2024).
+[24] Dammu, Preetam Prabhu Srikar, Himanshu Naidu, and Chirag Shah. "Dynamic-kgqa: A scalable framework for generating adaptive question answering datasets." *arXiv preprint arXiv:2503.05049* (2025).
+[25] Zhang, Zeyu, et al. "A survey on the memory mechanism of large language model based agents." *arXiv preprint arXiv:2404.13501* (2024).
+
+
+## More Papers (to be added)
+
+|Number	|Paper	|Notes	|
+|---	|---	|---	|
+|1	|Chen, Danqi, et al. "Reading wikipedia to answer open-domain questions." *arXiv preprint arXiv:1704.00051* (2017).	|	|
+|2	|Kwiatkowski, Tom, et al. "Natural questions: a benchmark for question answering research." *Transactions of the Association for Computational Linguistics* 7 (2019): 453-466.	|	|
+|3	|Joshi, Mandar, et al. "Triviaqa: A large scale distantly supervised challenge dataset for reading comprehension." *arXiv preprint arXiv:1705.03551* (2017).	|	|
+|4	|Yang, Zhilin, et al. "HotpotQA: A dataset for diverse, explainable multi-hop question answering." *arXiv preprint arXiv:1809.09600* (2018).	|	|
+|5	|Izacard, Gautier, and Edouard Grave. "Leveraging passage retrieval with generative models for open domain question answering." *arXiv preprint arXiv:2007.01282* (2020).	|	|
+|6	|Yao, Shunyu, et al. "React: Synergizing reasoning and acting in language models." International Conference on Learning Representations (ICLR). 2023.	|	|
+|7	|Nakano, Reiichiro, et al. "Webgpt: Browser-assisted question-answering with human feedback." *arXiv preprint arXiv:2112.09332* (2021).	|	|
+|8	|Yao, Shunyu, et al. "React: Synergizing reasoning and acting in language models." *International Conference on Learning Representations (ICLR)*. 2023.	|	|
+|9	|Jia, Robin, and Percy Liang. "Adversarial examples for evaluating reading comprehension systems." *arXiv preprint arXiv:1707.07328* (2017).	|	|
+|10	|Thakur, Nandan, et al. "Beir: A heterogenous benchmark for zero-shot evaluation of information retrieval models." *arXiv preprint arXiv:2104.08663* (2021).	|	|
+|11	|Kasai, Jungo, et al. "Realtime qa: What's the answer right now?." *Advances in neural information processing systems* 36 (2023): 49025-49043.	|	|
+|12	|Vu, Tu, et al. "Freshllms: Refreshing large language models with search engine augmentation." *arXiv preprint arXiv:2310.03214* (2023).	|	|
+|13	|Liu, Siyi, et al. "Open Domain Question Answering with Conflicting Contexts." arXiv preprint arXiv:2410.12311 (2024).	|	|
+|14	|Zeng, Yixiao, et al. "RARE: Retrieval-Aware Robustness Evaluation for Retrieval-Augmented Generation Systems." *arXiv preprint arXiv:2506.00789* (2025).	|	|
+|15	|Zhu, Yutao, et al. "Large language models for information retrieval: A survey." *arXiv preprint arXiv:2308.07107* (2023).	|	|
+|16	|Zhou, Kun, et al. "Don't make your LLM an evaluation benchmark cheater." *arXiv preprint arXiv:2311.01964* (2023).	|	|
+|17	|Zhu, Kaijie, et al. "Dyval: Dynamic evaluation of large language models for reasoning tasks." *arXiv preprint arXiv:2309.17167* (2023).	|	|
+|18	|Kiela, Douwe, et al. "Dynabench: Rethinking benchmarking in NLP." *arXiv preprint arXiv:2104.14337* (2021).	|	|
+|19	|Ma, Zhiyi, et al. "Dynaboard: An evaluation-as-a-service platform for holistic next-generation benchmarking." *Advances in Neural Information Processing Systems* 34 (2021): 10351-10367.	|	|
+|20	|Zhu, Kaijie, et al. "Dyval 2: Dynamic evaluation of large language models by meta probing agents." *arXiv preprint arXiv:2402.14865* (2024).	|	|
+|21	|Zhang, Zhehao, Jiaao Chen, and Diyi Yang. "Darg: Dynamic evaluation of large language models via adaptive reasoning graph." *arXiv preprint arXiv:2406.17271* (2024).	|	|
+|22	|Rawles, Christopher, et al. "Androidworld: A dynamic benchmarking environment for autonomous agents." *arXiv preprint arXiv:2405.14573* (2024).	|	|
+|23	|Yao, Shunyu, et al. "$$-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains." *arXiv preprint arXiv:2406.12045* (2024).	|	|
+|24	|Dammu, Preetam Prabhu Srikar, Himanshu Naidu, and Chirag Shah. "Dynamic-kgqa: A scalable framework for generating adaptive question answering datasets." *arXiv preprint arXiv:2503.05049* (2025).	|	|
+|25	|Zhang, Zeyu, et al. "A survey on the memory mechanism of large language model based agents." *arXiv preprint arXiv:2404.13501* (2024).	|	|
+|26	|Tirumala, Kushal, et al. "Memorization without overfitting: Analyzing the training dynamics of large language models." *Advances in Neural Information Processing Systems* 35 (2022): 38274-38290.	|	|
+|27	|Carlini, Nicholas, et al. "Quantifying memorization across neural language models." *The Eleventh International Conference on Learning Representations*. 2022.	|	|
+|28	|Liu, Ken Ziyu, et al. "Language models may verbatim complete text they were not explicitly trained on." arXiv preprint arXiv:2503.17514 (2025).	|	|
+|29	|Peng, Binghui, Srini Narayanan, and Christos Papadimitriou. "On limitations of the transformer architecture." Collegium Beatus Rhenanus (2024).	|	|
+|30	|Carragher, Peter, et al. "Quantifying memorization and retriever performance in retrieval-augmented vision-language models." arXiv preprint arXiv:2502.13836 (2025).	|	|
+|31	|Bang, Yejin, et al. "Hallulens: Llm hallucination benchmark." arXiv preprint arXiv:2504.17550 (2025).	|	|
+|32	|Morris, John X., et al. "How much do language models memorize?." arXiv preprint arXiv:2505.24832 (2025).	|	|
+|33	|Carragher, Peter, et al. "Quantifying memorization and retriever performance in retrieval-augmented vision-language models." *arXiv preprint arXiv:2502.13836* (2025).	|	|
+|34	|Yu, Xinyan Velocity, et al. "CREPE: Open-domain question answering with false presuppositions." *arXiv preprint arXiv:2211.17257* (2022).	|	|
+|35	|Kim, Najoung, et al. "$^ 2$: Question Answering with Questionable Assumptions." arXiv preprint arXiv:2212.10003 (2022).	|	|
+|36	|Yu, Wenhao, et al. "Ifqa: A dataset for open-domain question answering under counterfactual presuppositions." arXiv preprint arXiv:2305.14010 (2023).	|	|
+|37	|Chen, Wenhu, Xinyi Wang, and William Yang Wang. "A dataset for answering time-sensitive questions." arXiv preprint arXiv:2108.06314 (2021).	|	|
+|38	|Zhang, Michael JQ, and Eunsol Choi. "SituatedQA: Incorporating extra-linguistic contexts into QA." arXiv preprint arXiv:2109.06157 (2021).	|	|
+|39	|Liska, Adam, et al. "Streamingqa: A benchmark for adaptation to new knowledge over time in question answering models." International Conference on Machine Learning. PMLR, 2022.	|	|
+|40	|Kasai, Jungo, et al. "Realtime qa: What's the answer right now?." Advances in neural information processing systems 36 (2023): 49025-49043.	|	|
+|41	|Thrush, Tristan, et al. "Dynatask: A framework for creating dynamic AI benchmark tasks." arXiv preprint arXiv:2204.01906 (2022).	|	|
+|42	|Su, Jiayuan, et al. "Api is enough: Conformal prediction for large language models without logit-access." arXiv preprint arXiv:2403.01216 (2024).	|	|
+|43	|Ravaut, Mathieu, et al. "A Comprehensive Survey of Contamination Detection Methods in Large Language Models." arXiv preprint arXiv:2404.00699 (2024).	|	|
+|44	|Li, Yucheng, Frank Guerin, and Chenghua Lin. "An open source data contamination report for large language models." arXiv preprint arXiv:2310.17589 (2023).	|	|
+|45	|Yang, Shuo, et al. "Rethinking benchmark and contamination for language models with rephrased samples." arXiv preprint arXiv:2311.04850 (2023).	|	|
+|	|	|	|
+|	|	|	|
+|	|	|	|
+|	|	|	|
+|	|	|	|
+|	|	|	|
+|	|	|	|
+|	|	|	|
+|	|	|	|
+
+
+

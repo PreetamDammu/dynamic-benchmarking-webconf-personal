@@ -31,6 +31,7 @@ samples/sample-*.pdf
 *gz
 *.bbl
 *.run.xml
+*.rtf
 samples/ACM-Reference-Format.bst
 samples/*.tex
 samples/*.bbx

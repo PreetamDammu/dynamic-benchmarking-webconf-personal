@@ -1,0 +1,76 @@
+
+# **Dynamic Evaluation of WebQA Agents - Quick Updates [Sep 3]**
+
+### Key Takeaways
+
+* Final contamination reports for the 5 QA benchmarks are ready (both pretraining and retrieval)
+    * Plotting bugs previously identified are now fixed: [Update (edited Aug. 31): Dynamic Evaluation of WebQA Agents - Quick Updates [ Aug 27]](https://quip-amazon.com/VEqtAte8MpRQ#temp:C:YIAefac46d9ff0c41b4bf8ea75c9)
+* Two curated 500-datapoint splits (high-contamination and randomly sampled) are now finalized and available for experiments.
+* Location: s3://preetam-summer2025/contamination_results/curated_samples/split500/
+* Both splits are balanced across contamination type (retrieval vs. pretraining), with equal representation across QA datasets and other relevant aspects.
+
+#### Notes on Contaminated Samples
+
+* Each contaminated sample includes a link to the retrieved webpage (via search engine) or the corresponding C4 page. You can read through the JSON files to get some additional insights.
+* Here are a few plots and visuals that convey the composition:
+
+[Image: image.png][Image: image.png][Image: image.png]
+[Image: image.png][Image: image.png]
+[Image: image.png]
+### Planned Experiments
+
+**Dynamic Variant Generation**
+
+* Generate 3 rounds of dynamic variants for each 500-datapoint split.
+* Current status: experiments running, ETA September 4.
+
+**Distributional Consistency**
+
+* Verify consistency across rounds (sanity check already completed on FreshQA).
+* To be finalized once all three rounds are generated.
+
+**Paraphrase Validation**
+
+* Based on Zhang et al. (https://arxiv.org/pdf/2311.04850) paper, paraphrases of contaminated samples can still bias evaluation (similar to the contaminated samples themselves).
+* It would strengthen our evals to validate that our approach does not generate paraphrases (or that paraphrase rates remain low) using their method (https://github.com/lm-sys/llm-decontaminator).
+
+### **Benchmarking**
+
+Compare performance on:
+
+* Original 500 splits (sourced directly from five benchmarks).
+* Three generated dynamic variants.
+
+**Key questions:**
+
+* Does contamination provide performance boost?
+* Is performance of the methods being evaluated stable across dynamic variants of the dataset?
+* Does adding search access improve performance?
+* Does retrieval leakage play a role in (for datapoints already identified to be contaminated)?
+
+### Models to Benchmark
+
+**LLMs without search access**
+
+* gpt-oss:20b (OpenAI open-source)
+* gpt-oss:120b (OpenAI open-source)
+* gemma3:12b
+* gemma3:27b
+* llama4:scout
+* llama4:maverick
+
+**LLMs with search access (via Perplexica framework) '97 Same set as above.**
+
+* gpt-oss:20b (OpenAI open-source)
+* gpt-oss:120b (OpenAI open-source)
+* gemma3:12b
+* gemma3:27b
+* llama4:scout
+* llama4:maverick
+
+**Rationale**
+
+* Models represent different organizations/developers, which is useful since training data and recipes vary, as shown in similar previous studies
+* Two size variants per family (small/large) may reveal size effects on memorization.
+
+

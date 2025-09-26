@@ -1,0 +1,916 @@
+
+
+# **Dynamic Evaluation of WebQA Agents [Mid-term Presentation]** 
+
+***TLDR:** Static benchmarking datasets age quickly and are prone to leakage. We propose a dynamic evaluation method for question-answering that mitigates contamination and adapts in complexity to keep pace with evolving generative models.*
+
+
+## Introduction
+
+LLM agents with web access are increasingly becoming the default for user-facing question-answering systems, as seen in the growing adoption of tools like SearchGPT and Perplexity. However, most benchmarks and datasets used to evaluate these systems were designed for a previous generation of QA models and remain static, making them vulnerable to data leakage. ***Benchmark leakage*** occurs when a model has prior exposure to test items during pretraining, leading to inflated evaluation scores and undermining the benchmark'92s credibility. Since LLMs are often pretrained indiscriminately on publicly available web content, there is a high likelihood that test examples have already been seen during training. This effectively turns evaluation into '93testing on the training set,'94 severely compromising the validity of the reported results. Previous studies suggest this is already a known concern [16,17,20].
+
+With advancements in agentic capabilities such as tool use and web browsing, new risks emerge. Methods like ReAct [6] or FreshLLMs [2] perform web searches to supplement their knowledge or retrieve recent information. However, many test samples from popular benchmarks are discussed on blogs, forums, and platforms like HuggingFace or Kaggle. This creates the risk that the system may inadvertently encounter the exact answer online, bypassing the intended reasoning process over multiple source articles (see Example in 2.1).
+
+Furthermore, as LLM capabilities improve rapidly, the validity and relevance of static benchmarks erode quickly. For example, LLMs have already surpassed human-level performance on several popular benchmarks, prompting the creation of increasingly complex ones [26]. When progress accelerates, as observed in recent years, this becomes unsustainable. Dynamic evaluations with controllable complexity present a more scalable and future-proof alternative [17'9622].
+
+***Dynamic benchmarking*** addresses these challenges by generating test samples at evaluation time. This ensures that models are tested on fresh, unseen data, reducing the risk of test-set contamination. It also enables evaluation protocols to incorporate controllable complexity, keeping benchmarks adaptable to the evolving capabilities of generative models.
+
+
+
+## **Objective** 
+
+Develop a dynamic QA benchmark for question-answering agents with web search capabilities that:
+
+* **O1:** Is inherently resistant to data leakage and memorization.
+* **O2:** Supports controllable complexity to match evolving model capabilities.
+* **O3:** Reflects real-world, time-sensitive query scenarios.
+
+
+**Why Dynamic Evaluations?**
+
+* **Pretraining Contamination:**
+     Any publicly released static dataset is likely to have been seen during LLM pretraining. While some benchmarks like GAIA [27] release only questions and withhold answers to reduce this risk, the approach raises transparency concerns and restricts access for researchers. It also requires benchmark providers to run evaluations for all users, which is difficult to scale due to compute costs.
+* **Agentic Capabilities:**
+     Modern QA agents can browse the web, use tools, and retrieve recent information. However, static benchmarks may fail to test whether these agents actually *reason* over multiple sources when benchmark answers can be found verbatim online.
+* **The Web is Dynamic:**
+     Web content and search results change continuously '97 articles are updated, pages are removed, and new sources appear. In such an environment, fixed questions tied to a single, static answer can quickly become outdated or even meaningless. For example, a question referencing '93the latest GDP figures'94 will point to different documents depending on when the query is made.
+* **Dynamic User Queries:**
+     Many user queries themselves are inherently time-dependent, such as *'93Who is leading in today'92s election results?'94* or *'93What is the current price of Tesla stock?'94* These cannot be evaluated meaningfully with fixed answers from a static dataset. A dynamic benchmark can generate these questions at evaluation time, ensuring that they reflect the most current and relevant information.
+
+
+**Preliminaries and Related Work:** [[Related Work] Dynamic Evaluation of WebQA Agents](https://quip-amazon.com/GQfaAI002kpg) (Supplementary information, not a required read for this presentation).
+
+
+## Proposed Approach
+
+We propose a method that utilizes seed graphs that anchor future question generation instead of relying on static datapoints susceptible to memorization or data contamination. Because every evaluation round renders a fresh QA pair from each graph, no fixed test item can be leaked ahead of time, yet all rounds remain semantically comparable via the common anchors.
+
+### Seed Graphs
+
+At round ***t***, we maintain a set St={G1(t),'85,Gnt(t)} of seed graphs. Each graph encodes the evidence trail (queries, retrieved docs, answer node, etc.) for a distinct information need. To support evolving information, graphs are constructed at evaluation time.
+
+### QA Generation
+
+The generation function Gen takes a seed graph Gi(t)*, ** *a random seed ri,tR, and a fixed generation configuration to produce one QA pair:
+
+(qi,t,ai,t)=Gen(Gi(t);ri,t,),ri,tR                (1)
+
+
+In equation (1), Gen is an LLM-based generator. bundles the frozen prompt template and all non-random decoding settings (temperature, top-p, stop tokens, etc.) and stays fixed for the entire evaluation round.ri,tis an i.i.d. draw from the base randomness source R; it injects per-sample stochasticity so each call produces a new, fluent question while remaining anchored to . Holding constant and varying only ri,tensures that every system sees independent but identically distributed QA samples.
+
+### Distributional Consistency
+
+Sampling an independent seed ri,tR for each graph yields the per-graph distribution
+
+Pi,t=Dist(Gen(Gi(t);r,))         (2)
+
+**Joint dataset distribution. **** **Because seeds are independent across graphs, the round-*t* dataset Dt={(q1,t,a1,t),'85,(qnt,t,ant,t)} is an i.i.d. sample from the product measure
+
+Pt=i=1ntPi,t(3)
+
+For a model M under evaluation, let score((q,a),M) be any per-question metric (e.g., exact-match, F1, or log-loss).
+Define the aggregate dataset score as the simple average over all ntQA pairs:
+
+Agg(Dt,M)=nt1i=1ntscore((qi,t,ai,t),M)
+
+
+Because the pairs (qi,t,ai,t) are independent and each (qi,t,ai,t)Pi,t, linearity of expectation gives
+
+EDtPt[Agg(Dt,M)]=nt1i=1ntE(q,a)Pi,t[score((q,a),M)]
+
+Hence the expected accuracy on the entire dataset is simply the average of the per-graph expectations, so every seed graph contributes equally.
+
+### Collision Bound
+
+At evaluation round *t*, we work with the refreshed seed-graph set St={G(t)1,'85,G(t)nt}, and let's assume that for every graph Gi(t)the generator can produce K distinct question'96answer pairs:
+
+Ci,t={(q,a)Pi,t((q,a))>0},Ci,t=K
+
+
+**Overlap across rounds. **** **For two rounds u<v set Ji,u,v=Ci,uCi,vand let Jmax=maxu<vJi,u,v.
+Because answers and evidence evolve, Jmaxis typically small for fast-evolving questions.
+
+**Collision bound.** Sampling one QA pair per round, the probability that seed graph i repeats the exact same pair within ***t*** rounds satisfies
+
+Pr[collision'a0within'a0t]2K2t(t1)Jmax(3)
+
+**Trade-off. **** **To guarantee that this probability is at most a desired threshold (0,1), choose the candidatepool size K such that
+
+K2t(t1)Jmax(4)
+
+Equation(4) captures the trade-offs involved:
+
+* Larger K (i.e., a richer candidate pool) leads to lower collision probability for a fixed number of evaluation rounds t.
+* Fewer number of evaluation rounds t allows a smaller K to achieve the same error tolerance .
+* Smaller maximum overlap Jmax(i.e., greater drift between graphs) reduces the required value of K.
+
+Because each seed graph is rebuilt from fresh evidence every round, its candidate set changes and Jmaxstays small. Equation 3 quantifies the collision risk, while the design formula (4) provides a direct, tunable guideline for selecting K based on requirements such as the frequency of evaluation rounds.
+
+### Cross-Round Reporting and Compatibility
+
+Because each evaluation round rebuilds the seed-graph set St*,* the underlying product distribution
+Pt=iPi,tmay drift over time, especially for graphs corresponding to questions with evolving information.
+Consequently, raw accuracies from two different rounds may not be directly comparable. To ensure fair comparisons, the following strategies can be employed.
+
+**i) Snapshot evaluation. **** **Fix a reference round t'86 and freeze its seed graphs** **St'86*****. ** *All systems are then evaluated on the same dataset Dt'86, ensuring identical test conditions.
+**ii) Macro-averaged score over rounds. **** **For longitudinal tracking, aggregate over a window {t1,'85,tT} (e.g., the most recent T rounds):
+Scoremacro=T1j=1TAgg(Dtj,M) (5)
+
+Each Dtjis an i.i.d. sample from its own distribution Ptj, so (5) summarizes a model'92s average effectiveness under the benchmark'92s natural evolution without letting a single round dominate.
+
+
+## Preliminary Results and Examples
+
+### I) Dynamic QA Generation
+
+Graph representations are ideal for anchoring dynamic test sample generation, as they help in controlling complexity and ensuring consistency across different runs. Previous works show that they are effective for reasoning and KGQA [[1](https://arxiv.org/abs/2309.17167), [2](https://arxiv.org/abs/2503.05049)]. As there are various artifacts that need to be captured when representing the task executions of WebQA agents as graphs, we use the following graph schema.
+
+### Nodes
+
+|Vertex Class	|Label	|Payload	|
+|---	|---	|---	|
+|Query	|vq	|raw text q	|
+|Web Document	|vd	|HTML page	|
+|Text Snippet	|vs	|agent observations, thoughts	|
+|Answer	|vy*t	|gold answer text	|
+
+### Edges
+
+|Edge Label	|Represents	|
+|---	|---	|
+|
+retrieve	|
+document fetched via search or follow-up visit	|
+|
+evidence	|
+snippet extracted; snippet supports answer	|
+|
+comparison	|
+numerical/logical comparison between snippets	|
+|
+hypothesis	|
+agent'92s conjecture as an intermediate snippet	|
+|
+conclude	|
+final reasoning step deriving the answer	|
+|
+follows	|
+snippet generated immediately after another	|
+
+#### Generating Execution Logs
+
+For the 500 questions from FreshQA dataset ([paper](https://arxiv.org/abs/2310.03214), [dataset](https://github.com/freshllms/freshqa)), we use the Perplexica framework ([link](https://github.com/ItzCrazyKns/Perplexica)) to generate raw data. Perplexica operates similarly to the popular agentic search tool [Perplexity](https://www.perplexity.ai/), and uses [SearxNG](https://github.com/searxng/searxng) search engine to augment an LLM of our choice (we use deepseek.r1-v1:0 in our experiments).
+
+#### An example log
+
+`**'question':** 'When did Meta move its headquarters to Austin?'`
+`**'answer':** "It hasn't moved to Austin" `
+`**'thinking':** Based on the provided context, Meta has NOT moved its headquarters to Austin. While there are discussions about Meta potentially reincorporating in Texas [8][10], a Meta spokesperson explicitly stated that "it does not plan on shifting its corporate headquarters out of Menlo Park, California" [8].fact, Meta has been reducing its presence in Austin by:- Leaving its lease at The Domain [4][9]- Subleasing 120,000 square feet of downtown space [6]'`
+
+
+```
+'sources': [{'id': 1,
+   'title': 'Meta in Texas: Downtown Austin renovations, solar power purchase near ...',
+   'url': 'https://www.kvue.com/article/money/economy/boomtown-2040/meta-downtown-austin-renovations-solar-bastrop/269-90784b92-0226-4dd6-97ae-9475da00d591',
+   'snippet': 'Mar 19, 2025 ... Meta appears to be renovating its Downtown Austin office space. The company also plans to buy all the power from a planned solar farm in...'},
+  {'id': 2,
+   'title': 'META to move teams to Texas - cbsaustin.com',
+   'url': 'https://cbsaustin.com/news/local/meta-to-move-teams-to-texas',
+   'snippet': 'AUSTIN, Texas '97 CEO of META, Mark Zuckerberg, announced content oversight teams will be relocating to Texas. The announcement came in a video he posted to Facebook Tuesday morning. "We're moving our trust and safety, and content moderation teams out of California, and our US-based content review ...'},
+  {'id': 3,
+   'title': "Facebook Moving To Texas? Parent Company 'Meta' Signs Massive Lease In ...",
+   'url': 'https://www.dailywire.com/news/facebook-moving-to-texas-parent-company-meta-signs-massive-lease-in-downtown-austin',
+   'snippet': 'Facebook's parent company Meta has become the latest California corporation to at least partly move to Texas as it has signed a massive lease called "the largest ever in downtown Austin." "The lease is the largest ever in Downtown Austin and larger than the entire Frost Bank Tower in terms of square feet," KVUE reported.'},
+  {'id': 4,
+   'title': 'Meta Is Leaving Its Austin Office, Guess What Big Tech Company Is Moving In',
+   'url': 'https://finance.yahoo.com/news/meta-leaving-austin-office-guess-211425144.html',
+   'snippet': "The office real estate picture in Austin, TX is constantly changing but one company's loss may be another company's gain. Meta (NASDAQ:META) is leaving behind its lease in The Domain, a mixed ..."},
+  {'id': 5,
+   'title': 'Meta plans $2.9 million renovation in another Texas office space',
+   'url': 'https://www.chron.com/culture/article/meta-austin-office-20221773.php',
+   'snippet': 'Mar 14, 2025 ... Meta, the parent company of Facebook, Instagram and WhatsApp, is working on a tenant fit-up of a downtown Austin office at 300 West Sixth St.'},
+  {'id': 6,
+   'title': 'Meta out, IBM in at the Domain | Urbanize Austin',
+   'url': 'https://austin.urbanize.city/post/austin-meta-ibm-domain-sublease-cousins',
+   'snippet': 'Sep 6, 2024 ... Facebook parent company Meta laid off more than 10,000 employees and announced a 120,000-square-foot sublease in a downtown Austin building in...'},
+  {'id': 7,
+   'title': 'Offices - Meta',
+   'url': 'https://www.meta.com/media-gallery/offices-around-the-world/',
+   'snippet': 'Meta headquarters, campuses and offices around the world. Media available for download.'},
+  {'id': 8,
+   'title': 'Meta in talks to reincorporate in Texas or another state, exit ...',
+   'url': 'https://www.reuters.com/technology/meta-talks-reincorporate-texas-or-another-state-exit-delaware-wsj-reports-2025-01-31/',
+   'snippet': 'Jan 31, 2025 ... A Meta spokesperson said that it does not plan on shifting its corporate headquarters out of Menlo Park, California, but declined to comment...'},
+  {'id': 9,
+   'title': "IBM takes over Meta's lease at The Domain in Austin - MySA",
+   'url': 'https://www.mysanantonio.com/news/austin/article/meta-ibm-austin-19752226.php',
+   'snippet': "Sep 9, 2024 '97 IBM will be taking over Meta's former lease on a 320,000-square foot building at The Domain in North Austin. While some tech companies are ..."},
+  {'id': 10,
+   'title': "Is Facebook parent-company Meta moving to Texas? Here's what we know.",
+   'url': 'https://www.statesman.com/story/business/technology/2025/01/31/facebook-instagram-meta-moving-to-texas/78093842007/',
+   'snippet': 'Facebook and Instagram parent company, Meta Platforms, is reportedly in talks to reincorporate in Texas.'},
+  {'id': 11,
+   'title': "Construction of Meta's data center campus north of Austin to ...",
+   'url': 'https://www.bizjournals.com/austin/news/2025/03/26/meta-temple-data-center-construction-update-austin.html',
+   'snippet': "Mar 26, 2025 ... The project is part of Meta's growing operations in the Lone Star State. Meta has indicated that it's considering moving its headquarters to..."},
+  {'id': 12,
+   'title': 'Meta Has Bailed Out of Nearly 1 Million-SF of Austin Office Space',
+   'url': 'https://www.connectcre.com/stories/meta-has-bailed-out-of-nearly-1-million-sf-of-office-space-in-austin/',
+   'snippet': 'Bailing out on large leases has become all too common of late. Remote work and high interest rates have played havoc within the office sector. Facebook parent company Meta Platforms is shedding another big chunk of Austin office space. It wants out of a 320,000 office building in The Domain in North Austin. The Austin Business Journal ...'},
+  {'id': 13,
+   'title': 'Meta eyes $2.9M project at downtown office building - Austin ...',
+   'url': 'https://www.bizjournals.com/austin/news/2025/03/12/meta-downtown-austin-office.html',
+   'snippet': 'Mar 12, 2025 '97 Meta said in June 2023 that it was trying to find a subtenant for the nearly 120,000 square feet it leases in the building because it planned to ...'},
+  {'id': 14,
+   'title': 'The Facebook Company Is Now Meta | Meta',
+   'url': 'https://about.fb.com/news/2021/10/facebook-company-is-now-meta/',
+   'snippet': 'Oct 28, 2021 'b7 What is Meta? Meta builds technologies that help people connect, find communities, and grow businesses. When Facebook launched in 2004, it changed the way '85'},
+  {'id': 15,
+   'title': 'Introducing Oakley Meta Glasses, a New Category of Performance '85',
+   'url': 'https://about.fb.com/news/2025/06/introducing-oakley-meta-glasses-a-new-category-of-performance-ai-glasses/',
+   'snippet': 'Jun 20, 2025 'b7 Meta and Oakley are collaborating to deliver a brand-new category of Performance AI glasses. Oakley Meta glasses are a new product line that will combine Oakley'92s signature '85'}]}
+```
+
+#### Constructing Graphs
+
+Since the agent execution logs are unstructured and presented as agent thoughts, constructing a graph requires parsing the raw text and creating a structured set of steps. An LLM can be used to implement this step, with the following prompt:
+
+
+```
+You are a JSON formatter.
+
+INPUT = (<context> + <question> + <answer>) + TRANSCRIPT
+
+SPLIT RULES
+Split TRANSCRIPT into bullets / blank-line paragraphs.
+If a bullet has several citations '93[n]'94, create a separate THOUGHT
+   for each citation, duplicating the claim text but keeping one '93[n]'94.
+
+STEP-TYPE
+conclude  '96 last THOUGHT before the answer OR begins with
+              '93overall'94, '93in summary'94, '93therefore'94, '93thus'94, '93hence'94 '85
+evidence  '96 contains 1 '93[n]'94 AND no reasoning words (because, implies '85)
+reason    '96 all others.
+You are a JSON formatter.
+
+INPUT = (<context> + <question> + <answer>) + TRANSCRIPT
+
+Split TRANSCRIPT into bullets / blank-line paragraphs.
+If one bullet has several citations '93[n]'94, duplicate it so each
+     new bullet carries exactly one '93[n]'94.
+
+For each resulting bullet produce an object
+   { "text": <bullet>, "type": <STEP-TYPE> } using:
+
+   STEP-TYPE
+     conclude   '96 last bullet before the answer OR starts with
+                  '93overall / in summary / therefore / thus / hence'94.
+     evidence   '96 contains 1 '93[n]'94 AND no reasoning words
+                  (because, implies, therefore, might, etc.).
+     retrieve   '96 issues a search or URL visit .
+     comparison '96 compares two facts (compared, versus, higher than '85).
+     hypothesis '96 speculative statement (maybe, might, could, assume).
+     reason     '96 anything else (explanatory but not covered above).
+
+Output a JSON array called **thoughts** '97 no extra keys, no commentary.
+OUTPUT FORMAT:
+
+{
+  "thoughts":[
+    {"id":1,"text":"...","step_type":"evidence|reason|conclude",
+     "cites":[{"id":n,"stance":"supports|contradicts|neutral"}]},
+    '85
+  ],
+  "answer":{"text":"...", "cites":[{"id":n,"stance":"..."}]}
+}
+```
+
+
+Once the JSON with sequential thoughts and step types is obtained, we can construct graphs such as the ones shown below:
+
+
+As can be observed, there are several nodes that are not visited. Exploring other parts of the graphs and visiting nodes that were not utilized in answering the original question can help in generating related QA pairs. However, after exploring this approach, a few drawbacks were identified:
+
+* LLM agents make mistakes (expected behavior as performance on FreshQA dataset <80%), and relying on them to solve multi-hop questions may not be the best approach.
+* It is non-trivial to localize errors when things go wrong.
+* Little control on what claims within a document are utilized for QA generation.
+
+
+A better approach would be to extract claims within certain documents of interest, and then construct the questions bottom up. This provides higher level of control over the selection of documents, claims, reasoning operations required to answer questions, number of hops and complexity of the question in general.
+
+#### Example
+
+`**FreshQA Question:** What is the name of Leonardo DiCaprio's third child? `
+**`FreshQA Answer:`**` Leonardo DiCaprio does not have any children.`
+
+**`Perplexica (w/ DeepSeek-R1) Answer: `**`He has no children. `
+`**Sources:** Fetched 15 sources. `
+`**Thinking:** Based on the context, Leonardo DiCaprio does not have any children. Multiple sources confirm this, including [1] which states that "kids aren't a priority in his life" and [12] which explicitly states "Leonardo DiCaprio may not have any children."`
+
+Now, to generate related questions (about Leonardo DiCaprio'92s personal life), we can randomly pick a few sources from the retrieved 15 HTML docs. If we were to select 3 documents out of these 15, there would be 15c3 or 455 combinations. While we are using just using top 15 search results for now, this number can be much larger if higher diversity is required.
+
+Next, atomic claims from the long-form text from each document are extracted, similar to FactScore ([link](https://arxiv.org/pdf/2305.14251)).
+
+For example, let'92s assume documents `[7, 15, 8]` were selected. Extracted claims would look like:
+
+Note: The following values are for doc [1,4,8] since I extracted these values after rerunning the cell, but the response for any docs would look similar. The prompt can be found in  [Prompts Section](https://quip-amazon.com/hJM8ATEoZ44Z#temp:C:MCWb816d52e6d41472693e0f5bad).
+
+```
+{1: {'claim1': 'Leonardo DiCaprio has not fathered any children during his time in Hollywood.',
+  'supporting_text_span1': 'The rumors have all been false, as Leo has neither been married nor fathered a child since his time in Hollywood.',
+  'claim2': 'Leonardo DiCaprio expressed ambiguous thoughts about having children in a 2016 Rolling Stone interview.',
+  'supporting_text_span2': '"Do you mean do I want to bring children into a world like this?" he told Rolling Stone in 2016. "If it happens, it happens. I'd prefer not to get into specifics about it, just because then it becomes something that is misquoted. But, yeah. I don't know... To articulate how I feel about it is just gonna be misunderstood,"',
+  'claim3': 'Leonardo DiCaprio dated model and actress Camila Morrone from 2017 until their breakup in August 2022.',
+  'supporting_text_span3': "Leo's most recent girlfriend, 22-year-old model and actress Camila Morrone, was rumored to be pregnant a few times over the course of their relationship. The pair started dating in 2017, when Camila was only 20 [...] In August 2022, it was reported that he and Camila broke up",
+  'claim4': 'Leonardo DiCaprio has been an advocate for environmental causes including clean energy initiatives and climate change policy.',
+  'supporting_text_span4': "The actor has advocated for cleaner energy initiatives and immediate policy to reverse the effects of climate change for years. He's continuously used his platform as an actor to promote his ideas."},
+ 4: {'claim1': 'Leonardo DiCaprio was born on November 11, 1974, in Los Angeles, California.',
+  'supporting_text_span1': 'Born on November 11, 1974, in Los Angeles, California',
+  'claim2': 'Leonardo DiCaprio was named after the famous painter Leonardo da Vinci.',
+  'supporting_text_span2': "DiCaprio was named after the famous painter Leonardo da Vinci, as his mother felt him kick while looking at one of da Vinci's paintings",
+  'claim3': 'Leonardo DiCaprio started his acting career at age five in commercials and educational films.',
+  'supporting_text_span3': 'DiCaprio started his acting career at the age of five, appearing in commercials and educational films',
+  'claim4': 'Leonardo DiCaprio established Appian Way Productions in 2004.',
+  'supporting_text_span4': 'In 2004, DiCaprio established his own production company, Appian Way Productions',
+  'claim5': "Leonardo DiCaprio won the Academy Award for Best Actor in 2016 for his role in 'The Revenant'.",
+  'supporting_text_span5': "DiCaprio finally won the Academy Award for Best Actor in 2016 for his role in 'The Revenant'",
+  'claim6': "Leonardo DiCaprio received his first Academy Award nomination for Best Supporting Actor in 1994 for 'What's Eating Gilbert Grape'.",
+  'supporting_text_span6': "For his role in 'What's Eating Gilbert Grape,' DiCaprio received his first Academy Award nomination for Best Supporting Actor in 1994",
+  'claim7': "Leonardo DiCaprio's first major television role was as Garry Buckman in the sitcom 'Parenthood' in 1990.",
+  'supporting_text_span7': "His first major role on television was in the sitcom 'Parenthood' in 1990, where he played Garry Buckman"},
+ 11: {'claim1': 'Leonardo DiCaprio was born on November 11, 1974, in Los Angeles, California.',
+  'supporting_text_span1': 'Leonardo DiCaprio was born on November 11,1974, in Los Angeles, California.',
+  'claim2': 'Leonardo DiCaprio is the only child of Irmelin Indenbirken, a legal secretary, and George DiCaprio, an underground comix artist and distributor.',
+  'supporting_text_span2': 'Leonardo DiCaprio is the only child of Irmelin Indenbirken, a legal secretary, and George DiCaprio, an underground comix artist and distributor.',
+  'claim3': 'Leonardo DiCaprio founded the production company Appian Way Productions in 2004.',
+  'supporting_text_span3': 'In 2004, Leonardo DiCaprio founded the production company Appian Way Productions, a namesake of the Italian road.',
+  'claim4': 'Leonardo DiCaprio was paid $30 million for his role in Killers of the Flower Moon.',
+  'supporting_text_span4': "Leonardo DiCaprio next starred in Scorsese's crime drama Killers of the Flower Moon based on the book of the same name by David Grann , for which he was paid $30 million.",
+  'claim5': 'Leonardo DiCaprio was made a commander of the Ordre des Arts et des Lettres by the French Minister of Culture in 2005.',
+  'supporting_text_span5': 'In 2005, Leonardo DiCaprio was made a commander of the Ordre des Arts et des Lettres by the French Minister of Culture for his contributions to the arts.'}}
+```
+
+As can be seen above, verbatim excerpts from the documents are extracted for each claim. The supporting text spans can be verified by performing simple string match to ensure there are no hallucinations. These text spans are useful later in the LLM-as-a-Judge phase when all generated datapoints are passed through a verification filter.
+
+The claims are then arranged as separate buckets (as shown below) and fed to the LLM generator using prompts presented in 
+
+```
+
+
+{
+    "doc_id": 7,
+    "claims": {
+      "doc7_claim1": "Leonardo DiCaprio's childhood photo with his parents has gone viral on social media with over 13 million views.",
+      "doc7_claim2": "Leonardo DiCaprio won his first Best Actor Oscar for his role in The Revenant.",
+      "doc7_claim3": "Leonardo DiCaprio's father worked as an underground comic book distributor and his mother was a legal secretary.",
+      "doc7_claim4": "Leonardo DiCaprio's parents worked for his production company in 1995.",
+      "doc7_claim5": "Leonardo DiCaprio received the Actors Inspiration Award at the SAG Foundation 30th-anniversary celebration in November 2015."
+    }
+  },
+  {
+    "doc_id": 15,
+    "claims": {
+      "doc15_claim1": "Leonardo DiCaprio bought an island in Belize and built the world's first eco-restorative resort that restores the island's over-fished waters, coastline, and forest.",
+      "doc15_claim2": "Leonardo DiCaprio and Kate Winslet helped pay nursing home fees for the last Titanic survivor to prevent her from selling Titanic mementos.",
+      "doc15_claim3": "Leonardo DiCaprio received his name because his pregnant mother was looking at a Leonardo da Vinci painting in an Italian museum when he first kicked.",
+      "doc15_claim4": "Leonardo DiCaprio blocked a film he appeared in from being released in the United States and Canada.",
+      "doc15_claim5": "Leonardo DiCaprio turned down the role of Anakin Skywalker in the Star Wars prequels.",
+      "doc15_claim6": "Leonardo DiCaprio speaks German fluently due to spending part of his childhood in Germany with his grandparents.",
+      "doc15_claim7": "The Taliban banned the Leonardo DiCaprio haircut from Titanic among Afghan youths, with barbers facing jail time for giving it.",
+      "doc15_claim8": "Leonardo DiCaprio has never used drugs and required training from drug experts to portray being high.",
+      "doc15_claim9": "Leonardo DiCaprio earned $2.5 million for Titanic in 1997 and his pay increased to $20 million per movie from 2000 onwards, with exceptions for J Edgar, Django Unchained and The Wolf of Wall Street."
+    }
+  },
+  {
+    "doc_id": 8,
+    "claims": {
+      "doc8_claim1": "Leonardo DiCaprio was born on November 11, 1974 in Los Angeles, California.",
+      "doc8_claim2": "Leonardo DiCaprio's parents named him after Leonardo da Vinci because his pregnant mother first felt him kick while looking at a da Vinci painting in Florence's Uffizi museum.",
+      "doc8_claim3": "Leonardo DiCaprio won his first Academy Award for Best Actor for his role in The Revenant (2015).",
+      "doc8_claim4": "Leonardo DiCaprio established the Leonardo DiCaprio Foundation in 1998 to promote environmental awareness.",
+      "doc8_claim5": "Leonardo DiCaprio's films have grossed $7.2 billion worldwide.",
+      "doc8_claim6": "Leonardo DiCaprio was appointed as United Nations Messenger of Peace in September 2014.",
+      "doc8_claim7": "Leonardo DiCaprio made his film debut in 1991 in the horror sequel Critters 3."
+    }
+  })
+```
+
+
+Generating questions that would require information from different documents can help in constructing multi-hop questions across documents. As can be observed from the outputs, even with the same set of 3 documents, various QA datapoints can be constructed as there are multiple claims from each document, which in turn be permuted in numerous ways. Furthermore, we can construct questions that might require different kinds of reasoning or problem solving capabilities.
+
+
+|Pattern	|Reasoning Logic	|Example	|
+|---	|---	|---	|
+|Conjunction	|Claim A Claim B Claim C composite claim.	|
+'93Doc 1 says X; Doc 2 says Y; Doc 3 says Z, therefore '85'94	|
+|
+Comparison	|Claim A vs Claim B contrast.	|
+'93'85yet Doc 2 reports a higher value.'94	|
+|
+Causal chain	|Claim A causes Claim B, which causes Claim C.	|'93'85leading to '85'94	|
+|Temporal sequence	|Claim A at t, Claim B at t.	|'93'85after '85'94	|
+
+Each of these would require different prompts and instructions, and are attached below in [Prompts Section](https://quip-amazon.com/hJM8ATEoZ44Z#temp:C:MCWb816d52e6d41472693e0f5bad)
+
+#### Examples of Generated QA
+
+#### Temporal
+
+```
+[{'used_claims': [{'doc_id': 8,
+    'claim_id': 'doc8_claim7',
+    'claim': 'Leonardo DiCaprio made his film debut in 1991 in the horror sequel Critters 3.'},
+   {'doc_id': 15,
+    'claim_id': 'doc15_claim9',
+    'claim': 'Leonardo DiCaprio earned $2.5 million for Titanic in 1997 and his pay increased to $20 million per movie from 2000 onwards, with exceptions for J Edgar, Django Unchained and The Wolf of Wall Street.'}],
+  'question': "How many years after DiCaprio's film debut did his salary increase to $20 million per movie?",
+  'answer': '9 years (from 1991 to 2000)'},
+ {'used_claims': [{'doc_id': 8,
+    'claim_id': 'doc8_claim6',
+    'claim': 'Leonardo DiCaprio was appointed as United Nations Messenger of Peace in September 2014.'},
+   {'doc_id': 7,
+    'claim_id': 'doc7_claim5',
+    'claim': 'Leonardo DiCaprio received the Actors Inspiration Award at the SAG Foundation 30th-anniversary celebration in November 2015.'}],
+  'question': "Which came first: DiCaprio's UN Messenger of Peace appointment or his SAG Foundation Actors Inspiration Award?",
+  'answer': 'UN Messenger of Peace appointment (September 2014)'},
+ {'used_claims': [{'doc_id': 8,
+    'claim_id': 'doc8_claim4',
+    'claim': 'Leonardo DiCaprio established the Leonardo DiCaprio Foundation in 1998 to promote environmental awareness.'},
+   {'doc_id': 8,
+    'claim_id': 'doc8_claim3',
+    'claim': 'Leonardo DiCaprio won his first Academy Award for Best Actor for his role in The Revenant (2015).'}],
+  'question': 'How many years passed between DiCaprio establishing his environmental foundation and winning his first Oscar?',
+  'answer': '17 years (from 1998 to 2015)'}]
+```
+
+#### Comparison
+
+```
+[{'used_claims': [{'doc_id': 7,
+    'claim_id': 'doc7_claim2',
+    'claim': 'Leonardo DiCaprio won his first Best Actor Oscar for his role in The Revenant.'},
+   {'doc_id': 8,
+    'claim_id': 'doc8_claim7',
+    'claim': 'Leonardo DiCaprio made his film debut in 1991 in the horror sequel Critters 3.'}],
+  'question': "How many years passed between Leonardo DiCaprio's film debut and his first Best Actor Oscar win?",
+  'answer': '24 years'},
+ {'used_claims': [{'doc_id': 15,
+    'claim_id': 'doc15_claim9',
+    'claim': 'Leonardo DiCaprio earned $2.5 million for Titanic in 1997 and his pay increased to $20 million per movie from 2000 onwards, with exceptions for J Edgar, Django Unchained and The Wolf of Wall Street.'},
+   {'doc_id': 8,
+    'claim_id': 'doc8_claim5',
+    'claim': "Leonardo DiCaprio's films have grossed $7.2 billion worldwide."}],
+  'question': "What is the ratio between DiCaprio's films' total worldwide gross and his Titanic salary?",
+  'answer': '2,880:1'},
+ {'used_claims': [{'doc_id': 8,
+    'claim_id': 'doc8_claim2',
+    'claim': "Leonardo DiCaprio's parents named him after Leonardo da Vinci because his pregnant mother first felt him kick while looking at a da Vinci painting in Florence's Uffizi museum."},
+   {'doc_id': 15,
+    'claim_id': 'doc15_claim3',
+    'claim': 'Leonardo DiCaprio received his name because his pregnant mother was looking at a Leonardo da Vinci painting in an Italian museum when he first kicked.'}],
+  'question': 'Which museum is specifically named in accounts of how DiCaprio got his name?',
+  'answer': 'Uffizi'}]
+```
+
+#### Causal
+
+```
+[{'used_claims': [{'doc_id': 15,
+    'claim_id': 'doc15_claim3',
+    'claim': 'Leonardo DiCaprio received his name because his pregnant mother was looking at a Leonardo da Vinci painting in an Italian museum when he first kicked.'},
+   {'doc_id': 8,
+    'claim_id': 'doc8_claim2',
+    'claim': "Leonardo DiCaprio's parents named him after Leonardo da Vinci because his pregnant mother first felt him kick while looking at a da Vinci painting in Florence's Uffizi museum."},
+   {'doc_id': 8,
+    'claim_id': 'doc8_claim1',
+    'claim': 'Leonardo DiCaprio was born on November 11, 1974 in Los Angeles, California.'}],
+  'question': "How did a visit to an Italian museum in 1974 influence a future Hollywood star's identity?",
+  'answer': "A mother's experience viewing a da Vinci painting at the Uffizi museum when her baby first kicked led to naming her son Leonardo DiCaprio."},
+ {'used_claims': [{'doc_id': 8,
+    'claim_id': 'doc8_claim7',
+    'claim': 'Leonardo DiCaprio made his film debut in 1991 in the horror sequel Critters 3.'},
+   {'doc_id': 15,
+    'claim_id': 'doc15_claim9',
+    'claim': 'Leonardo DiCaprio earned $2.5 million for Titanic in 1997 and his pay increased to $20 million per movie from 2000 onwards, with exceptions for J Edgar, Django Unchained and The Wolf of Wall Street.'}],
+  'question': "How did DiCaprio's 1991 horror movie debut eventually impact his earning potential?",
+  'answer': 'Starting with a role in Critters 3 led to a career that eventually commanded $20 million per movie by 2000.'},
+ {'used_claims': [{'doc_id': 8,
+    'claim_id': 'doc8_claim4',
+    'claim': 'Leonardo DiCaprio established the Leonardo DiCaprio Foundation in 1998 to promote environmental awareness.'},
+   {'doc_id': 15,
+    'claim_id': 'doc15_claim1',
+    'claim': "Leonardo DiCaprio bought an island in Belize and built the world's first eco-restorative resort that restores the island's over-fished waters, coastline, and forest."}],
+  'question': "How did DiCaprio's 1998 environmental initiative evolve into direct ecosystem restoration?",
+  'answer': "His foundation's focus on environmental awareness led to him creating an eco-restorative resort in Belize that actively restores marine and forest ecosystems."}]
+```
+
+#### Conjunction
+
+```
+[{'used_claims': [{'doc_id': 8,
+    'claim_id': 'doc8_claim1',
+    'claim': 'Leonardo DiCaprio was born on November 11, 1974 in Los Angeles, California.'},
+   {'doc_id': 15,
+    'claim_id': 'doc15_claim3',
+    'claim': 'Leonardo DiCaprio received his name because his pregnant mother was looking at a Leonardo da Vinci painting in an Italian museum when he first kicked.'},
+   {'doc_id': 7,
+    'claim_id': 'doc7_claim3',
+    'claim': "Leonardo DiCaprio's father worked as an underground comic book distributor and his mother was a legal secretary."}],
+  'question': "In what year was the legal secretary's son named after seeing a painting in Italy?",
+  'answer': '1974'},
+ {'used_claims': [{'doc_id': 7,
+    'claim_id': 'doc7_claim2',
+    'claim': 'Leonardo DiCaprio won his first Best Actor Oscar for his role in The Revenant.'},
+   {'doc_id': 8,
+    'claim_id': 'doc8_claim6',
+    'claim': 'Leonardo DiCaprio was appointed as United Nations Messenger of Peace in September 2014.'},
+   {'doc_id': 15,
+    'claim_id': 'doc15_claim9',
+    'claim': 'Leonardo DiCaprio earned $2.5 million for Titanic in 1997 and his pay increased to $20 million per movie from 2000 onwards, with exceptions for J Edgar, Django Unchained and The Wolf of Wall Street.'}],
+  'question': 'Who became a UN Messenger of Peace before winning their first Oscar while commanding $20M per film?',
+  'answer': 'Leonardo DiCaprio'},
+ {'used_claims': [{'doc_id': 8,
+    'claim_id': 'doc8_claim7',
+    'claim': 'Leonardo DiCaprio made his film debut in 1991 in the horror sequel Critters 3.'},
+   {'doc_id': 15,
+    'claim_id': 'doc15_claim8',
+    'claim': 'Leonardo DiCaprio has never used drugs and required training from drug experts to portray being high.'},
+   {'doc_id': 7,
+    'claim_id': 'doc7_claim5',
+    'claim': 'Leonardo DiCaprio received the Actors Inspiration Award at the SAG Foundation 30th-anniversary celebration in November 2015.'}],
+  'question': "Which drug-free actor debuted in Critters 3 and later won the SAG Foundation's Inspiration Award?",
+  'answer': 'Leonardo DiCaprio'}]
+```
+
+### Observations
+
+* A few comparison questions overlap with temporal questions, for instance '93How many years passed between Leonardo DiCaprio's film debut and his first Best Actor Oscar win?'94. This may be valid as answering such temporal questions could require comparing across two separate documents.
+* There are certain questions that don'92t seem to be natural (similar to what real users would actually ask), such as '93What is the ratio between DiCaprio's films' total worldwide gross and his Titanic salary?'94. However, such questions are prevalent in most QA datasets such as [HotPotQA](https://hotpotqa.github.io/), [FreshQA](https://github.com/freshllms/freshqa), [WebQuestions](https://github.com/brmson/dataset-factoid-webquestions?tab=readme-ov-file), ..etc. as their main purpose is to evaluate the capabilities of question answering systems (even if they are not realistic or representative of a user).
+* Few of the generated questions have redundant claims that may not have any impact on the answer, such as '93Who became a UN Messenger of Peace before winning their first Oscar while commanding $20M per film?'94. The last part '93while commanding $20M per film'94 is not necessary to arrive at the answer. These can be filtered in the next phase using LLM judges.
+
+
+
+## II) Examples of Leakage through Web Access
+
+To assess the extent of benchmark leakage, we conducted a preliminary exploration of several publicly available QA datasets. For a subset of test questions, issuing a simple web search using the question string as-is returned results that contained the question verbatim, often embedded in blog posts, tutorials, or forum discussions. In many cases, the surrounding text also included the gold-standard answer.
+
+RAG systems or LLMs with web access, such as those described in [5-8,12], perform similar retrieval operations during inference. When benchmark questions appear verbatim in indexed web content, these systems may locate the exact page containing both the question and the answer, bypassing the intended reasoning process. 
+
+We categorize the search outcomes into three levels:
+
+* **L2 '96 Direct Leakage:** The question (verbatim or near-verbatim) and the gold-standard answer appear together on the same page.
+* **L1 '96 Indirect Leakage:** The question appears without the answer, but with hints, discussions, or references that can make finding the answer easier. This still poses a risk, as it can reduce task difficulty and enable shortcutting.
+* **L0 '96 No Evidence:** Neither the question nor close variants appear.
+
+For our experiments, we simply search using the question text.
+
+Here, we present a few examples from our exploration where test questions lead directly to such leaked sources.
+
+
+### Dataset: SQuAD
+
+**Question:** '93`Which NFL team represented the AFC at Super Bowl 50?`'94
+**Question Id:** `56be4db0acb8001400a502ec` 
+**Split:** Test
+**Setting:** Organic
+
+_**Results**_
+**Google Search Link:** [link](https://www.google.com/search?q=Which+NFL+team+represented+the+AFC+at+Super+Bowl+50%3F&rlz=1C5GCEM_enUS1167US1167&oq=Which+NFL+team+represented+the+AFC+at+Super+Bowl+50%3F&gs_lcrp=EgZjaHJvbWUqBggAEEUYOzIGCAAQRRg70gEIMjk3M2owajmoAgCwAgA&sourceid=chrome&ie=UTF-8)
+**Search result at rank 3:** https://rajpurkar.github.io/SQuAD-explorer/explore/1.1/dev/Super_Bowl_50.html
+
+**Leakage Level:** ***L2** *(Both question and answer found directly in the retrieved document)
+
+**Comment:** The official SQuAD [28] dataset page consists of a dataset explorer, and those pages are indexed and publicly available. Simple google search directly fetches test set items (including results).
+
+
+### **Dataset: GPQA**
+
+**Question:** '93`In a parallel universe where a magnet can have an isolated North or South pole, Maxwell'92s equations look different. But, specifically, which of those equations are different?`'94
+**Question ID:** 4
+**Split:** Test
+**Setting:** Organic
+
+_**Results**_
+**Google Search Link:** [link](https://www.google.com/search?q=In+a+parallel+universe+where+a+magnet+can+have+an+isolated+North+or+South+pole%2C+Maxwell%E2%80%99s+equations+look+different.+But%2C+specifically%2C+which+of+those+equations+are+different%3F&rlz=1C5GCEM_enUS1167US1167&oq=In+a+parallel+universe+where+a+magnet+can+have+an+isolated+North+or+South+pole%2C+Maxwell%E2%80%99s+equations+look+different.+But%2C+specifically%2C+which+of+those+equations+are+different%3F&gs_lcrp=EgZjaHJvbWUqBggAEEUYOzIGCAAQRRg70gEHNDQ1ajBqN6gCALACAA&sourceid=chrome&ie=UTF-8)
+**Search result at rank 1:** https://www.chegg.com/homework-help/questions-and-answers/parallel-universe-magnet-isolated-north-south-pole-maxwell-s-equations-look-different-spec-q221630812
+
+**Leakage Level:** ***L1** *(Answer seems to be behind a paywall, could have been L2 otherwise)
+
+
+### Dataset: TriviaQA
+
+**Question:** '93`Why did a Bible published in London in 1632 become known as the Wicked Bible?`'94
+**Question ID:** `tc_435`
+**Split:** Test
+**Setting:** Exact
+
+**Google Search Results:** [link](https://www.google.com/search?q=%22Why+did+a+Bible+published+in+London+in+1632+become+known+as+the+Wicked+Bible%3F%22&sca_esv=7eb5ca7a0ce96dc3&rlz=1C5GCEM_enUS1167US1167&ei=1xCZaL-TBtfC0PEPxv-QoA4&ved=0ahUKEwj_2tjJmYGPAxVXITQIHcY_BOQQ4dUDCBA&uact=5&oq=%22Why+did+a+Bible+published+in+London+in+1632+become+known+as+the+Wicked+Bible%3F%22&gs_lp=Egxnd3Mtd2l6LXNlcnAiTyJXaHkgZGlkIGEgQmlibGUgcHVibGlzaGVkIGluIExvbmRvbiBpbiAxNjMyIGJlY29tZSBrbm93biBhcyB0aGUgV2lja2VkIEJpYmxlPyJI0CJQ9AlY6h9wAXgBkAEAmAFuoAGUAqoBAzEuMrgBA8gBAPgBAZgCAaACC8ICChAAGLADGNYEGEeYAwCIBgGQBgiSBwExoAeNCbIHALgHAMIHAzMtMcgHCA&sclient=gws-wiz-serp)
+**Search result at rank 2:** https://www.triviacountry.com/07_Bible.htm
+**Leakage Level:** ***L2** *(Both question and answer found directly in the retrieved document)
+
+
+## Test Results on First 100 samples of SQuAD
+
+SQuAD [28] is a widely used benchmark for evaluating question-answering systems, and we use it here for preliminary analysis. For the search engine, we use [SearxNG](https://github.com/searxng/searxng). In the first 100 SQuAD samples, we found **12%** question leakage and **9%** direct leakage (L2). Notably, several L2 cases appeared within the top 10 search results, meaning a web-enabled system could easily encounter them during retrieval. The average first-leakage rank was **11.5**. For comparison, [Perplexica](https://github.com/ItzCrazyKns/Perplexica) retrieves the top 40 results by default, so 11.5 is well within the range it would typically process. Even the small number of indirect leakage cases (L1) is concerning, as contextual hints can still shortcut reasoning.
+
+|Metric	|Value	|
+|---	|---	|
+|**Total Samples**	|100	|
+|---	|---	|
+|**Question Leakage Rate**	|12%	|
+|**Answer Leakage Rate**	|9%	|
+|**Both Question & Answer Leakage Rate (L2)**	|9%	|
+|**L0 Count (No Evidence)**	|88	|
+|**L1 Count (Indirect Leakage)**	|3	|
+|**L2 Count (Direct Leakage)**	|9	|
+|**Average Rank of First Leakage Found**	|11.5	|
+
+**Table: Preliminary Leakage Detection Results**
+
+It is also worth noting that third-party projects unrelated to the official benchmark can introduce leaks, as in this example:
+https://github.com/geehaad/Question-Answering/blob/main/output2.csv
+**Question:** "How many times did the Denver defense force Newton into turnovers?"
+**Answer:** *three*
+Since it is impossible to control how others use the test set or how closely they follow best practices, the risk of leakage increases as a dataset gains popularity. Over time, more users and students may include it in their own projects or publish it in public repositories such as GitHub, further exposing the test content.
+
+**Note:** Interestingly, in this example, the question is also no longer valid because it refers to an outdated event '97 another reason why dynamic evaluations are necessary.
+
+
+## Next Steps
+
+### 1) Improving QA generation quality using LLM-as-a-Judge framework
+
+### 2) Empirical Validation
+
+Leakage can happen in two ways for web-enabled QA agents, and the proposed method aims to be resistant to both of these risks:
+
+* **Pretraining leakage:** when benchmark content has already been seen by the base LLM powering the agent.
+* **Run-time leakage:** when the agent, while retrieving documents from the web during inference, encounters leaked benchmark content and shortcuts the reasoning process.
+
+Our goal is to show that the proposed dynamic evaluation protocol is resistant to both forms of leakage.
+
+**Models**
+
+* Base model M: an off-the-shelf LLM checkpoint.
+* Pretraining-leaked model Mpretrain-leak: obtained by continuing pretraining @math{M} on intentionally leaked benchmark data.
+* Run-time-leaked setting Mruntime-leak: same M, but retrieval is seeded to expose leaked benchmark content during search.
+
+**Datasets**
+
+* Dynamic dataset rounds Dt1,'85,DtT: we build a fresh evidence graph at round tjand generate one QA pair, following the protocol described in the previous section.
+
+**Metric**
+
+* Aggregate exact-match Agg(D,M).
+
+### Leakage Effect: Pretraining Phase
+
+Leak & Test protocol:
+
+1. Clean evaluation (round t)
+
+    * Generate Dt=Gen(Gi(t);ri,t,)i=1nt.
+    * Record aclean=Agg(Dt,M).
+
+1. Leak
+
+    * Fine-tune M on Dtto obtain Mpretrain-leak.
+
+1. New evaluation (round t+1)
+
+    * Generate Dt+1=Gen(Gi(t+1);ri,t+1,)i=1nt+1.
+    * Record aleak=Agg(Dt+1,Mpretrain-leak).
+    * Compute t+1=aleakaclean.
+
+Repeating this over T rounds yields  2,3,'85,T.
+
+### Leakage Effect: Run-Time Phase
+
+To simulate run-time leakage, we follow a similar protocol but introduce the leak during retrieval:
+
+1. Clean retrieval evaluation (round t) 
+    1. Agent retrieves documents from a clean index or search API, evaluates on Dt.
+2. Leak 
+    1. Seed the retrieval index or web search results with documents containing the exact benchmark questions and answers from  Dt; 
+    2. Evaluate the same agent M(no fine-tuning), yielding Mruntime-leak.
+3. New evaluation (round t+1) 
+    1. Retrieval is performed on a clean index for on a clean index for Dt+1; 
+    2. compute t+1as above.
+
+This setup directly tests whether encountering leaked benchmark content during retrieval in one round provides any advantage in future rounds.
+
+### Hypothesis Test
+
+We test whether the average leakage gain exceeds tolerance (e.g., =0.02):
+H0:vs.H1:>, 
+where = E[].
+
+We apply a one-sided, one-sample t-test on the (T1) observed gaps with mean and standard deviation s:
+t=s/T1
+At significance level =0.05, reject H0if p<; otherwise conclude the observed gain is not practically meaningful.
+
+
+
+
+## References
+
+[1] Chen, Danqi, et al. "Reading wikipedia to answer open-domain questions." *arXiv preprint arXiv:1704.00051* (2017).
+[2] Kwiatkowski, Tom, et al. "Natural questions: a benchmark for question answering research." *Transactions of the Association for Computational Linguistics* 7 (2019): 453-466.
+[3] Joshi, Mandar, et al. "Triviaqa: A large scale distantly supervised challenge dataset for reading comprehension." *arXiv preprint arXiv:1705.03551* (2017).
+[4] Yang, Zhilin, et al. "HotpotQA: A dataset for diverse, explainable multi-hop question answering." *arXiv preprint arXiv:1809.09600* (2018).
+[5] Izacard, Gautier, and Edouard Grave. "Leveraging passage retrieval with generative models for open domain question answering." *arXiv preprint arXiv:2007.01282* (2020).
+[6] Yao, Shunyu, et al. "React: Synergizing reasoning and acting in language models." International Conference on Learning Representations (ICLR). 2023.
+[7] Nakano, Reiichiro, et al. "Webgpt: Browser-assisted question-answering with human feedback." *arXiv preprint arXiv:2112.09332* (2021).
+[8] Yao, Shunyu, et al. "React: Synergizing reasoning and acting in language models." *International Conference on Learning Representations (ICLR)*. 2023.
+[9] Jia, Robin, and Percy Liang. "Adversarial examples for evaluating reading comprehension systems." *arXiv preprint arXiv:1707.07328* (2017).
+[10] Thakur, Nandan, et al. "Beir: A heterogenous benchmark for zero-shot evaluation of information retrieval models." *arXiv preprint arXiv:2104.08663* (2021).
+[11] Kasai, Jungo, et al. "Realtime qa: What's the answer right now?." *Advances in neural information processing systems* 36 (2023): 49025-49043.
+[12] Vu, Tu, et al. "Freshllms: Refreshing large language models with search engine augmentation." *arXiv preprint arXiv:2310.03214* (2023).
+[13] Liu, Siyi, et al. "Open Domain Question Answering with Conflicting Contexts." arXiv preprint arXiv:2410.12311 (2024).
+[14] Zeng, Yixiao, et al. "RARE: Retrieval-Aware Robustness Evaluation for Retrieval-Augmented Generation Systems." *arXiv preprint arXiv:2506.00789* (2025).
+[15] Zhu, Yutao, et al. "Large language models for information retrieval: A survey." *arXiv preprint arXiv:2308.07107* (2023).
+[16] Zhou, Kun, et al. "Don't make your LLM an evaluation benchmark cheater." *arXiv preprint arXiv:2311.01964* (2023).
+[17] Zhu, Kaijie, et al. "Dyval: Dynamic evaluation of large language models for reasoning tasks." *arXiv preprint arXiv:2309.17167* (2023).
+[18] Kiela, Douwe, et al. "Dynabench: Rethinking benchmarking in NLP." *arXiv preprint arXiv:2104.14337* (2021).
+[19] Ma, Zhiyi, et al. "Dynaboard: An evaluation-as-a-service platform for holistic next-generation benchmarking." *Advances in Neural Information Processing Systems* 34 (2021): 10351-10367.
+[20] Zhu, Kaijie, et al. "Dyval 2: Dynamic evaluation of large language models by meta probing agents." *arXiv preprint arXiv:2402.14865* (2024).
+[21] Zhang, Zhehao, Jiaao Chen, and Diyi Yang. "Darg: Dynamic evaluation of large language models via adaptive reasoning graph." *arXiv preprint arXiv:2406.17271* (2024).
+[22] Rawles, Christopher, et al. "Androidworld: A dynamic benchmarking environment for autonomous agents." *arXiv preprint arXiv:2405.14573* (2024).
+[23] Yao, Shunyu, et al. "$$-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains." *arXiv preprint arXiv:2406.12045* (2024).
+[24] Dammu, Preetam Prabhu Srikar, Himanshu Naidu, and Chirag Shah. "Dynamic-kgqa: A scalable framework for generating adaptive question answering datasets." *arXiv preprint arXiv:2503.05049* (2025).
+[25] Zhang, Zeyu, et al. "A survey on the memory mechanism of large language model based agents." *arXiv preprint arXiv:2404.13501* (2024).
+[26] Wang, Alex, et al. "Superglue: A stickier benchmark for general-purpose language understanding systems." Advances in neural information processing systems 32 (2019).
+[27] Mialon, Gr'e9goire, et al. "Gaia: a benchmark for general ai assistants." *The Twelfth International Conference on Learning Representations*. 2023.
+[28] Rajpurkar, Pranav, et al. "Squad: 100,000+ questions for machine comprehension of text." *arXiv preprint arXiv:1606.05250* (2016).
+
+
+## Appendix
+
+### Prompts Section
+
+(these prompts may be modified based on observations and feedback)
+
+#### Claim Extraction Prompt
+
+```
+def extract_standalone_claims_prompt(text):
+
+    PROMPT = f'''
+    You are given a passage of text. Your task is to extract one-sentence standalone factual claims from the passage.
+
+    Each claim must:
+    - Be self-contained (i.e., understandable on its own without requiring coreference resolution)
+    - Not rely on ambiguous references like "this", "that", "they", etc.
+    - Be phrased as a complete declarative sentence
+    - Be verifiable (e.g., "Riot Games has no plans for League of Legends 2." is acceptable; "They have no plans for League of Legends 2" is not)
+
+    For each claim, also provide the exact verbatim supporting text span from the original text that led you to extract the claim.
+
+    Return your answer in JSON format using the following keys numbered from 1 to n:
+    - "claim1": <standalone claim>,
+    - "supporting_text_span1": <verbatim supporting text span from original>,
+    ...
+
+
+    Here is the input text:
+    {text}
+    '''
+
+    return PROMPT
+```
+
+#### QA Generation Prompts and Helpers
+
+```
+def is_temporal_applicable(*buckets*, *, *min_buckets*=2) -> bool:
+    """
+    True  at least `min_buckets` buckets each contain 1 explicit year / date
+    False otherwise
+    """
+    buckets_with_dates = sum(
+        1 *for* b *in* *buckets* *if* any(_DATE_RX.search(claim) *for* claim *in* b["claims"].values())
+    )
+    flag = buckets_with_dates >= *min_buckets*
+    *return* flag, buckets_with_dates
+
+def build_temporal_prompt(*buckets*, *, *n_pairs*=3, *min_buckets*=2):
+    *return* textwrap.dedent(f"""
+    You are generating *{*n_pairs*}* **temporal-sequence** multi-hop QA pairs.
+    Buckets of claims (grouped by doc_id) are below:
+    {json.dumps(*buckets*, *indent*=2)}
+    **Rules for each QA pair**
+    '95 Combine claims from at least **{*min_buckets*} different buckets**.  
+    '95 Each chosen claim must mention a year, date, or explicit timeframe.  
+    '95 Ask for an ordering or an interval (e.g., '93How many years after '85?'94).  
+    '95 Every referenced fact must be essential for the answer.
+    '95 The question should not contain the answer or steps to get the answer.
+    '95 The question should not refer to the documents, they should be general.  
+    '95 List every claim you used by its doc_id and claim_id.  
+    '95 Provide one concise answer (year, number of years, earlier event, etc.).  
+    **Output format (JSON list)**
+    - "used_claims": list of {{doc_id, claim_id, claim}}
+    - "question":   string
+    - "answer":     string
+    Return only the JSON'97no extra commentary.
+    """).strip()
+*# Comparison QAs*
+_NUM_RX = re.compile(r"[,]*(?:.+)?")            *# any numeral*
+def is_comparison_applicable(*buckets*, *, *min_buckets*=2) -> bool:
+    """
+    True  at least `min_buckets` buckets each contain 1 numeric value
+    False otherwise
+    """
+    buckets_with_nums = sum(
+        1 *for* b *in* *buckets* *if* any(_NUM_RX.search(claim) *for* claim *in* b["claims"].values())
+    )
+    flag = buckets_with_nums >= *min_buckets*
+    *return* flag, buckets_with_nums
+
+def build_comparison_prompt(*buckets*, *, *n_pairs*=3, *min_buckets*=2):
+    *return* textwrap.dedent(f"""
+    You are generating *{*n_pairs*}* **comparison-style** multi-hop QA pairs.
+    Buckets of claims (grouped by doc_id) are below:
+    {json.dumps(*buckets*, *indent*=2)}
+    **Rules for each QA pair**
+    '95 Use claims from at least **{*min_buckets*} different buckets**.  
+    '95 Frame the question so the solver *must* contrast values  
+      (higher, lower, difference, ratio, earlier, later).  
+    '95 Keep wording tight'97only include values essential for the comparison.  
+    '95 The question should not contain the answer or steps to get the answer.
+    '95 The question should not refer to the documents, they should be general.
+    '95 List every claim you used by its doc_id and claim_id.  
+    '95 Provide a single, concise answer (number, entity, etc.).  
+    **Output format (JSON list)**
+    - "used_claims": list of {{doc_id, claim_id, claim}}
+    - "question":   string
+    - "answer":     string
+    Return only the JSON'97no extra commentary.
+    """).strip()
+
+*# Causal QAs*
+_CAUSE_RX = re.compile(r"(cause[sd]?|lead[s]? to|result(?:ed)? in)", re.I)
+def is_causal_applicable(*buckets*, *, *min_buckets*=2) -> bool:
+    """
+    True  at least `min_buckets` buckets each contain 1 causal phrase
+    False otherwise
+    """
+    buckets_with_cause = sum(
+        1 *for* b *in* *buckets* *if* any(_CAUSE_RX.search(claim) *for* claim *in* b["claims"].values())
+    )
+    flag = buckets_with_cause >= *min_buckets*
+    *return* flag, buckets_with_cause
+
+def build_causal_prompt(*buckets*, *, *n_pairs*=3, *min_buckets*=2):
+    *return* textwrap.dedent(f"""
+    You are generating *{*n_pairs*}* **causal-chain** multi-hop QA pairs.
+    Buckets of claims (grouped by doc_id) are below:
+    {json.dumps(*buckets*, *indent*=2)}
+    **Rules for each QA pair**
+    '95 Pull evidence from at least **{*min_buckets*} different buckets**.  
+    '95 Link the facts in an explicit cause-and-effect sequence  
+      ('93'85led to'85'94, '93because of'85'94, etc.).  
+    '95 Every step must be necessary to reach the answer; omit filler.  
+    '95 The question should not contain the answer or steps to get the answer.
+    '95 The question should not refer to the documents, they should be general.  
+    '95 List every claim you used by its doc_id and claim_id.  
+    '95 Provide one concise answer (final effect, reason, yes/no, etc.).  
+    **Output format (JSON list)**
+    - "used_claims": list of {{doc_id, claim_id, claim}}
+    - "question":   string
+    - "answer":     string
+    Return only the JSON'97no extra commentary.
+    """).strip()
+*# Conjunction QAs*
+def is_conjunction_applicable(*buckets*, *, *min_buckets*=3) -> bool:
+    """
+    True  at least `min_buckets` buckets (no other content requirement)
+    False otherwise
+    """
+    flag = len(*buckets*) >= *min_buckets*
+    *return* flag, len(*buckets*)
+
+def build_conjunction_prompt(*buckets*, *, *n_pairs*=3, *min_buckets*=3):
+    *return* textwrap.dedent(f"""
+    You are generating *{*n_pairs*}* **conjunction-style** multi-hop QA pairs.
+    Buckets of claims (grouped by doc_id) are below:
+    {json.dumps(*buckets*, *indent*=2)}
+    **Rules for each QA pair**
+    '95 Combine facts from at least **{*min_buckets*} different buckets** (can use more).  
+    '95 The answer must change if *any* referenced claim were false (logical AND).  
+    '95 No trivia'97every fact must be essential.  
+    '95 The question should not contain the answer or steps to get the answer.
+    '95 The question should not refer to the documents, they should be general.  
+    '95 List every claim you used by its doc_id and claim_id.  
+    '95 Provide a single, concise answer (entity, number, date, etc.).  
+    **Output format (JSON list)**
+    - "used_claims": list of {{doc_id, claim_id, claim}}
+    - "question":   string
+    - "answer":     string
+    Return only the JSON'97no extra commentary.
+    """).strip()
+```
+
+
+
+
+}

@@ -1,0 +1,139 @@
+
+# [Project Tracker] **Dynamic Evaluation of WebQA Agents**
+
+## Overview
+
+LLM agents with web access are increasingly becoming the default option for user-facing question-answering systems, as evidenced by the rising adoption of tools like SearchGPT and Perplexity. However, most benchmarks and datasets used to evaluate these systems were originally designed for a previous generation of QA systems and are static in nature, making them susceptible to data leakage. ***Benchmark leakage*** refers to the contamination that occurs when a model has prior exposure to test items during pretraining, leading to inflated evaluation scores and undermining the benchmark'92s credibility. Since LLMs are often pretrained indiscriminately on publicly available web content, there's a high likelihood that test examples have already been seen during training. This turns evaluation into a case of "testing on the training set," which significantly compromises the validity of the reported results. ***Dynamic benchmarking*** offers a promising alternative by generating test samples at evaluation time. This ensures that models are evaluated on fresh, unseen data and reduces the risk of test-set contamination.
+
+**Objective:** Develop a dynamic QA benchmark suitable for question-answering agents equipped with web search capabilities, with built-in resistance to data leakage and memorization.
+
+**Preliminaries and Related Work:** [[Related Work] Dynamic Evaluation of WebQA Agents](https://quip-amazon.com/GQfaAI002kpg)
+
+**Why dynamic evaluations?**
+
+* **Pretraining Contamination**: Any static dataset or benchmark made publicly available is likely to have been seen during LLM pretraining. While some benchmarks like [GAIA](https://arxiv.org/abs/2311.12983) release only questions and withhold answers to mitigate this, such an approach introduces transparency concerns and limits access for researchers. It also requires benchmark providers to run evaluations on behalf of all users, which may be infeasible at scale due to compute constraints.
+* **The Web is Dynamic**: A second motivation stems from the evolving nature of the web itself. Many user queries are time-sensitive: for example, '93Does Tom Cruise have a movie coming out this month?'94, and static datasets like HotPotQA, which contain immutable questions and answers, are not suited for such scenarios. Benchmarks like [FreshQA](https://github.com/freshllms/freshqa) and [RealTimeQA](https://arxiv.org/abs/2207.13332) address this by updating content weekly, but they still fall short when it comes to rapidly changing topics like stock prices, traffic, or weather conditions.
+* **Broader Coverage of Real-world Queries**: A truly dynamic benchmark can support these fast-evolving, time-sensitive queries '97 questions that are highly relevant in end-user applications. This becomes possible as test samples are constructed at run time, grounded in curated and verifiable data. 
+
+
+Proposed Method Draft: [[Method] Dynamic Evaluation of WebQA Agents](https://quip-amazon.com/b2HgAfPdfFlm)
+
+
+
+## Location for code and results on S3
+
+### Active Resource
+
+* AWS OpenSearch: https://us-east-2.console.aws.amazon.com/aos/home?region=us-east-2#opensearch/domains/commoncrawlc4 (search index for C4 pretraining dataset)
+* EC2 Instance: https://us-east-2.console.aws.amazon.com/ec2/home?region=us-east-2#InstanceDetails:instanceId=i-04104a217d75c2bbe
+
+### **Code & Results:**
+
+* **Dynamic Benchmarking Main**
+    * **Description:** This is the main repo which generates the dynamic variants given an input file. It already has the required input files in the input folder, and the commands required to run experiments are in the README.md
+    * **Code Location:** s3://preetam-summer2025/code/WebQA-Dyn.zip
+    * **Results Location:** s3://preetam-summer2025/results/WebQA-Dyn_data/
+* **Contamination Detector Code**
+    * **Description:** This repo has the code to perform contamination detection using SearxNG endpoint (for retrieval leaks) and AWS OpenSearch endpoint (for pretraining leaks).
+    * **Code Location:** s3://preetam-summer2025/code/contamination_detector.zip
+    * **Results Location:** s3://preetam-summer2025/results/contamination_detector_data/
+* **Scoring QA systems (Performance Analysis)**
+    * **Description:** This repo has the code to implement performance analysis (uses SimpleQA prompt https://github.com/openai/simple-evals/blob/main/simpleqa_eval.py) and Claude 4 to generate accuracy scores.
+    * **Code Location:** s3://preetam-summer2025/code/scoring-qa.zip
+    * **Results Location:** s3://preetam-summer2025/results/scoring-qa_data/
+
+### Updates
+
+September 10 (In progress)
+
+* Updates: [Dynamic Evaluation of WebQA Agents - Quick Updates [Sep 10]](https://quip-amazon.com/FT3jAJbo3WKa)
+
+Sep 3 (In progress)
+
+* Updates: [Dynamic Evaluation of WebQA Agents - Quick Updates [Sep 3]](https://quip-amazon.com/zaEDAPiqTlvG)
+
+August 27 
+
+* Updates: [Dynamic Evaluation of WebQA Agents - Quick Updates [ Aug 27]](https://quip-amazon.com/VEqtAte8MpRQ)
+
+August 21
+
+* Updates: [Dynamic Evaluation of WebQA Agents - Quick Updates [ Aug 21]](https://quip-amazon.com/SiUoAinoSpAK)
+
+
+August 18
+
+* Detailed updates: [[August 18 -22] Updates](https://quip-amazon.com/fTn9Ap0oOEvh)
+
+
+August 14 
+
+* Mid-term presentation. Quip link: [Dynamic Benchmarking for Web-Enabled Question Answering Agents [Mid-term Presentation]](https://quip-amazon.com/G2IYAWBP2NTV)
+* Ran experiments to detect data contamination in QA datasets (SQuAD, HotPotQA, TriviaQA)
+* Implemented the LLM-J component
+* Experimenting with using graph metadata from previous rounds to increase diversity in subsequent-round generation
+* Finalizing controllable complexity scheme using four reasoning types (comparison, conjunction, causal, temporal) and varying document hop counts
+
+
+August 8
+
+* https://quip-amazon.com/aZgKAJ8xl7nf
+
+August 1 (Week 7)
+
+* Implemented QA generation using seed graphs
+* Explored different strategies to create QA datapoints.
+* Drafted and refined prompts for 4 types of QA (Causal, Temporal, Composite, and Comparison)
+* Created a Python notebook for observing QA generation and prompt steering to control QA samples
+
+
+July 25 (Week 6)
+
+* Drafted experimental design and validations.
+* Generated seed graphs for FreshQA (500 seed graphs)
+* Experimented QA exploration with Perplexica framework
+* WIP: implementing QA generation step
+
+
+July 18 (Week 5)
+
+* Read papers on memorization and transformer limitations with compositional tasks.
+* Drafted method details.
+* Attended SIGIR
+* Updated writing: narrative focus updated to reflect memorization literature limitations.
+
+July 11 (Week 4)
+
+* Started implementing LLM-as-Judge evaluation using FreshQA evals (they use LLMs for judging '97 two protocols: strict & relaxed).
+* Replicated baselines on FreshQA dataset with Perplexica
+* Experimented with different approaches to scale generation of datapoints using Perplexica framework
+
+
+July 4th, 2026 (Week 3)
+
+* Initiated benchmarking of baseline setup (PPLX.AI + Ollama) on FreshQA dataset (https://arxiv.org/pdf/2310.03214)
+* Resolved network issues blocking the agent from making web search calls (security group issues, worked with Wes)
+* Ollama endpoints are still causing issues with timeouts, so creating a new repo with only required/relevant components from Perplexica. 
+* Created a new code base, extending support to AWS Bedrock (Perplexica does not support AWS, only OpenAI API and Ollama endpoints).
+
+
+June 27, 2026 (Week 2)
+
+* Built a demo for Themis Hackathon
+* Hosted the local WebQA agent (using Perplexica with SearxNG)
+* Deployed Ollama endpoints (currently using DeepSeek-R1)
+* Performed an initial sanity check:
+    * Used a sample question from the FreshQA dataset
+    * Extracted WebQA operations and constructed a preliminary graph *(needs refinement)*
+
+
+June 20, 2026 (Week 1)
+
+* Refining problem statement
+* Literature survey
+* Configuring laptop and VMs on DevDesktop & EC2.
+* Embark trainings
+* Drafted the project plan and related work 
+
+
+

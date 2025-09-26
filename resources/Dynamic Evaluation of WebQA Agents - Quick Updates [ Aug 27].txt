@@ -1,0 +1,395 @@
+# **Dynamic Evaluation of WebQA Agents - Quick Updates [ Aug 27]**
+
+
+For the sake of clarity, some definitions before the updates/results:
+
+## Contamination
+
+Following the formal definition of contamination in [1], we say that the dataset Devalis **contaminated** by the dataset DMif: 
+
+xDeval,xDM,f(x,x)>=
+
+
+where f is a similarity function, and a similarity threshold. =1 corresponds to **verbatim** or **strict** contamination.
+
+
+* Contamination signs often include inflated performance on evaluation benchmarks, and model memorization of entire substrings. 
+* **Contamination *detection*** refers to techniques assessing whether contamination holds true or not. 
+
+
+
+### Contamination Detection Techniques
+
+Contamination detection methods can be open data (assumes pretraining data is accessible) or closed data (assumes pretraining data is unaccessible) [1]. We work with open data techniques since they are more accurate and transparent (we can directly pinpoint the exact leaked instance). On the other hand, closed-data techniques are approximations, and can be problematic [2].
+
+Open-data methods are string- or token-based. There are a few practical reasons for this: N-gram or token-based contamination detection methods allow us to work with text samples of any length. For instance, you can apply these methods to check for the contamination of a one-sentence text string across large documents containing thousands of sentences (like a web page or a textbook). This is important since pretraining datasets typically comprise such text documents.
+
+Contamination detection methods from the literature:
+
+    * Exact match (https://arxiv.org/pdf/2104.08758)
+    * 8-gram words, GPT-2 paper (https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)
+    * 13-gram words, GPT-3 paper (https://arxiv.org/pdf/2005.14165)
+    * 50-gram characters, GPT-4 paper (https://arxiv.org/pdf/2303.08774.pdf)
+    * 8-gram words with 70% threshold, PaLM paper (https://arxiv.org/pdf/2204.02311.pdf)
+    * Embedding similarity with 80% match, Platypus (https://arxiv.org/pdf/2308.07317)
+
+
+We also consider two levels of contamination, as outlined in [3], which are:
+
+    * **Input-only** (question contamination)
+    * **Input-and-label** (question and answer contamination)
+
+## Contamination in the context of QA agents with search access
+
+We present that contamination can happen at two stages in QA agents with web access (or most RAG systems). These are:
+
+* Pretraining contamination: occurs when the test sample is included in the pretraining corpus.
+* Retrieval contamination: occurs when the test sample is present in the retrieved results (from web engine).
+
+## Experiments and Results
+
+## 1) Contamination Modeling
+
+### Pretraining Contamination
+
+In our experiments, we use the following:
+
+* **Pretraining Corpus:** C4 Dataset (https://huggingface.co/datasets/allenai/c4), which is a cleaned pretraining corpus cleaned from https://commoncrawl.org/ project.
+    * Since checking contamination for every instance against the entire corpus is not feasible, we index it using AWS OpenSearch (this is similar to other efforts which use vector DBs like FAISS).
+* **QA Benchmarks:** We run our experiments on 5 widely adopted datasets
+    * SQuAD
+    * HotPotQA
+    * FreshQA
+    * SimpleQA
+    * WebQuestions
+
+
+**OVERALL STATISTICS:**
+
+* Total instances across all datasets: 24,833
+* Total unique question contaminated instances: 1,808 (7.28%)
+* Total unique question and answer contaminated instances: 919 (3.70%)
+
+
+
+**PER-DATASET BREAKDOWN:**
+**WebQuestions:**
+- Total questions: 2,032
+- Question contaminated: 157 (7.73%)
+- Question and answer contaminated: 74 (3.64%)
+
+
+**SQuAD:**
+- Total questions: 10,570
+- Question contaminated: 410 (3.88%)
+- Question and answer contaminated: 273 (2.58%)
+
+
+**HotpotQA:**
+- Total questions: 7,405
+- Question contaminated: 696 (9.40%)
+- Question and answer contaminated: 369 (4.98%)
+
+
+**FreshQA:**
+- Total questions: 500
+- Question contaminated: 48 (9.60%)
+- Question and answer contaminated: 21 (4.20%)
+
+
+**SimpleQA:**
+- Total questions: 4,326
+- Question contaminated: 497 (11.49%)
+- Question and answer contaminated: 182 (4.21%)
+
+Note: I noticed that the PALM approach (8-gram with skips at an 80% match threshold) gave no meaningful difference compared to the standard 8-gram method from the GPT-2 paper. This is likely because QA benchmark questions are not long enough for skips to have much impact.
+
+[Image: image.png]
+[Image: image.png]
+[Image: image.png]
+**S3 link for results:** s3://preetam-summer2025/contamination_results/
+
+
+## Retrieval Contamination
+
+For these experiments, we use the following SearxNG to serve as our web search engine (used in many agentic search systems, including [Perplexica](https://github.com/ItzCrazyKns/Perplexica)). We use results of first 3 pages (typically ranging from 30-80 documents, based on how many hits are returned for the question string).
+
+**OVERALL STATISTICS:**
+
+* Total questions across all datasets: 24,833
+* Total unique question contaminated instances: 1,994 (8.03%)
+* Total unique question and answer contaminated instances: 1,635 (6.58%)
+
+
+**PER-DATASET BREAKDOWN:**
+**WebQuestions:**
+
+* Total questions: 2,032
+* Question contaminated: 53 (2.61%)
+* Question and answer contaminated: 30 (1.48%)
+
+**SQuAD:**
+
+* Total questions: 10,570
+* Question contaminated: 1,163 (11.00%)
+* Question and answer contaminated: 968 (9.16%)
+
+**HotpotQA:**
+
+* Total questions: 7,405
+* Question contaminated: 536 (7.24%)
+* Question and answer contaminated: 428 (5.78%)
+
+**FreshQA:**
+
+* Total questions: 500
+* Question contaminated: 10 (2.00%)
+* Question and answer contaminated: 9 (1.80%)
+
+**SimpleQA:**
+
+* Total questions: 4,326
+* Question contaminated: 232 (5.36%)
+* Question and answer contaminated: 200 (4.62%)
+
+
+[Image: total_unique_retrieval_contaminated_instances_per_dataset.png][Image: overall_retrieval_contamination_rates_by_dataset.png][Image: retrieval_contamination_rates_by_method_dataset.png]
+
+
+
+### Dataset Level Analysis
+
+#### Update (edited Aug. 31) 
+
+Two bugs were identified in the plotting:
+
+
+* For the rank distribution analysis, the bins were not fixed, and matplotlib automatically assigned bin sizes based on the numbers/distribution. This caused bars of variable width, which was confusing. This has now been fixed.
+* Contamination by source category was plotting based on sources fetched instead of contamination sources. This is now fixed. This has also resolved some unusual trends, such as e-commerce being a common category (while e-commerce pages are fetched, they are not sources of contamination).
+
+The following mapping was used for category analysis:
+
+```
+{
+            "academic": ["arxiv.org", "researchgate.net", "scholar.google.com", "academia.edu"],
+            "news": ["cnn.com", "bbc.com", "reuters.com", "ap.org", "npr.org"],
+            "reference": ["wikipedia.org", "britannica.com", "encyclopedia.com"],
+            "social": ["reddit.com", "twitter.com", "facebook.com"],
+            "documentation": ["github.com", "docs.", "developer.", "api."],
+            "ecommerce": ["amazon.com", "ebay.com", "etsy.com"],
+            "government": [".gov", "whitehouse.gov", "congress.gov"],
+            "other": []
+        }
+```
+
+**HotPotQA**
+
+[Image: top_contaminated_domains_count.png][Image: source_category_analysis.png]
+[Image: rank_distribution_analysis.png]
+#### SimpleQA
+
+
+
+[Image: top_contaminated_domains_count.png][Image: source_category_analysis.png][Image: rank_distribution_analysis.png]
+#### SQuAD
+
+[Image: top_contaminated_domains_count.png][Image: source_category_analysis.png]
+[Image: rank_distribution_analysis.png]
+#### FreshQA
+
+[Image: top_contaminated_domains_count.png][Image: source_category_analysis.png][Image: rank_distribution_analysis.png]
+
+#### WebQuestions
+
+[Image: top_contaminated_domains_count.png][Image: source_category_analysis.png]
+[Image: rank_distribution_analysis.png]
+
+
+## 2) Proposed Method Results
+
+
+Now that we have contamination results for all datasets at both stages (pretraining and retrieval), we can
+
+* compile a high-contamination dataset (sourced from these 5 benchmarks) of manageable size for experiments (~500 or 1K samples), representative of both types of contaminations.
+* compile a random sampled dataset of manageable size, representative of both types of contaminations.
+
+
+While the above item is WIP, I ran some experiments using FreshQA (since it'92s a small dataset with 600 samples). These tests following experiments will be performed again using the final splits we create from the steps above.
+
+
+### Dynamic Variant of FreshQA
+
+We generate a dynamic variant (round 1) for the FreshQA dataset, and perform the contamination test. 
+
+**Pretraining Contamination**
+
+```
+METHOD SUMMARIES:
+EXACT:
+Total questions: 588
+Contaminated questions: 0 (0.00%)
+Q&A contaminated: 0 (0.00%)
+Clean questions: 588
+GPT2:
+Total questions: 588
+Contaminated questions: 10 (1.70%)
+Q&A contaminated: 3 (0.51%)
+Clean questions: 578
+GPT3:
+Total questions: 588
+Contaminated questions: 0 (0.00%)
+Q&A contaminated: 0 (0.00%)
+Clean questions: 588
+GPT4:
+Total questions: 588
+Contaminated questions: 0 (0.00%)
+Q&A contaminated: 0 (0.00%)
+Clean questions: 588
+PALM:
+Total questions: 588
+Contaminated questions: 10 (1.70%)
+Q&A contaminated: 3 (0.51%)
+Clean questions: 578
+OVERALL SUMMARY:
+Maximum contamination detected: 10 questions
+Maximum Q&A contamination: 3 questions
+Maximum contamination rate: 1.70%
+
+```
+
+
+
+### Retrieval Contamination
+
+```
+METHOD SUMMARIES:
+EXACT:
+Total questions: 588
+Contaminated questions: 0 (0.00%)
+Q&A contaminated: 0 (0.00%)
+Clean questions: 588
+GPT2:
+Total questions: 588
+Contaminated questions: 0 (0.00%)
+Q&A contaminated: 0 (0.00%)
+Clean questions: 588
+GPT3:
+Total questions: 588
+Contaminated questions: 0 (0.00%)
+Q&A contaminated: 0 (0.00%)
+Clean questions: 588
+GPT4:
+Total questions: 588
+Contaminated questions: 0 (0.00%)
+Q&A contaminated: 0 (0.00%)
+Clean questions: 588
+PALM:
+Total questions: 588
+Contaminated questions: 0 (0.00%)
+Q&A contaminated: 0 (0.00%)
+Clean questions: 588
+OVERALL SUMMARY:
+Maximum contamination detected: 0 questions
+Maximum Q&A contamination: 0 questions
+No contamination detected across all methods
+
+RETRIEVAL-SPECIFIC NOTES:
+This analysis examines whether questions and answers from the evaluation
+dataset appear in documents that would be retrieved by a search engine.
+
+Since no contamination was detected, this suggests that:
+The FreshQA generated split contains truly fresh/recent content
+The questions and answers are not present in the training data
+The dataset is well-suited for evaluating model performance on recent events
+```
+
+
+
+## Experiments for Distributional Consistency
+
+
+The core objective of this analysis is to determine whether two sets of text data originate from similar underlying distributions. Specifically, we investigate whether generated question-answer (QA) pairs exhibit distributional properties similar to their corresponding original QA pairs. 
+
+Given two lists of strings representing QA pairs - one containing original benchmark content (like SQUAD,..etc) and another containing the content generated by the propsed method - we seek to quantify the degree of distributional similarity between these collections. 
+
+
+
+#### Text-to-Embedding Conversion
+
+To enable quantitative analysis of text distributions, we employ a two-stage approach. First, we convert raw text strings into high-dimensional vector representations using pre-trained sentence transformers. Specifically, we utilize the 'all-MiniLM-L6-v2' model, which produces 384-dimensional embeddings that capture semantic relationships between texts.
+
+The conversion process involves concatenation of question and answer pairs into unified text representations (e.g., "Question: [question_text] Answer: [answer_text]"). This embedding space transformation is crucial because it:
+
+* Reduces the infinite-dimensional space of possible text strings to a finite, manageable vector space
+* Preserves semantic relationships through learned representations
+* Enables the application of distance metrics and statistical tests that require numerical inputs
+
+
+
+Once we obtain two sets of embedding vectors, we employ a multi-faceted approach to assess distributional similarity:
+
+
+* **Distance-based Metrics**: We compute various distance measures between corresponding pairs of embeddings to quantify local similarity
+    * Cosine Similarity
+    * Euclidean Distance
+    * Manhattan Distance
+* **Distribution-level Metrics:** We assess overall distribution characteristics using measures that compare the full embedding sets
+    * Wasserstein Distance
+    * Maximum Mean Discrepancy
+* **Statistical Hypothesis Testing:** We employ non-parametric tests to determine whether observed differences are statistically significant
+    * Wilcoxon Signed-Rank Test
+    * Mann-Whitney U Test
+    * Kolmogorov-Smirnov Test
+
+
+
+```
+DISTANCE METRICS ANALYSIS
+Analysis Type: Paired Comparison
+
+Cosine Similarity: Low (distributions have some differences)
+Value: 0.4586
+
+Wasserstein Distance: Very low (distributions are very similar)
+Value: 0.0030
+
+Euclidean Distance: Low (distributions are similar)
+Value: 1.0248
+
+Manhattan Distance: Low (distributions are similar)
+Value: 15.9072
+
+Maximum Mean Discrepancy: Very low (distributions are very similar)
+Value: 0.0002
+```
+
+```
+
+STATISTICAL TEST RESULTS
+==================================================
+
+WILCOXON:
+  Statistic: 12734109722.500000
+  P-value: 0.711532
+  Significance: ns (p >= 0.05)
+
+MANNWHITNEY:
+  Statistic: 25495748614.000000
+  P-value: 0.913915
+  Significance: ns (p >= 0.05)
+
+KS_TEST:
+  Statistic: 0.001741
+  P-value: 0.883108
+  Significance: ns (p >= 0.05)
+
+```
+
+## 
+References
+
+[1] Ravaut, Mathieu, et al. "A Comprehensive Survey of Contamination Detection Methods in Large Language Models." *arXiv preprint arXiv:2404.00699* (2024).
+[2] Liu, Ken Ziyu, et al. "Language models may verbatim complete text they were not explicitly trained on." *arXiv preprint arXiv:2503.17514* (2025).
+[3] Li, Yucheng, Frank Guerin, and Chenghua Lin. "An open source data contamination report for large language models." arXiv preprint arXiv:2310.17589 (2023).
+
+

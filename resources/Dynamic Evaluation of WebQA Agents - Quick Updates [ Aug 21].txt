@@ -1,0 +1,31 @@
+
+
+# **Dynamic Evaluation of WebQA Agents -** Quick Updates [ Aug 21] 
+
+
+Quick updates, shared here in Quip for easier feedback:
+
+* CommonCrawl C4 (a pretraining set, link: https://huggingface.co/datasets/allenai/c4) is now fully indexed in an AWS OpenSearch VPC endpoint. We are using this endpoint to retrieve top-k (for now, 1000 datapoints) for each test sample in a QA benchmark (like SQuAD, WebQuestions, TriviaQA, etc.) from the pretraining dataset. This step is required to keep things feasible, as pairwise comparisons between each test sample and large pretraining datasets are not scalable. Previous works maintain similar vector DBs (ref: https://arxiv.org/pdf/2311.04850).
+* We now have implementations for contamination detection methods discussed in this survey ready (ref: https://arxiv.org/pdf/2404.00699). These are standard contamination detection metrics from the original papers and model release reports of base LLMs and pretraining datasets. The authors of the survey paper have shared their re-implementation scripts (https://github.com/ntunlp/LLMSanitize/tree/main/llmsanitize/open_data_methods), but some of their code cannot be applied directly to our problem (small modifications required, I'92ll discuss these details later):
+    * Exact match (https://arxiv.org/pdf/2104.08758)
+    * 8-gram words, GPT-2 paper (https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)
+    * 13-gram words, GPT-3 paper (https://arxiv.org/pdf/2005.14165)
+    * 50-gram characters, GPT-4 paper (https://arxiv.org/pdf/2303.08774.pdf)
+    * 8-gram words with 70% threshold, PaLM paper (https://arxiv.org/pdf/2204.02311.pdf)
+    * Embedding similarity with 80% match, Platypus (https://arxiv.org/pdf/2308.07317)
+* As you would notice, all but the last method are string- or token-based. There are a few practical reasons for this:
+    * N-gram or token-based contamination detection methods allow us to work with text samples of any length. For instance, you can apply these methods to check for the contamination of a one-sentence text string across large documents containing thousands of sentences (like a web page or a textbook). This is important since pretraining datasets typically comprise such text documents.
+    * However, with embedding-based methods or other LLM-paraphrase detection methods (https://arxiv.org/pdf/2311.04850), both entities (the sample being evaluated and the reference sample) need to be of similar length. This may work in special cases, like math or coding datasets such as The Stack (https://huggingface.co/datasets/bigcode/the-stack), and will work when evaluating coding benchmarks like CodeAlpaca, since even the pretraining datapoints are roughly similar in nature to the benchmark datapoints.
+    * When it comes to QA datasets, or other NLP tasks such as NLI or Fact Verification, we typically see that the source documents are much larger than the test samples.
+* For the initial experiments, I think it makes sense to start with the word- or token-based metrics while we explore new options to possibly incorporate semantic matching. I say this because while string-based methods have high precision, they may not have as strong recall as semantic methods (potentially high false negatives, which could make the contamination look less severe than it actually is). However, string-based techniques are still the SOTA and the standard way to measure contamination in applications like QA.
+
+I also have a few questions I'92m hoping to get feedback on:
+
+* Datasets like SQuAD and TriviaQA are massive, and reporting scores on the entire test splits is not very feasible (not just in terms of compute costs'97the experiments would take forever). Other works dealing with these large QA datasets and compute-heavy methods typically use a randomly sampled subset of the test split, which is much smaller. For instance, this ICLR paper uses 1,000 test samples for each QA benchmark: https://openreview.net/pdf?id=nnVO1PvbTv.
+* Should we also work with smaller, more manageable splits? (I think we don'92t really have an option, but I'92d like your opinion.) Typically, newer benchmarks that anticipate these scalability issues are much smaller'97for example, FreshQA is just 500 samples (ref: https://arxiv.org/abs/2310.03214).
+* To promote diversity of datapoints, previous efforts have created new datasets/splits by sourcing multiple datasets, as in this EMNLP paper (ref: https://aclanthology.org/2023.findings-emnlp.307.pdf). Would it be a good idea to compile a manageable set of test samples sourced from different QA benchmarks?
+* Should we do random sampling on the source datasets (like SQuAD, etc.), or compile a subset of contaminated test samples instead? I ask this because it'92s unlikely that most datasets would have a majority of samples leaked, especially if we'92re testing only against one pretraining dataset like C4 (there are many, and much larger ones too).
+* If we compile a highly concentrated set of contaminated samples from different benchmarks, I think the experiments we conduct on such a split would help model the effectiveness (or ineffectiveness) of the proposed method more clearly.
+* On the other hand, if randomly sampled splits already contain a high concentration of contaminated samples, we could just stick with random sampling (we'92ll have these numbers soon).
+
+
