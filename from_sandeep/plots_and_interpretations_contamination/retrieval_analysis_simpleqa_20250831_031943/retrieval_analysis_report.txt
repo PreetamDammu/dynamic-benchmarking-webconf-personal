@@ -1,0 +1,80 @@
+RETRIEVAL LEAK ANALYSIS REPORT - SimpleQA
+============================================================
+
+DATASET INFORMATION:
+Dataset: SimpleQA
+Split: test
+Total questions evaluated: 4,326
+Methods used: exact, gpt2, gpt3, gpt4, palm
+
+OVERALL RETRIEVAL STATISTICS:
+Total contaminated questions detected: 233
+Overall contamination rate: 5.39%
+Average question contamination rank: 19.88
+Average answer contamination rank: 8.15
+
+DETECTION METHOD COMPARISON:
+exact:
+  - Contaminated questions: 232 (5.36%)
+  - Q&A contaminated: 155 (3.58%)
+  - Clean questions: 4094
+8-gram (GPT-2):
+  - Contaminated questions: 227 (5.25%)
+  - Q&A contaminated: 189 (4.37%)
+  - Clean questions: 4099
+13-gram (GPT-3):
+  - Contaminated questions: 173 (4.00%)
+  - Q&A contaminated: 142 (3.28%)
+  - Clean questions: 4153
+50-char substring (GPT-4):
+  - Contaminated questions: 230 (5.32%)
+  - Q&A contaminated: 174 (4.02%)
+  - Clean questions: 4096
+8-gram with skips (PaLM):
+  - Contaminated questions: 227 (5.25%)
+  - Q&A contaminated: 189 (4.37%)
+  - Clean questions: 4099
+
+TOP CONTAMINATED DOMAINS:
+1. huggingface.co: 86.70% (202 questions affected)
+2. en.wikipedia.org: 30.04% (70 questions affected)
+3. www.wikiwand.com: 4.72% (11 questions affected)
+4. www.reddit.com: 0.86% (2 questions affected)
+5. www.scribd.com: 0.86% (2 questions affected)
+6. english.stackexchange.com: 0.00% (0 questions affected)
+7. www.nationalww2museum.org: 0.00% (0 questions affected)
+8. www.zhihu.com: 0.00% (0 questions affected)
+9. www.facebook.com: 0.00% (0 questions affected)
+10. www.names.org: 0.00% (0 questions affected)
+
+CONTAMINATION BY SOURCE CATEGORY:
+other: 100.00% (233 questions affected)
+reference: 30.04% (70 questions affected)
+academic: 0.00% (0 questions affected)
+social: 0.86% (2 questions affected)
+documentation: 0.43% (1 questions affected)
+government: 0.00% (0 questions affected)
+news: 0.00% (0 questions affected)
+ecommerce: 0.00% (0 questions affected)
+
+STRATEGIC TIER PERFORMANCE:
+Tier 1 success: 72 questions
+Tier 3 required: 162 questions
+Tier 1 efficiency: 30.9%
+Full content fetch rate: 3.16%
+
+QUESTION VS ANSWER CONTAMINATION PATTERNS:
+Question only: 77 (33.2%)
+Both contaminated: 155 (66.8%)
+
+TOP ANSWER CONTAMINATION SOURCES:
+1. huggingface.co: 92 contaminated answers
+2. openaipublic.blob.core.windows.net: 8 contaminated answers
+3. kaggle.com: 3 contaminated answers
+4. facebook.com: 2 contaminated answers
+5. gktoday.in: 2 contaminated answers
+6. scribd.com: 2 contaminated answers
+7. en.wikipedia.org: 1 contaminated answers
+8. alchetron.com: 1 contaminated answers
+9. maph.org.au: 1 contaminated answers
+10. reddit.com: 1 contaminated answers

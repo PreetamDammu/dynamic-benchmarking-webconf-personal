@@ -1,0 +1,40 @@
+CONTAMINATION DETECTION RESULTS SUMMARY
+==================================================
+
+OVERALL STATISTICS:
+Total instances across all datasets: 24,833
+Total unique question contaminated instances: 1,808 (7.28%)
+Total unique question and answer contaminated instances: 919 (3.70%)
+
+PER-DATASET BREAKDOWN:
+WebQuestions:
+  - Total questions: 2,032
+  - Question contaminated: 157 (7.73%)
+  - Question and answer contaminated: 74 (3.64%)
+
+SQuAD:
+  - Total questions: 10,570
+  - Question contaminated: 410 (3.88%)
+  - Question and answer contaminated: 273 (2.58%)
+
+HotpotQA:
+  - Total questions: 7,405
+  - Question contaminated: 696 (9.40%)
+  - Question and answer contaminated: 369 (4.98%)
+
+FreshQA:
+  - Total questions: 500
+  - Question contaminated: 48 (9.60%)
+  - Question and answer contaminated: 21 (4.20%)
+
+SimpleQA:
+  - Total questions: 4,326
+  - Question contaminated: 497 (11.49%)
+  - Question and answer contaminated: 182 (4.21%)
+
+METHOD EFFECTIVENESS:
+exact: 279 total detections
+8-gram (GPT-2): 1,534 total detections
+13-gram (GPT-3): 171 total detections
+50-char substring (GPT-4): 547 total detections
+8-gram with skips (PaLM): 1,534 total detections

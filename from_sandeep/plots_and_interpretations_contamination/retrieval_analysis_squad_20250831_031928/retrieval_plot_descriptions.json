@@ -1,0 +1,55 @@
+{
+  "top_contaminated_domains_count.png": {
+    "title": "Top Contaminated Domains in SQuAD",
+    "description": "Bar chart showing the domains with the highest number of contaminated instances found. The height of each bar represents the number of contaminated matches detected for each domain. This helps identify which domains contain the most contaminated content.",
+    "key_insights": [
+      "Domain with most contaminated instances: rajpurkar.github.io (967 instances)",
+      "Total contaminated instances across top domains: 1,512",
+      "Number of domains analyzed: 15",
+      "Average contaminated instances per domain: 100.8"
+    ]
+  },
+  "rank_distribution_analysis.png": {
+    "title": "Rank Distribution Analysis",
+    "description": "Combined histogram showing the distribution of ranks at which question contamination (blue) and Q&A contamination (orange) were detected. The dashed lines indicate the mean ranks. This visualization helps compare how early in the retrieval process different types of contamination are typically found.",
+    "key_insights": [
+      "Average question contamination rank: 16.3",
+      "Average Q&A contamination rank: 7.9",
+      "Median question contamination rank: 14.0",
+      "Median Q&A contamination rank: 4.0",
+      "Questions found at rank 1: 6 instances",
+      "Q&A instances found at rank 1: 103 instances",
+      "Total question contamination instances: 1197",
+      "Total Q&A contamination instances: 1170"
+    ]
+  },
+  "source_category_analysis.png": {
+    "title": "Contaminated Sources by Category in SQuAD",
+    "description": "Bar chart showing the number of contaminated sources found in each source category. The height represents the count of contaminated sources, and the text shows the exact number. This helps identify which types of sources contain the most contaminated content.",
+    "key_insights": [
+      "Category with most contaminated sources: other (1,564 sources)",
+      "Category with least contaminated sources: ecommerce (1 sources)",
+      "Average contaminated sources per category: 242.5",
+      "Total contaminated sources across all categories: 1,940"
+    ]
+  },
+  "efficiency_metrics.png": {
+    "title": "Efficiency Metrics",
+    "description": "Bar chart showing efficiency metrics including the full content fetch rate, Tier 1 efficiency, and Tier 3 usage rate. This helps understand the performance characteristics of the detection system.",
+    "key_insights": [
+      "Full content fetch rate: 5.90%",
+      "Tier 1 efficiency: 43.5%",
+      "Tier 3 usage rate: 59.3%"
+    ]
+  },
+  "top_answer_contamination_sources.png": {
+    "title": "Top Sources for Answer Contamination",
+    "description": "Horizontal bar chart showing the top domains that were sources for answer contamination. This helps identify which domains are most likely to contain answer contamination.",
+    "key_insights": [
+      "Top answer contamination source: rajpurkar.github.io (1984 contaminated answers)",
+      "Total answer contamination sources: 87",
+      "Total contaminated answers across all sources: 2381",
+      "Average contaminated answers per source: 27.4"
+    ]
+  }
+}

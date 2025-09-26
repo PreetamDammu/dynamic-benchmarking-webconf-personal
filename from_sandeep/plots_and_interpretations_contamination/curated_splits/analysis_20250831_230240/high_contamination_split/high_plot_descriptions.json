@@ -1,0 +1,10 @@
+{
+  "contamination_type_analysis.png": "Analysis of contamination types for high split",
+  "method_effectiveness_analysis.png": "Analysis of detection method effectiveness for high split",
+  "retrieval_domain_analysis.png": "Analysis of retrieval contamination domains for high split",
+  "pretraining_domain_analysis.png": "Analysis of pretraining contamination domains for high split",
+  "domain_overlap_analysis.png": "Analysis of domain overlap for high split",
+  "source_quality_analysis.png": "Analysis of source quality metrics for high split",
+  "dataset_characteristics.png": "Analysis of dataset-specific characteristics for high split",
+  "summary_dashboard.png": "Comprehensive dashboard summarizing high split analysis results"
+}

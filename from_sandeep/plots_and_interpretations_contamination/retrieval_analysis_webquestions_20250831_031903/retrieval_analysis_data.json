@@ -1,0 +1,899 @@
+{
+  "domain_analysis": {
+    "domain_contamination_rates": {
+      "en.wikipedia.org": {
+        "total_matches": 129,
+        "contaminated_matches": 28,
+        "questions_with_contamination": 28,
+        "contamination_rate": 33.33333333333333,
+        "document_contamination_rate": 21.705426356589147
+      },
+      "www.reddit.com": {
+        "total_matches": 100,
+        "contaminated_matches": 2,
+        "questions_with_contamination": 2,
+        "contamination_rate": 2.380952380952381,
+        "document_contamination_rate": 2.0
+      },
+      "www.quora.com": {
+        "total_matches": 64,
+        "contaminated_matches": 6,
+        "questions_with_contamination": 6,
+        "contamination_rate": 7.142857142857142,
+        "document_contamination_rate": 9.375
+      },
+      "www.britannica.com": {
+        "total_matches": 63,
+        "contaminated_matches": 13,
+        "questions_with_contamination": 13,
+        "contamination_rate": 15.476190476190476,
+        "document_contamination_rate": 20.634920634920633
+      },
+      "support.google.com": {
+        "total_matches": 40,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "www.facebook.com": {
+        "total_matches": 38,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "en.m.wikipedia.org": {
+        "total_matches": 33,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "www.mayoclinic.org": {
+        "total_matches": 30,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "www.imdb.com": {
+        "total_matches": 23,
+        "contaminated_matches": 4,
+        "questions_with_contamination": 4,
+        "contamination_rate": 4.761904761904762,
+        "document_contamination_rate": 17.391304347826086
+      },
+      "www.typing.com": {
+        "total_matches": 20,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "www.youtube.com": {
+        "total_matches": 20,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "www.psychologytoday.com": {
+        "total_matches": 20,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "homework.study.com": {
+        "total_matches": 17,
+        "contaminated_matches": 7,
+        "questions_with_contamination": 7,
+        "contamination_rate": 8.333333333333332,
+        "document_contamination_rate": 41.17647058823529
+      },
+      "preply.com": {
+        "total_matches": 16,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "people.com": {
+        "total_matches": 16,
+        "contaminated_matches": 3,
+        "questions_with_contamination": 3,
+        "contamination_rate": 3.571428571428571,
+        "document_contamination_rate": 18.75
+      },
+      "wise.com": {
+        "total_matches": 15,
+        "contaminated_matches": 2,
+        "questions_with_contamination": 2,
+        "contamination_rate": 2.380952380952381,
+        "document_contamination_rate": 13.333333333333334
+      },
+      "www.answers.com": {
+        "total_matches": 14,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "www.deviantart.com": {
+        "total_matches": 14,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "www.cia.gov": {
+        "total_matches": 14,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "my.clevelandclinic.org": {
+        "total_matches": 13,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      }
+    },
+    "sorted_domains": [
+      [
+        "en.wikipedia.org",
+        {
+          "total_matches": 129,
+          "contaminated_matches": 28,
+          "questions_with_contamination": 28,
+          "contamination_rate": 33.33333333333333,
+          "document_contamination_rate": 21.705426356589147
+        }
+      ],
+      [
+        "www.britannica.com",
+        {
+          "total_matches": 63,
+          "contaminated_matches": 13,
+          "questions_with_contamination": 13,
+          "contamination_rate": 15.476190476190476,
+          "document_contamination_rate": 20.634920634920633
+        }
+      ],
+      [
+        "homework.study.com",
+        {
+          "total_matches": 17,
+          "contaminated_matches": 7,
+          "questions_with_contamination": 7,
+          "contamination_rate": 8.333333333333332,
+          "document_contamination_rate": 41.17647058823529
+        }
+      ],
+      [
+        "www.quora.com",
+        {
+          "total_matches": 64,
+          "contaminated_matches": 6,
+          "questions_with_contamination": 6,
+          "contamination_rate": 7.142857142857142,
+          "document_contamination_rate": 9.375
+        }
+      ],
+      [
+        "www.imdb.com",
+        {
+          "total_matches": 23,
+          "contaminated_matches": 4,
+          "questions_with_contamination": 4,
+          "contamination_rate": 4.761904761904762,
+          "document_contamination_rate": 17.391304347826086
+        }
+      ],
+      [
+        "people.com",
+        {
+          "total_matches": 16,
+          "contaminated_matches": 3,
+          "questions_with_contamination": 3,
+          "contamination_rate": 3.571428571428571,
+          "document_contamination_rate": 18.75
+        }
+      ],
+      [
+        "www.reddit.com",
+        {
+          "total_matches": 100,
+          "contaminated_matches": 2,
+          "questions_with_contamination": 2,
+          "contamination_rate": 2.380952380952381,
+          "document_contamination_rate": 2.0
+        }
+      ],
+      [
+        "wise.com",
+        {
+          "total_matches": 15,
+          "contaminated_matches": 2,
+          "questions_with_contamination": 2,
+          "contamination_rate": 2.380952380952381,
+          "document_contamination_rate": 13.333333333333334
+        }
+      ],
+      [
+        "support.google.com",
+        {
+          "total_matches": 40,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.facebook.com",
+        {
+          "total_matches": 38,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "en.m.wikipedia.org",
+        {
+          "total_matches": 33,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.mayoclinic.org",
+        {
+          "total_matches": 30,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.typing.com",
+        {
+          "total_matches": 20,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.youtube.com",
+        {
+          "total_matches": 20,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.psychologytoday.com",
+        {
+          "total_matches": 20,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "preply.com",
+        {
+          "total_matches": 16,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.answers.com",
+        {
+          "total_matches": 14,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.deviantart.com",
+        {
+          "total_matches": 14,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.cia.gov",
+        {
+          "total_matches": 14,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "my.clevelandclinic.org",
+        {
+          "total_matches": 13,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ]
+    ],
+    "top_contaminated_domains": [
+      [
+        "en.wikipedia.org",
+        {
+          "total_matches": 129,
+          "contaminated_matches": 28,
+          "questions_with_contamination": 28,
+          "contamination_rate": 33.33333333333333,
+          "document_contamination_rate": 21.705426356589147
+        }
+      ],
+      [
+        "www.britannica.com",
+        {
+          "total_matches": 63,
+          "contaminated_matches": 13,
+          "questions_with_contamination": 13,
+          "contamination_rate": 15.476190476190476,
+          "document_contamination_rate": 20.634920634920633
+        }
+      ],
+      [
+        "homework.study.com",
+        {
+          "total_matches": 17,
+          "contaminated_matches": 7,
+          "questions_with_contamination": 7,
+          "contamination_rate": 8.333333333333332,
+          "document_contamination_rate": 41.17647058823529
+        }
+      ],
+      [
+        "www.quora.com",
+        {
+          "total_matches": 64,
+          "contaminated_matches": 6,
+          "questions_with_contamination": 6,
+          "contamination_rate": 7.142857142857142,
+          "document_contamination_rate": 9.375
+        }
+      ],
+      [
+        "www.imdb.com",
+        {
+          "total_matches": 23,
+          "contaminated_matches": 4,
+          "questions_with_contamination": 4,
+          "contamination_rate": 4.761904761904762,
+          "document_contamination_rate": 17.391304347826086
+        }
+      ],
+      [
+        "people.com",
+        {
+          "total_matches": 16,
+          "contaminated_matches": 3,
+          "questions_with_contamination": 3,
+          "contamination_rate": 3.571428571428571,
+          "document_contamination_rate": 18.75
+        }
+      ],
+      [
+        "www.reddit.com",
+        {
+          "total_matches": 100,
+          "contaminated_matches": 2,
+          "questions_with_contamination": 2,
+          "contamination_rate": 2.380952380952381,
+          "document_contamination_rate": 2.0
+        }
+      ],
+      [
+        "wise.com",
+        {
+          "total_matches": 15,
+          "contaminated_matches": 2,
+          "questions_with_contamination": 2,
+          "contamination_rate": 2.380952380952381,
+          "document_contamination_rate": 13.333333333333334
+        }
+      ],
+      [
+        "support.google.com",
+        {
+          "total_matches": 40,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.facebook.com",
+        {
+          "total_matches": 38,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "en.m.wikipedia.org",
+        {
+          "total_matches": 33,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.mayoclinic.org",
+        {
+          "total_matches": 30,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.typing.com",
+        {
+          "total_matches": 20,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.youtube.com",
+        {
+          "total_matches": 20,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.psychologytoday.com",
+        {
+          "total_matches": 20,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "preply.com",
+        {
+          "total_matches": 16,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.answers.com",
+        {
+          "total_matches": 14,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.deviantart.com",
+        {
+          "total_matches": 14,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.cia.gov",
+        {
+          "total_matches": 14,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "my.clevelandclinic.org",
+        {
+          "total_matches": 13,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ]
+    ]
+  },
+  "rank_analysis": {
+    "question_ranks": {
+      "ranks": [
+        15,
+        22,
+        22,
+        28,
+        31,
+        22,
+        35,
+        16,
+        9,
+        28,
+        6,
+        18,
+        28,
+        32,
+        126,
+        26,
+        19,
+        18,
+        23,
+        33,
+        8,
+        16,
+        24,
+        33,
+        5,
+        6,
+        17,
+        29,
+        9,
+        16,
+        25,
+        14,
+        52,
+        22,
+        11,
+        57,
+        29,
+        14,
+        51,
+        26,
+        31,
+        28,
+        2,
+        37,
+        22,
+        31,
+        40,
+        9,
+        19,
+        29,
+        29,
+        27,
+        14,
+        24,
+        22,
+        39,
+        13,
+        34,
+        19,
+        22,
+        18,
+        36,
+        21,
+        22,
+        2,
+        3,
+        22,
+        27,
+        10,
+        8,
+        10,
+        2,
+        4,
+        46,
+        23,
+        13,
+        2,
+        26,
+        62,
+        34,
+        7,
+        14,
+        32,
+        34
+      ],
+      "avg_rank": 23.69047619047619,
+      "median_rank": 22.0,
+      "min_rank": 2,
+      "max_rank": 126,
+      "rank_distribution": {
+        "15": 1,
+        "22": 9,
+        "28": 4,
+        "31": 3,
+        "35": 1,
+        "16": 3,
+        "9": 3,
+        "6": 2,
+        "18": 3,
+        "32": 2,
+        "126": 1,
+        "26": 3,
+        "19": 3,
+        "23": 2,
+        "33": 2,
+        "8": 2,
+        "24": 2,
+        "5": 1,
+        "17": 1,
+        "29": 4,
+        "25": 1,
+        "14": 4,
+        "52": 1,
+        "11": 1,
+        "57": 1,
+        "51": 1,
+        "2": 4,
+        "37": 1,
+        "40": 1,
+        "27": 2,
+        "39": 1,
+        "13": 2,
+        "34": 3,
+        "36": 1,
+        "21": 1,
+        "3": 1,
+        "10": 2,
+        "4": 1,
+        "46": 1,
+        "62": 1,
+        "7": 1
+      }
+    },
+    "answer_ranks": {
+      "ranks": [
+        8,
+        6,
+        6,
+        2,
+        1,
+        8,
+        14,
+        8,
+        9,
+        3,
+        6,
+        2,
+        2,
+        14,
+        5,
+        3,
+        8,
+        3,
+        21,
+        4,
+        6,
+        2,
+        2,
+        4,
+        8,
+        6,
+        4,
+        5,
+        1,
+        25,
+        2,
+        31,
+        3,
+        2,
+        3,
+        5,
+        34,
+        3,
+        3,
+        4,
+        14,
+        1,
+        2,
+        51,
+        22,
+        2,
+        1,
+        1,
+        2,
+        10,
+        8,
+        2,
+        9,
+        2,
+        26,
+        10,
+        2,
+        4,
+        2,
+        5,
+        2,
+        2,
+        2,
+        24,
+        2,
+        2,
+        2,
+        4,
+        2,
+        6,
+        3,
+        4,
+        3,
+        2,
+        3,
+        13,
+        10,
+        2,
+        2,
+        41
+      ],
+      "avg_rank": 7.4125,
+      "median_rank": 4.0,
+      "min_rank": 1,
+      "max_rank": 51,
+      "rank_distribution": {
+        "8": 6,
+        "6": 6,
+        "2": 24,
+        "1": 5,
+        "14": 3,
+        "9": 2,
+        "3": 10,
+        "5": 4,
+        "21": 1,
+        "4": 7,
+        "25": 1,
+        "31": 1,
+        "34": 1,
+        "51": 1,
+        "22": 1,
+        "10": 3,
+        "26": 1,
+        "24": 1,
+        "13": 1,
+        "41": 1
+      }
+    }
+  },
+  "category_analysis": {
+    "other": {
+      "total_matches": 2912,
+      "contaminated_matches": 106,
+      "questions_with_contamination": 84,
+      "contamination_rate": 100.0,
+      "document_contamination_rate": 3.6401098901098905
+    },
+    "government": {
+      "total_matches": 135,
+      "contaminated_matches": 4,
+      "questions_with_contamination": 4,
+      "contamination_rate": 4.761904761904762,
+      "document_contamination_rate": 2.9629629629629632
+    },
+    "news": {
+      "total_matches": 21,
+      "contaminated_matches": 0,
+      "questions_with_contamination": 0,
+      "contamination_rate": 0.0,
+      "document_contamination_rate": 0.0
+    },
+    "reference": {
+      "total_matches": 276,
+      "contaminated_matches": 41,
+      "questions_with_contamination": 41,
+      "contamination_rate": 48.80952380952381,
+      "document_contamination_rate": 14.855072463768115
+    },
+    "social": {
+      "total_matches": 189,
+      "contaminated_matches": 3,
+      "questions_with_contamination": 3,
+      "contamination_rate": 3.571428571428571,
+      "document_contamination_rate": 1.5873015873015872
+    },
+    "documentation": {
+      "total_matches": 1,
+      "contaminated_matches": 0,
+      "questions_with_contamination": 0,
+      "contamination_rate": 0.0,
+      "document_contamination_rate": 0.0
+    },
+    "ecommerce": {
+      "total_matches": 7,
+      "contaminated_matches": 0,
+      "questions_with_contamination": 0,
+      "contamination_rate": 0.0,
+      "document_contamination_rate": 0.0
+    },
+    "academic": {
+      "total_matches": 5,
+      "contaminated_matches": 3,
+      "questions_with_contamination": 3,
+      "contamination_rate": 3.571428571428571,
+      "document_contamination_rate": 60.0
+    }
+  },
+  "tier_analysis": {
+    "tier_performance": {
+      "tier_1_success": 17,
+      "tier_3_required": 67
+    },
+    "efficiency": {
+      "full_content_fetch_rate": 0.24506486181613085,
+      "tier_1_efficiency": 0.20238095238095238,
+      "tier_3_usage_rate": 0.7976190476190477
+    }
+  },
+  "qa_patterns": {
+    "question_only": 22,
+    "both_contaminated": 30,
+    "source_analysis": {
+      "arxiv.org": 1,
+      "youtube.com": 1,
+      "pennbookcenter.com": 2,
+      "thefamouspeople.com": 1,
+      "kryptinc.com": 1,
+      "harvard.edu": 1,
+      "mapsofindia.com": 5,
+      "britannica.com": 2,
+      "kids.kiddle.co": 1,
+      "embassyofpanama.org": 1,
+      "tatutrad.net": 4,
+      "imdb.com": 2,
+      "taddlr.com": 1,
+      "smoothradio.com": 1,
+      "soapcentral.com": 1,
+      "shakespeare.org.uk": 1,
+      "beautifulworld.com": 1,
+      "biography.com": 1,
+      "lessonup.com": 4,
+      "dom.com.cy": 1,
+      "skinscanapp.com": 8,
+      "study.com": 2,
+      "classtools.net": 1,
+      "rent.is": 1,
+      "mylovelyfeline.com": 1,
+      "travelex.co.uk": 1,
+      "tuitionhero.org": 2
+    }
+  }
+}

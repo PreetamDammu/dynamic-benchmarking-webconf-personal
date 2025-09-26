@@ -1,0 +1,1214 @@
+{
+  "domain_analysis": {
+    "domain_contamination_rates": {
+      "english.stackexchange.com": {
+        "total_matches": 567,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "en.wikipedia.org": {
+        "total_matches": 345,
+        "contaminated_matches": 70,
+        "questions_with_contamination": 70,
+        "contamination_rate": 30.042918454935624,
+        "document_contamination_rate": 20.28985507246377
+      },
+      "huggingface.co": {
+        "total_matches": 235,
+        "contaminated_matches": 202,
+        "questions_with_contamination": 202,
+        "contamination_rate": 86.69527896995707,
+        "document_contamination_rate": 85.95744680851064
+      },
+      "www.nationalww2museum.org": {
+        "total_matches": 204,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "www.zhihu.com": {
+        "total_matches": 127,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "www.wikiwand.com": {
+        "total_matches": 113,
+        "contaminated_matches": 11,
+        "questions_with_contamination": 11,
+        "contamination_rate": 4.721030042918455,
+        "document_contamination_rate": 9.734513274336283
+      },
+      "www.facebook.com": {
+        "total_matches": 96,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "www.names.org": {
+        "total_matches": 71,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "serverfault.com": {
+        "total_matches": 64,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "dictionary.cambridge.org": {
+        "total_matches": 63,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "www.familysearch.org": {
+        "total_matches": 56,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "www.reddit.com": {
+        "total_matches": 50,
+        "contaminated_matches": 2,
+        "questions_with_contamination": 2,
+        "contamination_rate": 0.8583690987124464,
+        "document_contamination_rate": 4.0
+      },
+      "zhidao.baidu.com": {
+        "total_matches": 50,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "www.scribd.com": {
+        "total_matches": 47,
+        "contaminated_matches": 2,
+        "questions_with_contamination": 2,
+        "contamination_rate": 0.8583690987124464,
+        "document_contamination_rate": 4.25531914893617
+      },
+      "stackoverflow.com": {
+        "total_matches": 47,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "www.merriam-webster.com": {
+        "total_matches": 45,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "www.yearone.com": {
+        "total_matches": 40,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "www.collinsdictionary.com": {
+        "total_matches": 34,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "number.bunshun.jp": {
+        "total_matches": 34,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      },
+      "answers.microsoft.com": {
+        "total_matches": 33,
+        "contaminated_matches": 0,
+        "questions_with_contamination": 0,
+        "contamination_rate": 0.0,
+        "document_contamination_rate": 0.0
+      }
+    },
+    "sorted_domains": [
+      [
+        "huggingface.co",
+        {
+          "total_matches": 235,
+          "contaminated_matches": 202,
+          "questions_with_contamination": 202,
+          "contamination_rate": 86.69527896995707,
+          "document_contamination_rate": 85.95744680851064
+        }
+      ],
+      [
+        "en.wikipedia.org",
+        {
+          "total_matches": 345,
+          "contaminated_matches": 70,
+          "questions_with_contamination": 70,
+          "contamination_rate": 30.042918454935624,
+          "document_contamination_rate": 20.28985507246377
+        }
+      ],
+      [
+        "www.wikiwand.com",
+        {
+          "total_matches": 113,
+          "contaminated_matches": 11,
+          "questions_with_contamination": 11,
+          "contamination_rate": 4.721030042918455,
+          "document_contamination_rate": 9.734513274336283
+        }
+      ],
+      [
+        "www.reddit.com",
+        {
+          "total_matches": 50,
+          "contaminated_matches": 2,
+          "questions_with_contamination": 2,
+          "contamination_rate": 0.8583690987124464,
+          "document_contamination_rate": 4.0
+        }
+      ],
+      [
+        "www.scribd.com",
+        {
+          "total_matches": 47,
+          "contaminated_matches": 2,
+          "questions_with_contamination": 2,
+          "contamination_rate": 0.8583690987124464,
+          "document_contamination_rate": 4.25531914893617
+        }
+      ],
+      [
+        "english.stackexchange.com",
+        {
+          "total_matches": 567,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.nationalww2museum.org",
+        {
+          "total_matches": 204,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.zhihu.com",
+        {
+          "total_matches": 127,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.facebook.com",
+        {
+          "total_matches": 96,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.names.org",
+        {
+          "total_matches": 71,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "serverfault.com",
+        {
+          "total_matches": 64,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "dictionary.cambridge.org",
+        {
+          "total_matches": 63,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.familysearch.org",
+        {
+          "total_matches": 56,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "zhidao.baidu.com",
+        {
+          "total_matches": 50,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "stackoverflow.com",
+        {
+          "total_matches": 47,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.merriam-webster.com",
+        {
+          "total_matches": 45,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.yearone.com",
+        {
+          "total_matches": 40,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.collinsdictionary.com",
+        {
+          "total_matches": 34,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "number.bunshun.jp",
+        {
+          "total_matches": 34,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "answers.microsoft.com",
+        {
+          "total_matches": 33,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ]
+    ],
+    "top_contaminated_domains": [
+      [
+        "huggingface.co",
+        {
+          "total_matches": 235,
+          "contaminated_matches": 202,
+          "questions_with_contamination": 202,
+          "contamination_rate": 86.69527896995707,
+          "document_contamination_rate": 85.95744680851064
+        }
+      ],
+      [
+        "en.wikipedia.org",
+        {
+          "total_matches": 345,
+          "contaminated_matches": 70,
+          "questions_with_contamination": 70,
+          "contamination_rate": 30.042918454935624,
+          "document_contamination_rate": 20.28985507246377
+        }
+      ],
+      [
+        "www.wikiwand.com",
+        {
+          "total_matches": 113,
+          "contaminated_matches": 11,
+          "questions_with_contamination": 11,
+          "contamination_rate": 4.721030042918455,
+          "document_contamination_rate": 9.734513274336283
+        }
+      ],
+      [
+        "www.reddit.com",
+        {
+          "total_matches": 50,
+          "contaminated_matches": 2,
+          "questions_with_contamination": 2,
+          "contamination_rate": 0.8583690987124464,
+          "document_contamination_rate": 4.0
+        }
+      ],
+      [
+        "www.scribd.com",
+        {
+          "total_matches": 47,
+          "contaminated_matches": 2,
+          "questions_with_contamination": 2,
+          "contamination_rate": 0.8583690987124464,
+          "document_contamination_rate": 4.25531914893617
+        }
+      ],
+      [
+        "english.stackexchange.com",
+        {
+          "total_matches": 567,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.nationalww2museum.org",
+        {
+          "total_matches": 204,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.zhihu.com",
+        {
+          "total_matches": 127,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.facebook.com",
+        {
+          "total_matches": 96,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.names.org",
+        {
+          "total_matches": 71,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "serverfault.com",
+        {
+          "total_matches": 64,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "dictionary.cambridge.org",
+        {
+          "total_matches": 63,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.familysearch.org",
+        {
+          "total_matches": 56,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "zhidao.baidu.com",
+        {
+          "total_matches": 50,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "stackoverflow.com",
+        {
+          "total_matches": 47,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.merriam-webster.com",
+        {
+          "total_matches": 45,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.yearone.com",
+        {
+          "total_matches": 40,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "www.collinsdictionary.com",
+        {
+          "total_matches": 34,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "number.bunshun.jp",
+        {
+          "total_matches": 34,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ],
+      [
+        "answers.microsoft.com",
+        {
+          "total_matches": 33,
+          "contaminated_matches": 0,
+          "questions_with_contamination": 0,
+          "contamination_rate": 0.0,
+          "document_contamination_rate": 0.0
+        }
+      ]
+    ]
+  },
+  "rank_analysis": {
+    "question_ranks": {
+      "ranks": [
+        14,
+        29,
+        32,
+        26,
+        24,
+        29,
+        26,
+        23,
+        9,
+        40,
+        14,
+        33,
+        10,
+        5,
+        8,
+        30,
+        10,
+        12,
+        6,
+        22,
+        37,
+        42,
+        16,
+        15,
+        5,
+        11,
+        30,
+        30,
+        10,
+        22,
+        6,
+        8,
+        52,
+        8,
+        44,
+        42,
+        5,
+        24,
+        25,
+        13,
+        4,
+        37,
+        19,
+        16,
+        26,
+        18,
+        18,
+        15,
+        39,
+        8,
+        3,
+        6,
+        14,
+        46,
+        9,
+        3,
+        14,
+        16,
+        33,
+        34,
+        33,
+        18,
+        12,
+        18,
+        18,
+        6,
+        46,
+        25,
+        6,
+        9,
+        9,
+        32,
+        18,
+        4,
+        28,
+        16,
+        31,
+        58,
+        5,
+        35,
+        22,
+        34,
+        22,
+        22,
+        30,
+        6,
+        20,
+        37,
+        22,
+        8,
+        36,
+        14,
+        6,
+        8,
+        27,
+        3,
+        26,
+        12,
+        24,
+        9,
+        6,
+        7,
+        37,
+        12,
+        32,
+        31,
+        14,
+        9,
+        13,
+        10,
+        32,
+        21,
+        10,
+        30,
+        13,
+        23,
+        4,
+        28,
+        12,
+        6,
+        23,
+        5,
+        18,
+        39,
+        31,
+        60,
+        8,
+        30,
+        29,
+        17,
+        9,
+        18,
+        2,
+        4,
+        40,
+        22,
+        2,
+        20,
+        13,
+        24,
+        36,
+        39,
+        14,
+        10,
+        6,
+        24,
+        24,
+        9,
+        24,
+        32,
+        9,
+        6,
+        25,
+        38,
+        14,
+        27,
+        21,
+        12,
+        24,
+        18,
+        27,
+        3,
+        43,
+        16,
+        15,
+        14,
+        12,
+        15,
+        30,
+        6,
+        17,
+        9,
+        13,
+        46,
+        34,
+        33,
+        14,
+        48,
+        36,
+        14,
+        31,
+        6,
+        7,
+        10,
+        6,
+        17,
+        27,
+        8,
+        30,
+        2,
+        9,
+        20,
+        5,
+        44,
+        23,
+        22,
+        5,
+        28,
+        4,
+        30,
+        9,
+        32,
+        27,
+        4,
+        30,
+        2,
+        39,
+        8,
+        31,
+        9,
+        8,
+        29,
+        24,
+        5,
+        23,
+        22,
+        20,
+        10,
+        17,
+        5,
+        32,
+        2,
+        33,
+        31,
+        14,
+        11,
+        14,
+        34,
+        25,
+        10,
+        21,
+        30,
+        27
+      ],
+      "avg_rank": 19.88412017167382,
+      "median_rank": 18.0,
+      "min_rank": 2,
+      "max_rank": 60,
+      "rank_distribution": {
+        "14": 13,
+        "29": 4,
+        "32": 7,
+        "26": 4,
+        "24": 9,
+        "23": 5,
+        "9": 13,
+        "40": 2,
+        "33": 5,
+        "10": 9,
+        "5": 9,
+        "8": 10,
+        "30": 11,
+        "12": 7,
+        "6": 14,
+        "22": 9,
+        "37": 4,
+        "42": 2,
+        "16": 5,
+        "15": 4,
+        "11": 2,
+        "52": 1,
+        "44": 2,
+        "25": 4,
+        "13": 5,
+        "4": 6,
+        "19": 1,
+        "18": 9,
+        "39": 4,
+        "3": 4,
+        "46": 3,
+        "34": 4,
+        "28": 3,
+        "31": 6,
+        "58": 1,
+        "35": 1,
+        "20": 4,
+        "36": 3,
+        "27": 6,
+        "7": 2,
+        "21": 3,
+        "60": 1,
+        "17": 4,
+        "2": 5,
+        "38": 1,
+        "43": 1,
+        "48": 1
+      }
+    },
+    "answer_ranks": {
+      "ranks": [
+        4,
+        6,
+        5,
+        4,
+        5,
+        8,
+        5,
+        2,
+        10,
+        40,
+        5,
+        10,
+        4,
+        5,
+        8,
+        3,
+        4,
+        12,
+        6,
+        7,
+        37,
+        3,
+        12,
+        3,
+        5,
+        8,
+        4,
+        2,
+        9,
+        2,
+        4,
+        8,
+        1,
+        2,
+        21,
+        5,
+        5,
+        8,
+        4,
+        13,
+        4,
+        10,
+        5,
+        4,
+        8,
+        9,
+        18,
+        11,
+        6,
+        2,
+        3,
+        3,
+        4,
+        8,
+        9,
+        3,
+        4,
+        18,
+        33,
+        3,
+        2,
+        2,
+        12,
+        18,
+        5,
+        6,
+        46,
+        12,
+        6,
+        9,
+        4,
+        3,
+        2,
+        4,
+        6,
+        2,
+        8,
+        4,
+        5,
+        2,
+        9,
+        2,
+        6,
+        2,
+        4,
+        6,
+        20,
+        6,
+        8,
+        8,
+        10,
+        14,
+        3,
+        5,
+        27,
+        3,
+        1,
+        12,
+        24,
+        4,
+        2,
+        3,
+        6,
+        6,
+        32,
+        3,
+        5,
+        4,
+        8,
+        10,
+        4,
+        2,
+        10,
+        2,
+        1,
+        2,
+        4,
+        2,
+        2,
+        6,
+        4,
+        20,
+        7,
+        39,
+        5,
+        15,
+        2,
+        4,
+        1,
+        5,
+        9,
+        9,
+        2,
+        2,
+        5,
+        9,
+        2,
+        2,
+        2,
+        10,
+        36,
+        3,
+        14,
+        10,
+        2,
+        11,
+        14,
+        9,
+        24,
+        2,
+        3,
+        3,
+        2,
+        38,
+        5,
+        5,
+        21,
+        12,
+        4,
+        4,
+        4,
+        1,
+        43,
+        2,
+        4,
+        14,
+        5,
+        3,
+        30,
+        2,
+        20,
+        9,
+        13,
+        1,
+        2,
+        3,
+        14,
+        10,
+        5,
+        3,
+        5,
+        6,
+        5,
+        10,
+        4,
+        17,
+        1,
+        2,
+        27,
+        2,
+        4,
+        20,
+        6,
+        9,
+        5,
+        2,
+        1,
+        7,
+        4,
+        32,
+        9,
+        32,
+        2,
+        4,
+        5,
+        2,
+        39,
+        2,
+        3,
+        9,
+        2,
+        3,
+        10,
+        5,
+        3,
+        8,
+        10,
+        5,
+        5,
+        5,
+        2,
+        2,
+        9,
+        2,
+        4,
+        11,
+        14,
+        10,
+        4,
+        10,
+        6,
+        2,
+        6
+      ],
+      "avg_rank": 8.145922746781116,
+      "median_rank": 5.0,
+      "min_rank": 1,
+      "max_rank": 46,
+      "rank_distribution": {
+        "4": 31,
+        "6": 16,
+        "5": 28,
+        "8": 12,
+        "2": 41,
+        "10": 14,
+        "40": 1,
+        "3": 21,
+        "12": 6,
+        "7": 3,
+        "37": 1,
+        "9": 14,
+        "1": 8,
+        "21": 2,
+        "13": 2,
+        "18": 3,
+        "11": 3,
+        "33": 1,
+        "46": 1,
+        "20": 4,
+        "14": 6,
+        "27": 2,
+        "24": 2,
+        "32": 3,
+        "39": 2,
+        "15": 1,
+        "36": 1,
+        "38": 1,
+        "43": 1,
+        "30": 1,
+        "17": 1
+      }
+    }
+  },
+  "category_analysis": {
+    "other": {
+      "total_matches": 8387,
+      "contaminated_matches": 318,
+      "questions_with_contamination": 233,
+      "contamination_rate": 100.0,
+      "document_contamination_rate": 3.791582210563968
+    },
+    "reference": {
+      "total_matches": 447,
+      "contaminated_matches": 70,
+      "questions_with_contamination": 70,
+      "contamination_rate": 30.042918454935624,
+      "document_contamination_rate": 15.659955257270694
+    },
+    "academic": {
+      "total_matches": 109,
+      "contaminated_matches": 0,
+      "questions_with_contamination": 0,
+      "contamination_rate": 0.0,
+      "document_contamination_rate": 0.0
+    },
+    "social": {
+      "total_matches": 226,
+      "contaminated_matches": 2,
+      "questions_with_contamination": 2,
+      "contamination_rate": 0.8583690987124464,
+      "document_contamination_rate": 0.8849557522123894
+    },
+    "documentation": {
+      "total_matches": 26,
+      "contaminated_matches": 1,
+      "questions_with_contamination": 1,
+      "contamination_rate": 0.4291845493562232,
+      "document_contamination_rate": 3.8461538461538463
+    },
+    "government": {
+      "total_matches": 340,
+      "contaminated_matches": 0,
+      "questions_with_contamination": 0,
+      "contamination_rate": 0.0,
+      "document_contamination_rate": 0.0
+    },
+    "news": {
+      "total_matches": 22,
+      "contaminated_matches": 0,
+      "questions_with_contamination": 0,
+      "contamination_rate": 0.0,
+      "document_contamination_rate": 0.0
+    },
+    "ecommerce": {
+      "total_matches": 12,
+      "contaminated_matches": 0,
+      "questions_with_contamination": 0,
+      "contamination_rate": 0.0,
+      "document_contamination_rate": 0.0
+    }
+  },
+  "tier_analysis": {
+    "tier_performance": {
+      "tier_1_success": 72,
+      "tier_3_required": 162
+    },
+    "efficiency": {
+      "full_content_fetch_rate": 0.03156024662974188,
+      "tier_1_efficiency": 0.3090128755364807,
+      "tier_3_usage_rate": 0.6952789699570815
+    }
+  },
+  "qa_patterns": {
+    "question_only": 77,
+    "both_contaminated": 155,
+    "source_analysis": {
+      "huggingface.co": 92,
+      "openaipublic.blob.core.windows.net": 8,
+      "en.wikipedia.org": 1,
+      "alchetron.com": 1,
+      "maph.org.au": 1,
+      "kaggle.com": 3,
+      "reddit.com": 1,
+      "arxiv.org": 1,
+      "politicalgraveyard.com": 1,
+      "military-history.fandom.com": 1,
+      "community.notepad-plus-plus.org": 1,
+      "prabook.com": 1,
+      "facebook.com": 2,
+      "transfermarkt.com": 1,
+      "almerja.net": 1,
+      "thenewdelhi.in": 1,
+      "gktoday.in": 2,
+      "inventaire.io": 1,
+      "bankbazaar.com": 1,
+      "wikiwand.com": 1,
+      "imsvintagephotos.com": 1,
+      "quotes.ng": 1,
+      "scribd.com": 2
+    }
+  }
+}

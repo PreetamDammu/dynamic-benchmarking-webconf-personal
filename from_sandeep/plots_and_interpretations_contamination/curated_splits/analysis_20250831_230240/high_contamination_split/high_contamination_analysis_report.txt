@@ -1,0 +1,284 @@
+HIGH CONTAMINATION SPLIT - DETAILED ANALYSIS REPORT
+================================================================================
+
+Analysis Timestamp: 20250831_230240
+Split Directory: results/curated_splits/split500
+Output Directory: plots_and_interpretations/curated_splits/analysis_20250831_230240/high_contamination_split
+
+ANALYSIS RESULTS:
+----------------------------------------
+
+CONTAMINATION_TYPES:
+{
+  "overall_distribution": {
+    "retrieval": 162,
+    "both": 28,
+    "pretraining": 261,
+    "none": 49
+  },
+  "by_dataset": {
+    "squad": {
+      "retrieval": 73,
+      "both": 3,
+      "pretraining": 24
+    },
+    "freshqa": {
+      "pretraining": 41,
+      "both": 7,
+      "retrieval": 3,
+      "none": 49
+    },
+    "webquestions": {
+      "pretraining": 73,
+      "both": 12,
+      "retrieval": 15
+    },
+    "hotpotqa": {
+      "retrieval": 41,
+      "pretraining": 57,
+      "both": 2
+    },
+    "simpleqa": {
+      "pretraining": 66,
+      "retrieval": 30,
+      "both": 4
+    }
+  }
+}
+
+METHOD_EFFECTIVENESS:
+{
+  "method_stats": {
+    "exact": {
+      "retrieval": 188,
+      "pretraining": 104,
+      "both": 27,
+      "total": 292
+    },
+    "gpt2": {
+      "retrieval": 151,
+      "pretraining": 194,
+      "both": 9,
+      "total": 345
+    },
+    "gpt4": {
+      "retrieval": 162,
+      "pretraining": 70,
+      "both": 15,
+      "total": 232
+    },
+    "palm": {
+      "retrieval": 151,
+      "pretraining": 194,
+      "both": 9,
+      "total": 345
+    },
+    "gpt3": {
+      "retrieval": 83,
+      "pretraining": 11,
+      "both": 7,
+      "total": 94
+    }
+  }
+}
+
+RETRIEVAL_DOMAINS:
+{
+  "top_retrieval_domains": {
+    "rajpurkar.github.io": 69,
+    "huggingface.co": 54,
+    "arxiv.org": 15,
+    "aclanthology.org": 8,
+    "quora.com": 5,
+    "github.com": 5,
+    "openreview.net": 4,
+    "britannica.com": 3,
+    "youtube.com": 3,
+    "biography.com": 2,
+    "magicthegatheringliliana.net": 2,
+    "imdb.com": 2,
+    "spaceexplored.com": 2,
+    "babycentre.co.uk": 2,
+    "quizlet.com": 2
+  },
+  "total_unique_domains": 48
+}
+
+PRETRAINING_DOMAINS:
+{
+  "top_pretraining_domains": {
+    "en.wikipedia.org": 14,
+    "thefullwiki.org": 9,
+    "ipfs.io": 8,
+    "answers.com": 7,
+    "wikimili.com": 6,
+    "en.m.wikipedia.org": 6,
+    "howlingpixel.com": 6,
+    "eur-lex.europa.eu": 5,
+    "wiki-offline.jakearchibald.com": 4,
+    "wikivisually.com": 4,
+    "maps.thefullwiki.org": 4,
+    "khatrimazas.com": 4,
+    "floristmawar.com": 4,
+    "refreshart.com": 4,
+    "playstationgamesdownload.tk": 4
+  },
+  "total_unique_domains": 574
+}
+
+DOMAIN_OVERLAP:
+{
+  "domain_overlap": {
+    "retrieval_only": 44,
+    "both": 4,
+    "pretraining_only": 570
+  },
+  "total_retrieval_domains": 48,
+  "total_pretraining_domains": 574
+}
+
+SOURCE_QUALITY:
+{
+  "source_statistics": {
+    "retrieval": {
+      "total_sources": 213,
+      "contaminated_sources": 213,
+      "questions_with_sources": 168
+    },
+    "pretraining": {
+      "total_sources": 814,
+      "contaminated_sources": 814,
+      "questions_with_sources": 287
+    }
+  },
+  "contamination_rates_by_dataset": {
+    "squad": 100.0,
+    "freshqa": 51.0,
+    "webquestions": 100.0,
+    "hotpotqa": 100.0,
+    "simpleqa": 100.0
+  },
+  "questions_with_sources": {
+    "retrieval": 168,
+    "pretraining": 287
+  }
+}
+
+DATASET_CHARACTERISTICS:
+{
+  "squad": {
+    "total_questions": 100,
+    "contaminated_count": 100,
+    "contamination_rate": 100.0,
+    "type_breakdown": {
+      "retrieval": 73,
+      "both": 3,
+      "pretraining": 24
+    },
+    "method_usage": {
+      "palm": 87,
+      "exact": 81,
+      "gpt2": 87,
+      "gpt4": 84,
+      "gpt3": 37
+    },
+    "avg_answers_per_question": 3.19,
+    "unique_methods": 5
+  },
+  "freshqa": {
+    "total_questions": 100,
+    "contaminated_count": 51,
+    "contamination_rate": 51.0,
+    "type_breakdown": {
+      "pretraining": 41,
+      "both": 7,
+      "retrieval": 3,
+      "none": 49
+    },
+    "method_usage": {
+      "exact": 25,
+      "gpt4": 24,
+      "palm": 33,
+      "gpt2": 33
+    },
+    "avg_answers_per_question": 1.98,
+    "unique_methods": 4
+  },
+  "webquestions": {
+    "total_questions": 100,
+    "contaminated_count": 100,
+    "contamination_rate": 100.0,
+    "type_breakdown": {
+      "pretraining": 73,
+      "both": 12,
+      "retrieval": 15
+    },
+    "method_usage": {
+      "palm": 20,
+      "gpt2": 20,
+      "exact": 90,
+      "gpt4": 4,
+      "gpt3": 1
+    },
+    "avg_answers_per_question": 2.57,
+    "unique_methods": 5
+  },
+  "hotpotqa": {
+    "total_questions": 100,
+    "contaminated_count": 100,
+    "contamination_rate": 100.0,
+    "type_breakdown": {
+      "retrieval": 41,
+      "pretraining": 57,
+      "both": 2
+    },
+    "method_usage": {
+      "gpt2": 98,
+      "gpt4": 62,
+      "exact": 43,
+      "palm": 98,
+      "gpt3": 29
+    },
+    "avg_answers_per_question": 1.0,
+    "unique_methods": 5
+  },
+  "simpleqa": {
+    "total_questions": 100,
+    "contaminated_count": 100,
+    "contamination_rate": 100.0,
+    "type_breakdown": {
+      "pretraining": 66,
+      "retrieval": 30,
+      "both": 4
+    },
+    "method_usage": {
+      "palm": 99,
+      "gpt2": 99,
+      "gpt4": 51,
+      "exact": 34,
+      "gpt3": 27
+    },
+    "avg_answers_per_question": 1.0,
+    "unique_methods": 5
+  }
+}
+
+PLOT DESCRIPTIONS:
+----------------------------------------
+
+contamination_type_analysis.png: Analysis of contamination types for high split
+
+method_effectiveness_analysis.png: Analysis of detection method effectiveness for high split
+
+retrieval_domain_analysis.png: Analysis of retrieval contamination domains for high split
+
+pretraining_domain_analysis.png: Analysis of pretraining contamination domains for high split
+
+domain_overlap_analysis.png: Analysis of domain overlap for high split
+
+source_quality_analysis.png: Analysis of source quality metrics for high split
+
+dataset_characteristics.png: Analysis of dataset-specific characteristics for high split
+
+summary_dashboard.png: Comprehensive dashboard summarizing high split analysis results
+

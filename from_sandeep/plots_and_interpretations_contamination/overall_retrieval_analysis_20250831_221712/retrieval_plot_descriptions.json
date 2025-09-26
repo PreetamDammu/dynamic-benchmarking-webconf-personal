@@ -1,0 +1,27 @@
+{
+  "retrieval_contamination_rates_by_method_dataset.png": {
+    "title": "Retrieval Contamination Rates by Method and Dataset",
+    "description": "Heatmap showing retrieval contamination detection rates for each method across all datasets. Each cell shows the percentage of questions that were detected as contaminated by a specific method for a specific dataset.",
+    "insights": "Shows which methods are most effective for different datasets in retrieval contamination detection."
+  },
+  "total_unique_retrieval_contaminated_instances_per_dataset.png": {
+    "title": "Total Unique Retrieval Contaminated Instances per Dataset",
+    "description": "Bar chart showing the total number of unique contaminated instances for each dataset, separated by question-only contamination and question-and-answer contamination.",
+    "insights": "Shows which datasets have the most retrieval contamination and the distribution between question-only and Q&A contamination."
+  },
+  "retrieval_method_effectiveness_comparison.png": {
+    "title": "Retrieval Method Effectiveness Comparison",
+    "description": "Bar chart showing the total number of contamination detections for each method across all datasets combined.",
+    "insights": "Shows which methods are most effective at detecting retrieval contamination across all datasets."
+  },
+  "overall_retrieval_contamination_rates_by_dataset.png": {
+    "title": "Overall Retrieval Contamination Rates by Dataset",
+    "description": "Bar chart showing the overall contamination rates for each dataset, comparing question contamination rates with question-and-answer contamination rates.",
+    "insights": "Shows the relative contamination levels across datasets and the difference between question-only and Q&A contamination."
+  },
+  "retrieval_method_comparison_bar_chart.png": {
+    "title": "Retrieval Method Comparison Bar Chart",
+    "description": "Grouped bar chart comparing the effectiveness of different detection methods across all datasets.",
+    "insights": "Shows how different methods perform relative to each other across different datasets."
+  }
+}

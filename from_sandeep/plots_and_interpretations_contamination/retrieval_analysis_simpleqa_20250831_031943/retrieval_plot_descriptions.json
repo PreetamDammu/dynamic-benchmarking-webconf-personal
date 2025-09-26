@@ -1,0 +1,55 @@
+{
+  "top_contaminated_domains_count.png": {
+    "title": "Top Contaminated Domains in SimpleQA",
+    "description": "Bar chart showing the domains with the highest number of contaminated instances found. The height of each bar represents the number of contaminated matches detected for each domain. This helps identify which domains contain the most contaminated content.",
+    "key_insights": [
+      "Domain with most contaminated instances: huggingface.co (202 instances)",
+      "Total contaminated instances across top domains: 327",
+      "Number of domains analyzed: 15",
+      "Average contaminated instances per domain: 21.8"
+    ]
+  },
+  "rank_distribution_analysis.png": {
+    "title": "Rank Distribution Analysis",
+    "description": "Combined histogram showing the distribution of ranks at which question contamination (blue) and Q&A contamination (orange) were detected. The dashed lines indicate the mean ranks. This visualization helps compare how early in the retrieval process different types of contamination are typically found.",
+    "key_insights": [
+      "Average question contamination rank: 19.9",
+      "Average Q&A contamination rank: 8.1",
+      "Median question contamination rank: 18.0",
+      "Median Q&A contamination rank: 5.0",
+      "Questions found at rank 1: 0 instances",
+      "Q&A instances found at rank 1: 8 instances",
+      "Total question contamination instances: 233",
+      "Total Q&A contamination instances: 233"
+    ]
+  },
+  "source_category_analysis.png": {
+    "title": "Contaminated Sources by Category in SimpleQA",
+    "description": "Bar chart showing the number of contaminated sources found in each source category. The height represents the count of contaminated sources, and the text shows the exact number. This helps identify which types of sources contain the most contaminated content.",
+    "key_insights": [
+      "Category with most contaminated sources: other (318 sources)",
+      "Category with least contaminated sources: academic (0 sources)",
+      "Average contaminated sources per category: 48.9",
+      "Total contaminated sources across all categories: 391"
+    ]
+  },
+  "efficiency_metrics.png": {
+    "title": "Efficiency Metrics",
+    "description": "Bar chart showing efficiency metrics including the full content fetch rate, Tier 1 efficiency, and Tier 3 usage rate. This helps understand the performance characteristics of the detection system.",
+    "key_insights": [
+      "Full content fetch rate: 3.16%",
+      "Tier 1 efficiency: 30.9%",
+      "Tier 3 usage rate: 69.5%"
+    ]
+  },
+  "top_answer_contamination_sources.png": {
+    "title": "Top Sources for Answer Contamination",
+    "description": "Horizontal bar chart showing the top domains that were sources for answer contamination. This helps identify which domains are most likely to contain answer contamination.",
+    "key_insights": [
+      "Top answer contamination source: huggingface.co (92 contaminated answers)",
+      "Total answer contamination sources: 23",
+      "Total contaminated answers across all sources: 126",
+      "Average contaminated answers per source: 5.5"
+    ]
+  }
+}

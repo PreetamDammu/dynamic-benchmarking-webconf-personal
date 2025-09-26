@@ -1,0 +1,57 @@
+{
+  "question_contamination_rates_by_method_dataset.png": {
+    "title": "Question Contamination Detection Rates Across Datasets and Methods",
+    "description": "Bar chart showing the percentage of question contamination detected by each method across all datasets. Each dataset has multiple bars representing different detection methods. This visualization helps identify which methods are most effective at detecting contamination in different types of datasets and reveals patterns in contamination detection effectiveness.",
+    "key_insights": [
+      "Highest detection rate: 8-gram (GPT-2) in SimpleQA (11.28%)",
+      "Lowest detection rate: exact in HotpotQA (0.00%)",
+      "Average detection rate across all methods and datasets: 3.59%",
+      "Number of datasets analyzed: 5",
+      "Number of detection methods compared: 5"
+    ]
+  },
+  "total_unique_contaminated_instances_per_dataset.png": {
+    "title": "Total Unique Contaminated Instances per Dataset",
+    "description": "Grouped bar chart showing the total number of unique contaminated instances for each dataset, separated into 'Question Contaminated' (instances where only the question was contaminated) and 'Question and Answer Contaminated' (instances where both question and answer were contaminated). This visualization shows the absolute scale of contamination across datasets.",
+    "key_insights": [
+      "Dataset with most question contaminated instances: HotpotQA (696 instances)",
+      "Dataset with most question and answer contaminated instances: HotpotQA (369 instances)",
+      "Total unique contaminated instances across all datasets: 2,727",
+      "Average question contaminated instances per dataset: 361.6",
+      "Average question and answer contaminated instances per dataset: 183.8"
+    ]
+  },
+  "method_effectiveness_heatmap.png": {
+    "title": "Question Contamination Detections by Method and Dataset",
+    "description": "Heatmap showing the raw count of question contaminated instances detected by each method for each dataset. The color intensity represents the number of detections, with darker red indicating higher counts. This visualization helps identify which methods are most effective for specific datasets and reveals patterns in detection effectiveness.",
+    "key_insights": [
+      "Most effective method overall: 8-gram (GPT-2) (1534 total detections)",
+      "Dataset with most detections: HotpotQA (1695 total detections)",
+      "Range of detections: 0 to 680 instances per method-dataset combination",
+      "Total detections across all methods and datasets: 4,065",
+      "Average detections per method-dataset combination: 162.6"
+    ]
+  },
+  "overall_contamination_rates_by_dataset.png": {
+    "title": "Overall Contamination Rates by Dataset",
+    "description": "Grouped bar chart showing the overall contamination rates for each dataset, comparing question contamination rates (percentage of questions that are contaminated) with question and answer contamination rates (percentage of questions where both question and answer are contaminated). This provides a high-level view of contamination prevalence across datasets.",
+    "key_insights": [
+      "Highest question contamination rate: SimpleQA (11.49%)",
+      "Highest question and answer contamination rate: HotpotQA (4.98%)",
+      "Lowest question contamination rate: SQuAD (3.88%)",
+      "Average question contamination rate across datasets: 8.42%",
+      "Average question and answer contamination rate across datasets: 3.92%"
+    ]
+  },
+  "total_detections_by_method.png": {
+    "title": "Total Question Contamination Detections by Method",
+    "description": "Bar chart showing the total number of question contamination detections across all datasets for each detection method. This visualization provides a clear comparison of the overall effectiveness of each method in detecting contamination and helps identify the most reliable detection approaches.",
+    "key_insights": [
+      "Most effective method: 8-gram (GPT-2) (1,534 detections)",
+      "Least effective method: 13-gram (GPT-3) (171 detections)",
+      "Average detections per method: 813.0",
+      "Total detections across all methods: 4,065",
+      "Range of effectiveness: 171 to 1,534 detections"
+    ]
+  }
+}

@@ -1,0 +1,280 @@
+RANDOM CONTAMINATION SPLIT - DETAILED ANALYSIS REPORT
+================================================================================
+
+Analysis Timestamp: 20250831_230240
+Split Directory: results/curated_splits/split500
+Output Directory: plots_and_interpretations/curated_splits/analysis_20250831_230240/random_split
+
+ANALYSIS RESULTS:
+----------------------------------------
+
+CONTAMINATION_TYPES:
+{
+  "overall_distribution": {
+    "none": 444,
+    "both": 4,
+    "retrieval": 20,
+    "pretraining": 32
+  },
+  "by_dataset": {
+    "squad": {
+      "none": 94,
+      "both": 1,
+      "retrieval": 4,
+      "pretraining": 1
+    },
+    "freshqa": {
+      "none": 91,
+      "pretraining": 8,
+      "both": 1
+    },
+    "webquestions": {
+      "pretraining": 4,
+      "retrieval": 2,
+      "none": 92,
+      "both": 2
+    },
+    "hotpotqa": {
+      "retrieval": 8,
+      "pretraining": 13,
+      "none": 79
+    },
+    "simpleqa": {
+      "none": 88,
+      "retrieval": 6,
+      "pretraining": 6
+    }
+  }
+}
+
+METHOD_EFFECTIVENESS:
+{
+  "method_stats": {
+    "gpt2": {
+      "retrieval": 19,
+      "pretraining": 29,
+      "both": 2,
+      "total": 48
+    },
+    "gpt4": {
+      "retrieval": 19,
+      "pretraining": 14,
+      "both": 1,
+      "total": 33
+    },
+    "exact": {
+      "retrieval": 23,
+      "pretraining": 10,
+      "both": 3,
+      "total": 33
+    },
+    "palm": {
+      "retrieval": 19,
+      "pretraining": 29,
+      "both": 2,
+      "total": 48
+    },
+    "gpt3": {
+      "retrieval": 13,
+      "pretraining": 4,
+      "both": 1,
+      "total": 17
+    }
+  }
+}
+
+RETRIEVAL_DOMAINS:
+{
+  "top_retrieval_domains": {
+    "huggingface.co": 6,
+    "rajpurkar.github.io": 4,
+    "openreview.net": 4,
+    "taddlr.com": 2,
+    "babycentre.co.uk": 2,
+    "scribd.com": 2,
+    "groups.google.com": 1,
+    "researchgate.net": 1,
+    "aclanthology.org": 1,
+    "arxiv.org": 1,
+    "openaipublic.blob.core.windows.net": 1
+  },
+  "total_unique_domains": 11
+}
+
+PRETRAINING_DOMAINS:
+{
+  "top_pretraining_domains": {
+    "readerz.net": 4,
+    "en.wikipedia.org": 3,
+    "remotecontrolboat.org": 3,
+    "worldcat.org": 2,
+    "britishpathe.com": 2,
+    "earthmath.kennesaw.edu": 2,
+    "glassonyonpr.com": 2,
+    "edrivera.com": 2,
+    "education.seattlepi.com": 2,
+    "worldhistoryproject.org": 2,
+    "hamburgerwagon.com": 2,
+    "bright-green.org": 2,
+    "aquatic-club.com": 2,
+    "codigobarras.info": 2,
+    "uscarriers.net": 2
+  },
+  "total_unique_domains": 75
+}
+
+DOMAIN_OVERLAP:
+{
+  "domain_overlap": {
+    "retrieval_only": 11,
+    "both": 0,
+    "pretraining_only": 75
+  },
+  "total_retrieval_domains": 11,
+  "total_pretraining_domains": 75
+}
+
+SOURCE_QUALITY:
+{
+  "source_statistics": {
+    "retrieval": {
+      "total_sources": 25,
+      "contaminated_sources": 25,
+      "questions_with_sources": 20
+    },
+    "pretraining": {
+      "total_sources": 103,
+      "contaminated_sources": 103,
+      "questions_with_sources": 36
+    }
+  },
+  "contamination_rates_by_dataset": {
+    "squad": 6.0,
+    "freshqa": 9.0,
+    "webquestions": 8.0,
+    "hotpotqa": 21.0,
+    "simpleqa": 12.0
+  },
+  "questions_with_sources": {
+    "retrieval": 20,
+    "pretraining": 36
+  }
+}
+
+DATASET_CHARACTERISTICS:
+{
+  "squad": {
+    "total_questions": 100,
+    "contaminated_count": 6,
+    "contamination_rate": 6.0,
+    "type_breakdown": {
+      "none": 94,
+      "both": 1,
+      "retrieval": 4,
+      "pretraining": 1
+    },
+    "method_usage": {
+      "gpt2": 5,
+      "gpt4": 5,
+      "exact": 5,
+      "palm": 5,
+      "gpt3": 2
+    },
+    "avg_answers_per_question": 3.3,
+    "unique_methods": 5
+  },
+  "freshqa": {
+    "total_questions": 100,
+    "contaminated_count": 9,
+    "contamination_rate": 9.0,
+    "type_breakdown": {
+      "none": 91,
+      "pretraining": 8,
+      "both": 1
+    },
+    "method_usage": {
+      "exact": 5,
+      "gpt4": 5,
+      "palm": 6,
+      "gpt2": 6
+    },
+    "avg_answers_per_question": 1.97,
+    "unique_methods": 4
+  },
+  "webquestions": {
+    "total_questions": 100,
+    "contaminated_count": 8,
+    "contamination_rate": 8.0,
+    "type_breakdown": {
+      "pretraining": 4,
+      "retrieval": 2,
+      "none": 92,
+      "both": 2
+    },
+    "method_usage": {
+      "palm": 2,
+      "exact": 7,
+      "gpt2": 2
+    },
+    "avg_answers_per_question": 2.29,
+    "unique_methods": 3
+  },
+  "hotpotqa": {
+    "total_questions": 100,
+    "contaminated_count": 21,
+    "contamination_rate": 21.0,
+    "type_breakdown": {
+      "retrieval": 8,
+      "pretraining": 13,
+      "none": 79
+    },
+    "method_usage": {
+      "gpt2": 21,
+      "gpt4": 15,
+      "exact": 8,
+      "palm": 21,
+      "gpt3": 10
+    },
+    "avg_answers_per_question": 1.0,
+    "unique_methods": 5
+  },
+  "simpleqa": {
+    "total_questions": 100,
+    "contaminated_count": 12,
+    "contamination_rate": 12.0,
+    "type_breakdown": {
+      "none": 88,
+      "retrieval": 6,
+      "pretraining": 6
+    },
+    "method_usage": {
+      "palm": 12,
+      "exact": 6,
+      "gpt2": 12,
+      "gpt4": 8,
+      "gpt3": 5
+    },
+    "avg_answers_per_question": 1.0,
+    "unique_methods": 5
+  }
+}
+
+PLOT DESCRIPTIONS:
+----------------------------------------
+
+contamination_type_analysis.png: Analysis of contamination types for random split
+
+method_effectiveness_analysis.png: Analysis of detection method effectiveness for random split
+
+retrieval_domain_analysis.png: Analysis of retrieval contamination domains for random split
+
+pretraining_domain_analysis.png: Analysis of pretraining contamination domains for random split
+
+domain_overlap_analysis.png: Analysis of domain overlap for random split
+
+source_quality_analysis.png: Analysis of source quality metrics for random split
+
+dataset_characteristics.png: Analysis of dataset-specific characteristics for random split
+
+summary_dashboard.png: Comprehensive dashboard summarizing random split analysis results
+

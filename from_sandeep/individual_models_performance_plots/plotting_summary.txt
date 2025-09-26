@@ -1,0 +1,18 @@
+Individual Model Plotting Summary (Two Plots Per Model)
+Generated: 2025-09-16 13:00:40
+Total plots created: 13
+
+Created plots:
+1. mistral_7b_base_performance.pdf
+2. mistral_7b_web_rag_performance.pdf
+3. mistral_large_base_performance.pdf
+4. mistral_large_web_rag_performance.pdf
+5. openai_20b_base_performance.pdf
+6. openai_20b_web_rag_performance.pdf
+7. openai_120b_base_performance.pdf
+8. openai_120b_web_rag_performance.pdf
+9. llama4_maverick_base_performance.pdf
+10. llama4_maverick_web_rag_performance.pdf
+11. llama4_scout_base_performance.pdf
+12. llama4_scout_web_rag_performance.pdf
+13. model_performance_collage.pdf

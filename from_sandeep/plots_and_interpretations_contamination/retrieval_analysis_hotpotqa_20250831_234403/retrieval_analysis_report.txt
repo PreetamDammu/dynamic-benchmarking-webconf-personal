@@ -1,0 +1,80 @@
+RETRIEVAL LEAK ANALYSIS REPORT - HotpotQA
+============================================================
+
+DATASET INFORMATION:
+Dataset: HotpotQA
+Split: validation
+Total questions evaluated: 7,405
+Methods used: exact, gpt2, gpt3, gpt4, palm
+
+OVERALL RETRIEVAL STATISTICS:
+Total contaminated questions detected: 536
+Overall contamination rate: 7.24%
+Average question contamination rank: 15.85
+Average answer contamination rank: 9.66
+
+DETECTION METHOD COMPARISON:
+exact:
+  - Contaminated questions: 536 (7.24%)
+  - Q&A contaminated: 354 (4.78%)
+  - Clean questions: 6869
+8-gram (GPT-2):
+  - Contaminated questions: 523 (7.06%)
+  - Q&A contaminated: 401 (5.42%)
+  - Clean questions: 6882
+13-gram (GPT-3):
+  - Contaminated questions: 331 (4.47%)
+  - Q&A contaminated: 266 (3.59%)
+  - Clean questions: 7074
+50-char substring (GPT-4):
+  - Contaminated questions: 534 (7.21%)
+  - Q&A contaminated: 382 (5.16%)
+  - Clean questions: 6871
+8-gram with skips (PaLM):
+  - Contaminated questions: 523 (7.06%)
+  - Q&A contaminated: 401 (5.42%)
+  - Clean questions: 6882
+
+TOP CONTAMINATED DOMAINS:
+1. huggingface.co: 62.13% (333 questions affected)
+2. en.wikipedia.org: 17.16% (92 questions affected)
+3. arxiv.org: 14.55% (78 questions affected)
+4. aclanthology.org: 10.26% (55 questions affected)
+5. openreview.net: 4.48% (24 questions affected)
+6. www.facebook.com: 1.87% (10 questions affected)
+7. www.reddit.com: 1.49% (8 questions affected)
+8. www.imdb.com: 1.12% (6 questions affected)
+9. www.researchgate.net: 0.93% (5 questions affected)
+10. www.mayoclinic.org: 0.75% (4 questions affected)
+
+CONTAMINATION BY SOURCE CATEGORY:
+other: 100.00% (536 questions affected)
+academic: 19.59% (105 questions affected)
+documentation: 2.61% (14 questions affected)
+reference: 18.28% (98 questions affected)
+social: 3.54% (19 questions affected)
+government: 0.00% (0 questions affected)
+ecommerce: 0.19% (1 questions affected)
+news: 0.00% (0 questions affected)
+
+STRATEGIC TIER PERFORMANCE:
+Tier 1 success: 260 questions
+Tier 3 required: 306 questions
+Tier 1 efficiency: 48.5%
+Full content fetch rate: 2.73%
+
+QUESTION VS ANSWER CONTAMINATION PATTERNS:
+Question only: 182 (34.0%)
+Both contaminated: 354 (66.0%)
+
+TOP ANSWER CONTAMINATION SOURCES:
+1. huggingface.co: 212 contaminated answers
+2. arxiv.org: 27 contaminated answers
+3. aclanthology.org: 21 contaminated answers
+4. openreview.net: 15 contaminated answers
+5. github.com: 7 contaminated answers
+6. ar5iv.labs.arxiv.org: 6 contaminated answers
+7. web.stanford.edu: 4 contaminated answers
+8. direct.mit.edu: 2 contaminated answers
+9. researchgate.net: 2 contaminated answers
+10. facebook.com: 2 contaminated answers

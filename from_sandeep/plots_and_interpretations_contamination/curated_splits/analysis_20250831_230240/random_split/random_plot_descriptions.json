@@ -1,0 +1,10 @@
+{
+  "contamination_type_analysis.png": "Analysis of contamination types for random split",
+  "method_effectiveness_analysis.png": "Analysis of detection method effectiveness for random split",
+  "retrieval_domain_analysis.png": "Analysis of retrieval contamination domains for random split",
+  "pretraining_domain_analysis.png": "Analysis of pretraining contamination domains for random split",
+  "domain_overlap_analysis.png": "Analysis of domain overlap for random split",
+  "source_quality_analysis.png": "Analysis of source quality metrics for random split",
+  "dataset_characteristics.png": "Analysis of dataset-specific characteristics for random split",
+  "summary_dashboard.png": "Comprehensive dashboard summarizing random split analysis results"
+}

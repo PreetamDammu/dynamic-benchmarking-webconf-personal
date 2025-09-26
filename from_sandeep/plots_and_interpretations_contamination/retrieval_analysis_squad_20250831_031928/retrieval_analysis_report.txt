@@ -1,0 +1,80 @@
+RETRIEVAL LEAK ANALYSIS REPORT - SQuAD
+============================================================
+
+DATASET INFORMATION:
+Dataset: SQuAD
+Split: validation
+Total questions evaluated: 10,570
+Methods used: exact, gpt2, gpt3, gpt4, palm
+
+OVERALL RETRIEVAL STATISTICS:
+Total contaminated questions detected: 1197
+Overall contamination rate: 11.32%
+Average question contamination rank: 16.35
+Average answer contamination rank: 7.87
+
+DETECTION METHOD COMPARISON:
+exact:
+  - Contaminated questions: 1162 (10.99%)
+  - Q&A contaminated: 814 (7.70%)
+  - Clean questions: 9408
+8-gram (GPT-2):
+  - Contaminated questions: 968 (9.16%)
+  - Q&A contaminated: 784 (7.42%)
+  - Clean questions: 9602
+13-gram (GPT-3):
+  - Contaminated questions: 451 (4.27%)
+  - Q&A contaminated: 358 (3.39%)
+  - Clean questions: 10119
+50-char substring (GPT-4):
+  - Contaminated questions: 1123 (10.62%)
+  - Q&A contaminated: 887 (8.39%)
+  - Clean questions: 9447
+8-gram with skips (PaLM):
+  - Contaminated questions: 968 (9.16%)
+  - Q&A contaminated: 784 (7.42%)
+  - Clean questions: 9602
+
+TOP CONTAMINATED DOMAINS:
+1. rajpurkar.github.io: 80.79% (967 questions affected)
+2. en.wikipedia.org: 25.23% (302 questions affected)
+3. www.quora.com: 7.02% (84 questions affected)
+4. www.britannica.com: 1.25% (15 questions affected)
+5. www.reddit.com: 0.92% (11 questions affected)
+6. www.facebook.com: 0.67% (8 questions affected)
+7. www.merriam-webster.com: 0.50% (6 questions affected)
+8. www.vam.ac.uk: 0.50% (6 questions affected)
+9. www.wikiwand.com: 0.42% (5 questions affected)
+10. english.stackexchange.com: 0.00% (0 questions affected)
+
+CONTAMINATION BY SOURCE CATEGORY:
+other: 100.00% (1197 questions affected)
+reference: 26.65% (319 questions affected)
+social: 1.67% (20 questions affected)
+academic: 0.75% (9 questions affected)
+government: 1.50% (18 questions affected)
+news: 0.17% (2 questions affected)
+documentation: 0.58% (7 questions affected)
+ecommerce: 0.08% (1 questions affected)
+
+STRATEGIC TIER PERFORMANCE:
+Tier 1 success: 521 questions
+Tier 3 required: 710 questions
+Tier 1 efficiency: 43.5%
+Full content fetch rate: 5.90%
+
+QUESTION VS ANSWER CONTAMINATION PATTERNS:
+Question only: 348 (29.9%)
+Both contaminated: 814 (70.1%)
+
+TOP ANSWER CONTAMINATION SOURCES:
+1. rajpurkar.github.io: 1984 contaminated answers
+2. huggingface.co: 84 contaminated answers
+3. quora.com: 34 contaminated answers
+4. web.stanford.edu: 22 contaminated answers
+5. github.com: 11 contaminated answers
+6. facebook.com: 9 contaminated answers
+7. acronymfinder.com: 6 contaminated answers
+8. en.wikipedia.org: 6 contaminated answers
+9. samplecontents.library.ph: 6 contaminated answers
+10. biography.com: 5 contaminated answers
