@@ -1,2 +1,90 @@
 \section{Method}
-TBD
+
+We propose a method that utilizes \emph{seed graphs} to anchor future question generation instead of relying on static datapoints that are susceptible to memorization or data contamination. Because each evaluation round renders a fresh QA pair from each graph, no fixed test item can be leaked ahead of time, yet all rounds remain semantically comparable via the common anchors.
+
+\subsection{Seed Graphs}
+
+At evaluation round $t$, we maintain a set $\mathcal{S}_t = \{ G_1^{(t)}, \ldots, G_{n_t}^{(t)} \}$ of seed graphs. Each graph encodes the evidence trail (e.g., queries, retrieved documents, answer node) for a distinct information need. To support evolving information, graphs are constructed at evaluation time.
+
+\subsection{QA Generation}
+
+The generation function $\text{Gen}$ takes a seed graph $G_i^{(t)}$, a random seed $r_{i,t} \sim \mathcal{R}$, and a fixed generation configuration to produce one QA pair:
+\begin{equation}
+    (q_{i,t}, a_{i,t}) = \text{Gen}(G_i^{(t)}; r_{i,t}, \theta)
+\end{equation}
+
+Here, $\text{Gen}$ is an LLM-based generator that bundles a frozen prompt template and fixed decoding settings (e.g., temperature, top-$p$, stop tokens). $r_{i,t}$ is an i.i.d.\ sample from randomness source $\mathcal{R}$, introducing per-sample stochasticity. Holding $\theta$ constant and varying only $r_{i,t}$ ensures that each system sees independent but identically distributed QA samples.
+
+\subsection{Distributional Consistency}
+
+Sampling an independent seed $r_{i,t} \sim \mathcal{R}$ for each graph yields the per-graph distribution:
+\begin{equation}
+    \mathcal{P}_{i,t} = \text{Dist}(\text{Gen}(G_i^{(t)}; r, \theta))
+\end{equation}
+
+Because seeds are independent across graphs, the round-$t$ dataset 
+$D_t = \{ (q_{1,t}, a_{1,t}), \ldots, (q_{n_t,t}, a_{n_t,t}) \}$ 
+is an i.i.d.\ sample from the product measure:
+\begin{equation}
+    \mathcal{P}_t = \prod_{i=1}^{n_t} \mathcal{P}_{i,t}
+\end{equation}
+
+For a model $M$ under evaluation, let $\text{score}((q, a), M)$ be any per-question metric (e.g., exact match, F1, log-loss). The aggregate dataset score is defined as:
+\begin{equation}
+    \text{Agg}(D_t, M) = \frac{1}{n_t} \sum_{i=1}^{n_t} \text{score}((q_{i,t}, a_{i,t}), M)
+\end{equation}
+
+By linearity of expectation and independence of $(q_{i,t}, a_{i,t}) \sim \mathcal{P}_{i,t}$:
+\begin{equation}
+    \mathbb{E}_{D_t \sim \mathcal{P}_t}[\text{Agg}(D_t, M)] 
+    = \frac{1}{n_t} \sum_{i=1}^{n_t} \mathbb{E}_{(q,a) \sim \mathcal{P}_{i,t}}[\text{score}((q,a), M)]
+\end{equation}
+
+This shows that the expected accuracy is simply the average of the per-graph expectations—so every seed graph contributes equally.
+
+\subsection{Collision Bound}
+
+Assume for every seed graph $G_i^{(t)}$, the generator can produce $K$ distinct question–answer pairs:
+\[
+\mathcal{C}_{i,t} = \{ (q, a) \in \mathcal{P}_{i,t} \mid \Pr((q, a)) > 0 \}, \quad |\mathcal{C}_{i,t}| = K
+\]
+
+To characterize overlap across rounds $u < v$, define:
+\[
+J_{i,u,v} = |\mathcal{C}_{i,u} \cap \mathcal{C}_{i,v}|, \quad J_{\max} = \max_{u < v} J_{i,u,v}
+\]
+
+Because answers and evidence evolve over time, $J_{\max}$ tends to remain small for fast-changing topics.
+
+\paragraph{Collision Probability.} Sampling one QA pair per round, the probability that seed graph $i$ produces the same QA pair twice within $t$ rounds satisfies:
+\begin{equation}
+    \Pr[\text{collision within } t] \leq \frac{t(t-1)}{2K^2} J_{\max}
+\end{equation}
+
+\paragraph{Collision Control.} To guarantee that this probability is at most $\delta \in (0,1)$, it suffices to choose $K$ such that:
+\begin{equation}
+    K \geq \sqrt{ \frac{t(t-1)}{2\delta} J_{\max} }
+\end{equation}
+
+Equation (7) captures key trade-offs:
+\begin{itemize}
+    \item Larger $K$ (richer candidate pool) reduces collision probability for fixed $t$.
+    \item Fewer evaluation rounds $t$ allow a smaller $K$ for the same error tolerance $\delta$.
+    \item Smaller $J_{\max}$ (i.e., greater semantic drift) reduces required $K$.
+\end{itemize}
+
+Because each seed graph is rebuilt from fresh evidence each round, its candidate set changes, helping keep $J_{\max}$ small. Equation (6) quantifies the collision risk, while Equation (7) provides a tunable design guideline for selecting $K$.
+
+\subsection{Cross-Round Reporting and Compatibility}
+
+Because each round rebuilds the seed graph set $\mathcal{S}_t$, the underlying distribution 
+$\mathcal{P}_t = \prod_i \mathcal{P}_{i,t}$ may drift over time, especially for evolving topics. Consequently, raw accuracies from different rounds may not be directly comparable. We offer two strategies:
+
+\paragraph{i) Snapshot Evaluation.} Fix a reference round $t^\ast$ and freeze its seed graphs $\mathcal{S}_{t^\ast}$. All systems are then evaluated on the same dataset $D_{t^\ast}$, ensuring identical test conditions.
+
+\paragraph{ii) Macro-Averaged Score.} For longitudinal tracking, aggregate performance across a window $\{t_1, \ldots, t_T\}$ (e.g., most recent $T$ rounds) using:
+\begin{equation}
+    \text{Score}_{\text{macro}} = \frac{1}{T} \sum_{j=1}^{T} \text{Agg}(D_{t_j}, M)
+\end{equation}
+
+Each $D_{t_j}$ is i.i.d.\ from its own $\mathcal{P}_{t_j}$, so Eq.\ (8) summarizes average effectiveness under the benchmark’s natural evolution, without letting any single round dominate.
