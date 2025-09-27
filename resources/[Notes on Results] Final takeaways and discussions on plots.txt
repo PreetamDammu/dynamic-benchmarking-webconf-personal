@@ -1,0 +1,60 @@
+Experimental context
+
+We evaluate two 500-item seed splits: Highly-Contaminated and Randomly-Sampled. Each split is expanded for 10 rounds by:
+	•	Dynamic variants (ours): starting from a seed question, generate new questions on the same topic that are not paraphrases. Controls: 2–4 hops; operators sampled uniformly from temporal, causal, and conjunctive reasoning.
+	•	Paraphrase baseline: surface rewordings of the seed question.
+
+We report results for Base (LLM-only) and Web-RAG (SearXNG retrieval). Direct score comparisons between the two seed splits are not valid because they contain different items. We only compare within the same split and model across conditions/rounds.
+
+Clarifications up front:
+	•	Every flagged contaminant has a resolvable pointer (C4 doc ID or retrieved URL).
+	•	For small deltas, statistical tests are required to rule out noise. We therefore make claims only about consistent, directionally stable trends across rounds and split conditions.
+	•	Open-data contamination hits (string/embedding rules that return a source) are treated as stronger evidence than distributional significance alone. See LLMSanitize survey: https://arxiv.org/pdf/2404.00699.
+
+Findings
+
+1) Model performance across rounds
+
+Base (LLM-only)
+	•	Paraphrases reduce accuracy slightly and consistently. Across models, yellow curves lie below the original-seed marker and remain below dynamic blue curves. This aligns with reports that simple rewording can drop accuracy by disrupting superficial heuristics rather than task difficulty (see https://arxiv.org/pdf/2402.14865v1).
+	•	Paraphrases preserve seed-split gaps. The performance gap between the Highly-Contaminated and Randomly-Sampled seeds persists after paraphrasing, indicating that paraphrases inherit properties of the seed (including residual leakage and seed difficulty).
+	•	Dynamic variants are stable across rounds. For a fixed model and split, the blue curves are flat and tightly banded across 10 rounds, implying that the generator produces question sets of comparable difficulty at the dataset level, rather than drifting easier or harder over time.
+
+Interpretation: paraphrasing changes surface form but not the underlying evidence demands of the seed; dynamic variants change the question while holding topic and reasoning regime fixed, which normalizes difficulty across rounds.
+
+Web-RAG
+	•	Web access increases accuracy on the seed items, as expected: right-hand panels show a lift from Base to Web-RAG on the original seeds. Retrieved content is useful.
+	•	Paraphrasing hurts Web-RAG more than Base. The yellow Web-RAG curves drop sharply relative to their Base counterparts on the same split and model. Retrieval is brittle to surface changes: paraphrases often steer the search away from the exact leaked or templated pages.
+	•	The drop is larger on the Highly-Contaminated split. On that split, paraphrasing removes a larger portion of “direct hit” pages, revealing that the original Web-RAG scores were partially inflated by leaked question–answer pages that the agent could land on.
+	•	Dynamic vs paraphrase gap widens with Web-RAG. The blue–yellow separation is notably larger under Web-RAG. Together with the contamination plots (below), this indicates that simple paraphrases still carry contamination effects that Web-RAG can exploit, whereas dynamic variants remove that advantage.
+
+Takeaway: Web-RAG amplifies differences between true generalization and leakage-driven shortcuts. Dynamic variants retain the retrieval benefit without inheriting seed leakage.
+
+2) Contamination detection across rounds (8-gram method in figures)
+
+Each panel shows four series:
+	•	Solid blue: dynamic variant tested w.r.t. the new query’s results
+	•	Solid yellow: paraphrase tested w.r.t. the new query’s results
+	•	Dot-dash blue: the original seed tested w.r.t. the dynamic query’s results
+	•	Dot-dash yellow: the original seed tested w.r.t. the paraphrase query’s results
+
+Key observations:
+	•	Solid lines are near zero for both methods. String-match rules rarely trigger on the newly generated texts, which is expected for non-verbatim questions.
+	•	Dot-dash for paraphrases remains non-trivial, especially on the Highly-Contaminated split and for retrieval checks. Even though the query is paraphrased, the search results still surface pages that contain the original question and its answer, so leakage persists “via the back door.” This matches findings that paraphrase-only decontamination can miss practical leakage effects (https://arxiv.org/pdf/2311.04850).
+	•	Dot-dash for dynamic variants is low and flat. Dynamic queries do not recover pages that contain the original seed question–answer pair at meaningful rates across rounds.
+
+Implication: string-based detectors undercount leakage on paraphrases when measured only against the new text. Evaluating contamination with respect to the original seed is necessary. Dynamic variants reduce both “own-text” and “w.r.t. seed” signals; paraphrases reduce only the former.
+
+What the results support
+	•	Stability: For a fixed model and split, dynamic-variant accuracy is consistent across rounds, indicating the generator yields comparable difficulty without drift.
+	•	De-inflation under Web-RAG: On Highly-Contaminated seeds, Web-RAG performance drops sharply when paraphrased, revealing prior inflation from leaked pages. Dynamic variants avoid this dependence.
+	•	Superior decontamination vs paraphrase: Paraphrase baselines lower verbatim matches but leave measurable retrieval-time seed leakage; dynamic variants suppress both, which explains the larger blue–yellow performance gap under Web-RAG.
+	•	Split invariance after generation (qualitative): After applying the generator, models show similar trend shapes on both seed splits. While we do not claim cross-split equality of means, the absence of systematic drift suggests the method reduces dependence on the initial contamination level of seeds.
+
+Caveats to keep explicit
+	•	No between-split mean comparisons. Different items imply different base difficulty; we report only within-split trends.
+	•	Detection scope. Figures use the 8-gram rule for illustration; full reports include the full suite (exact match, 8/13-gram words, 50-gram chars, 8-gram 70% overlap, and 0.80 embedding similarity).
+	•	Approximate search. Pretraining checks use top-1000 C4 candidates; retrieval checks use the first three SearXNG pages. This mirrors typical agent budgets but is not exhaustive.
+	•	Statistical testing. For small accuracy deltas, treat conclusions as directional unless supported by formal tests. Open-data contamination hits with URLs or C4 IDs are stronger evidence than marginal accuracy differences.
+
+This language should slot directly under your figures without inviting avoidable challenges.

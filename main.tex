@@ -198,12 +198,9 @@
 %% The abstract is a short summary of the work to be presented in the
 %% article.
 \begin{abstract}
-  A clear and well-documented \LaTeX\ document is presented as an
-  article formatted for publication by ACM in a conference proceedings
-  or journal publication. Based on the ``acmart'' document class, this
-  article presents and explains many of the common variations, as well
-  as many of the formatting elements an author may use in the
-  preparation of the documentation of their work.
+
+LLM agents with web access are increasingly becoming the default for user-facing question answering. Reliable evaluation in this setting requires tests that remain unseen at train time and cannot be answered via verbatim lookup at inference. However, standard practice still relies on static benchmarks that age quickly and are vulnerable to contamination. We analyze two channels, pretraining leakage where test items appear in the pretraining data, and run-time leakage where the agent finds the exact target answer verbatim during evaluation and reports it rather than demonstrating genuine problem solving. We uncover evidence across five QA datasets for both pretraining and run-time leakage, and we show that static evaluation can overestimate capability. We introduce DynamicWebQA, a dynamic evaluation framework that constructs questions and verifiable answers at evaluation time from relevant web sources. The framework enforces multi-document grounding, records evidence chains, and offers controllable complexity through source set size, number of hops, and reasoning constraints. By generating fresh test instances, DynamicWebQA reduces memorization risk, mitigates run-time leakage, and naturally covers time-sensitive queries. 
+
 \end{abstract}
 
 %%
@@ -261,12 +258,13 @@
 \maketitle
 
 \input{sections/introduction}
+\input{sections/related_work}
 \input{sections/method}
 \input{sections/results}
 \input{sections/discussion}
 \input{sections/conclusion}
 
 \bibliographystyle{ACM-Reference-Format}
-\bibliography{bibliography}
+\bibliography{DynamicBenchmarkWebQA}
 
 \end{document}
