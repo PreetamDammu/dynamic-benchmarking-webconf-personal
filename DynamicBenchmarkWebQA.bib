@@ -17,6 +17,24 @@
   file = {/Users/preetams/Zotero/storage/TZ5XK539/Bang et al. - 2025 - HalluLens LLM Hallucination Benchmark.pdf;/Users/preetams/Zotero/storage/75S4H383/2504.html}
 }
 
+@misc{borgeaudImprovingLanguageModels2022,
+  title = {Improving Language Models by Retrieving from Trillions of Tokens},
+  author = {Borgeaud, Sebastian and Mensch, Arthur and Hoffmann, Jordan and Cai, Trevor and Rutherford, Eliza and Millican, Katie and van den Driessche, George and Lespiau, Jean-Baptiste and Damoc, Bogdan and Clark, Aidan and Casas, Diego de Las and Guy, Aurelia and Menick, Jacob and Ring, Roman and Hennigan, Tom and Huang, Saffron and Maggiore, Loren and Jones, Chris and Cassirer, Albin and Brock, Andy and Paganini, Michela and Irving, Geoffrey and Vinyals, Oriol and Osindero, Simon and Simonyan, Karen and Rae, Jack W. and Elsen, Erich and Sifre, Laurent},
+  year = {2022},
+  month = feb,
+  number = {arXiv:2112.04426},
+  eprint = {2112.04426},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2112.04426},
+  urldate = {2025-09-29},
+  abstract = {We enhance auto-regressive language models by conditioning on document chunks retrieved from a large corpus, based on local similarity with preceding tokens. With a \$2\$ trillion token database, our Retrieval-Enhanced Transformer (RETRO) obtains comparable performance to GPT-3 and Jurassic-1 on the Pile, despite using 25\${\textbackslash}times\$ fewer parameters. After fine-tuning, RETRO performance translates to downstream knowledge-intensive tasks such as question answering. RETRO combines a frozen Bert retriever, a differentiable encoder and a chunked cross-attention mechanism to predict tokens based on an order of magnitude more data than what is typically consumed during training. We typically train RETRO from scratch, yet can also rapidly RETROfit pre-trained transformers with retrieval and still achieve good performance. Our work opens up new avenues for improving language models through explicit memory at unprecedented scale.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Computation and Language,Computer Science - Machine Learning},
+  note = {Comment: Fix incorrect reported numbers in Table 14},
+  file = {/Users/preetams/Zotero/storage/4VKFMBI6/Borgeaud et al. - 2022 - Improving language models by retrieving from trillions of tokens.pdf;/Users/preetams/Zotero/storage/J9HCI6JU/2112.html}
+}
+
 @misc{carliniQuantifyingMemorizationNeural2023,
   title = {Quantifying {{Memorization Across Neural Language Models}}},
   author = {Carlini, Nicholas and Ippolito, Daphne and Jagielski, Matthew and Lee, Katherine and Tramer, Florian and Zhang, Chiyuan},
@@ -103,6 +121,58 @@
   abstract = {As question answering (QA) systems advance alongside the rapid evolution of foundation models, the need for robust, adaptable, and large-scale evaluation benchmarks becomes increasingly critical. Traditional QA benchmarks are often static and publicly available, making them susceptible to data contamination and memorization by large language models (LLMs). Consequently, static benchmarks may overestimate model generalization and hinder a reliable assessment of real-world performance. In this work, we introduce Dynamic-KGQA, a scalable framework for generating adaptive QA datasets from knowledge graphs (KGs), designed to mitigate memorization risks while maintaining statistical consistency across iterations. Unlike fixed benchmarks, Dynamic-KGQA generates a new dataset variant on every run while preserving the underlying distribution, enabling fair and reproducible evaluations. Furthermore, our framework provides fine-grained control over dataset characteristics, supporting domain-specific and topic-focused QA dataset generation. Additionally, Dynamic-KGQA produces compact, semantically coherent subgraphs that facilitate both training and evaluation of KGQA models, enhancing their ability to leverage structured knowledge effectively. To align with existing evaluation protocols, we also provide static large-scale train/test/validation splits, ensuring comparability with prior methods. By introducing a dynamic, customizable benchmarking paradigm, Dynamic-KGQA enables a more rigorous and adaptable evaluation of QA systems.},
   isbn = {979-8-4007-1592-1},
   file = {/Users/preetams/Zotero/storage/V2AQHXLU/Dammu et al. - 2025 - Dynamic-KGQA A Scalable Framework for Generating Adaptive Question Answering Datasets.pdf}
+}
+
+@misc{gaoRetrievalAugmentedGenerationLarge2024,
+  title = {Retrieval-{{Augmented Generation}} for {{Large Language Models}}: {{A Survey}}},
+  shorttitle = {Retrieval-{{Augmented Generation}} for {{Large Language Models}}},
+  author = {Gao, Yunfan and Xiong, Yun and Gao, Xinyu and Jia, Kangxiang and Pan, Jinliu and Bi, Yuxi and Dai, Yi and Sun, Jiawei and Wang, Meng and Wang, Haofen},
+  year = {2024},
+  month = mar,
+  number = {arXiv:2312.10997},
+  eprint = {2312.10997},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2312.10997},
+  urldate = {2025-09-29},
+  abstract = {Large Language Models (LLMs) showcase impressive capabilities but encounter challenges like hallucination, outdated knowledge, and non-transparent, untraceable reasoning processes. Retrieval-Augmented Generation (RAG) has emerged as a promising solution by incorporating knowledge from external databases. This enhances the accuracy and credibility of the generation, particularly for knowledge-intensive tasks, and allows for continuous knowledge updates and integration of domain-specific information. RAG synergistically merges LLMs' intrinsic knowledge with the vast, dynamic repositories of external databases. This comprehensive review paper offers a detailed examination of the progression of RAG paradigms, encompassing the Naive RAG, the Advanced RAG, and the Modular RAG. It meticulously scrutinizes the tripartite foundation of RAG frameworks, which includes the retrieval, the generation and the augmentation techniques. The paper highlights the state-of-the-art technologies embedded in each of these critical components, providing a profound understanding of the advancements in RAG systems. Furthermore, this paper introduces up-to-date evaluation framework and benchmark. At the end, this article delineates the challenges currently faced and points out prospective avenues for research and development.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language},
+  note = {Comment: Ongoing Work},
+  file = {/Users/preetams/Zotero/storage/WVJMCVKZ/Gao et al. - 2024 - Retrieval-Augmented Generation for Large Language Models A Survey.pdf;/Users/preetams/Zotero/storage/86TIJ5H6/2312.html}
+}
+
+@inproceedings{guuRetrievalAugmentedLanguage2020,
+  title = {Retrieval {{Augmented Language Model Pre-Training}}},
+  booktitle = {Proceedings of the 37th {{International Conference}} on {{Machine Learning}}},
+  author = {Guu, Kelvin and Lee, Kenton and Tung, Zora and Pasupat, Panupong and Chang, Mingwei},
+  year = {2020},
+  month = nov,
+  pages = {3929--3938},
+  publisher = {PMLR},
+  issn = {2640-3498},
+  urldate = {2025-09-29},
+  abstract = {Language model pre-training has been shown to capture a surprising amount of world knowledge, crucial for NLP tasks such as question answering. However, this knowledge is stored implicitly in the parameters of a neural network, requiring ever-larger networks to cover more facts. To capture knowledge in a more modular and interpretable way, we augment language model pre-training with a latent knowledge retriever, which allows the model to retrieve and attend over documents from a large corpus such as Wikipedia, used during pre-training, fine-tuning and inference. For the first time, we show how to pre-train such a knowledge retriever in an unsupervised manner, using masked language modeling as the learning signal and backpropagating through a retrieval step that considers millions of documents. We demonstrate the effectiveness of Retrieval-Augmented Language Model pre-training (REALM) by fine-tuning on the challenging task of Open-domain Question Answering (Open-QA). We compare against state-of-the-art models for both explicit and implicit knowledge storage on three popular Open-QA benchmarks, and find that we outperform all previous methods by a significant margin (4-16\% absolute accuracy), while also providing qualitative benefits such as interpretability and modularity.},
+  langid = {english},
+  file = {/Users/preetams/Zotero/storage/ZR9WCCWJ/Guu et al. - 2020 - Retrieval Augmented Language Model Pre-Training.pdf}
+}
+
+@misc{izacardAtlasFewshotLearning2022,
+  title = {Atlas: {{Few-shot Learning}} with {{Retrieval Augmented Language Models}}},
+  shorttitle = {Atlas},
+  author = {Izacard, Gautier and Lewis, Patrick and Lomeli, Maria and Hosseini, Lucas and Petroni, Fabio and Schick, Timo and {Dwivedi-Yu}, Jane and Joulin, Armand and Riedel, Sebastian and Grave, Edouard},
+  year = {2022},
+  month = nov,
+  number = {arXiv:2208.03299},
+  eprint = {2208.03299},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2208.03299},
+  urldate = {2025-09-29},
+  abstract = {Large language models have shown impressive few-shot results on a wide range of tasks. However, when knowledge is key for such results, as is the case for tasks such as question answering and fact checking, massive parameter counts to store knowledge seem to be needed. Retrieval augmented models are known to excel at knowledge intensive tasks without the need for as many parameters, but it is unclear whether they work in few-shot settings. In this work we present Atlas, a carefully designed and pre-trained retrieval augmented language model able to learn knowledge intensive tasks with very few training examples. We perform evaluations on a wide range of tasks, including MMLU, KILT and NaturalQuestions, and study the impact of the content of the document index, showing that it can easily be updated. Notably, Atlas reaches over 42\% accuracy on Natural Questions using only 64 examples, outperforming a 540B parameters model by 3\% despite having 50x fewer parameters.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Computation and Language},
+  file = {/Users/preetams/Zotero/storage/ZRGYBHUJ/Izacard et al. - 2022 - Atlas Few-shot Learning with Retrieval Augmented Language Models.pdf;/Users/preetams/Zotero/storage/2H7NF6KX/2208.html}
 }
 
 @misc{izacardLeveragingPassageRetrieval2021,
@@ -233,6 +303,19 @@
   file = {/Users/preetams/Zotero/storage/CHBHYBZ6/Kwiatkowski et al. - 2019 - Natural Questions A Benchmark for Question Answering Research.pdf}
 }
 
+@inproceedings{lewisRetrievalAugmentedGenerationKnowledgeIntensive2020a,
+  title = {Retrieval-{{Augmented Generation}} for {{Knowledge-Intensive NLP Tasks}}},
+  booktitle = {Advances in {{Neural Information Processing Systems}}},
+  author = {Lewis, Patrick and Perez, Ethan and Piktus, Aleksandra and Petroni, Fabio and Karpukhin, Vladimir and Goyal, Naman and K{\"u}ttler, Heinrich and Lewis, Mike and Yih, Wen-tau and Rockt{\"a}schel, Tim and Riedel, Sebastian and Kiela, Douwe},
+  year = {2020},
+  volume = {33},
+  pages = {9459--9474},
+  publisher = {Curran Associates, Inc.},
+  urldate = {2025-09-29},
+  abstract = {Large pre-trained language models have been shown to store factual knowledge in their parameters, and achieve state-of-the-art results when fine-tuned on downstream NLP tasks. However, their ability to access and precisely manipulate knowledge is still limited, and hence on knowledge-intensive tasks, their performance lags behind task-specific architectures. Additionally, providing provenance for their decisions and updating their world knowledge remain open research problems. Pre-trained models with a differentiable access mechanism to explicit non-parametric memory can overcome this issue, but have so far been only investigated for extractive downstream tasks. We explore a general-purpose fine-tuning recipe for retrieval-augmented generation (RAG) -- models which combine pre-trained parametric and non-parametric memory for language generation. We introduce RAG models where the parametric memory is a pre-trained seq2seq model and the non-parametric memory is a dense vector index of Wikipedia, accessed with a pre-trained neural retriever. We compare two RAG formulations, one which conditions on the same retrieved passages across the whole generated sequence, the other can use different passages per token. We fine-tune and evaluate our models on a wide range of knowledge-intensive NLP tasks and set the state-of-the-art on three open domain QA tasks, outperforming parametric seq2seq models and task-specific retrieve-and-extract architectures. For language generation tasks, we find that RAG models generate more specific, diverse and factual language than a state-of-the-art parametric-only seq2seq baseline.},
+  file = {/Users/preetams/Zotero/storage/AFSBASWU/Lewis et al. - 2020 - Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks.pdf}
+}
+
 @misc{liOpenSourceData2024,
   title = {An {{Open Source Data Contamination Report}} for {{Large Language Models}}},
   author = {Li, Yucheng and Guerin, Frank and Lin, Chenghua},
@@ -321,6 +404,24 @@
   file = {/Users/preetams/Zotero/storage/7X3U7K7J/Ma et al. - 2021 - Dynaboard An Evaluation-As-A-Service Platform for Holistic Next-Generation Benchmarking.pdf;/Users/preetams/Zotero/storage/G8FJDGBB/2106.html}
 }
 
+@misc{mialonAugmentedLanguageModels2023,
+  title = {Augmented {{Language Models}}: A {{Survey}}},
+  shorttitle = {Augmented {{Language Models}}},
+  author = {Mialon, Gr{\'e}goire and Dess{\`i}, Roberto and Lomeli, Maria and Nalmpantis, Christoforos and Pasunuru, Ram and Raileanu, Roberta and Rozi{\`e}re, Baptiste and Schick, Timo and {Dwivedi-Yu}, Jane and Celikyilmaz, Asli and Grave, Edouard and LeCun, Yann and Scialom, Thomas},
+  year = {2023},
+  month = feb,
+  number = {arXiv:2302.07842},
+  eprint = {2302.07842},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2302.07842},
+  urldate = {2025-09-29},
+  abstract = {This survey reviews works in which language models (LMs) are augmented with reasoning skills and the ability to use tools. The former is defined as decomposing a potentially complex task into simpler subtasks while the latter consists in calling external modules such as a code interpreter. LMs can leverage these augmentations separately or in combination via heuristics, or learn to do so from demonstrations. While adhering to a standard missing tokens prediction objective, such augmented LMs can use various, possibly non-parametric external modules to expand their context processing ability, thus departing from the pure language modeling paradigm. We therefore refer to them as Augmented Language Models (ALMs). The missing token objective allows ALMs to learn to reason, use tools, and even act, while still performing standard natural language tasks and even outperforming most regular LMs on several benchmarks. In this work, after reviewing current advance in ALMs, we conclude that this new research direction has the potential to address common limitations of traditional LMs such as interpretability, consistency, and scalability issues.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Computation and Language},
+  file = {/Users/preetams/Zotero/storage/XZ9GIA78/Mialon et al. - 2023 - Augmented Language Models a Survey.pdf;/Users/preetams/Zotero/storage/Y8T4U9XZ/2302.html}
+}
+
 @misc{morrisHowMuchLanguage2025,
   title = {How Much Do Language Models Memorize?},
   author = {Morris, John X. and Sitawarin, Chawin and Guo, Chuan and Kokhlikyan, Narine and Suh, G. Edward and Rush, Alexander M. and Chaudhuri, Kamalika and Mahloujifar, Saeed},
@@ -372,6 +473,25 @@
   archiveprefix = {arXiv},
   keywords = {Computer Science - Artificial Intelligence,Computer Science - Machine Learning,Statistics - Machine Learning},
   file = {/Users/preetams/Zotero/storage/UWJ9ATAA/Peng et al. - 2024 - On Limitations of the Transformer Architecture.pdf;/Users/preetams/Zotero/storage/8J2Z4BBC/2402.html}
+}
+
+@misc{rajpurkarSQuAD100000Questions2016,
+  title = {{{SQuAD}}: 100,000+ {{Questions}} for {{Machine Comprehension}} of {{Text}}},
+  shorttitle = {{{SQuAD}}},
+  author = {Rajpurkar, Pranav and Zhang, Jian and Lopyrev, Konstantin and Liang, Percy},
+  year = {2016},
+  month = oct,
+  number = {arXiv:1606.05250},
+  eprint = {1606.05250},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.1606.05250},
+  urldate = {2025-09-29},
+  abstract = {We present the Stanford Question Answering Dataset (SQuAD), a new reading comprehension dataset consisting of 100,000+ questions posed by crowdworkers on a set of Wikipedia articles, where the answer to each question is a segment of text from the corresponding reading passage. We analyze the dataset to understand the types of reasoning required to answer the questions, leaning heavily on dependency and constituency trees. We build a strong logistic regression model, which achieves an F1 score of 51.0\%, a significant improvement over a simple baseline (20\%). However, human performance (86.8\%) is much higher, indicating that the dataset presents a good challenge problem for future research. The dataset is freely available at https://stanford-qa.com},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Computation and Language},
+  note = {Comment: To appear in Proceedings of the 2016 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  file = {/Users/preetams/Zotero/storage/HEASKPIZ/Rajpurkar et al. - 2016 - SQuAD 100,000+ Questions for Machine Comprehension of Text.pdf;/Users/preetams/Zotero/storage/Y6BGWS4S/1606.html}
 }
 
 @misc{ravautComprehensiveSurveyContamination2025a,
@@ -717,6 +837,43 @@
   keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
   note = {Comment: International Conference on Machine Learning (ICML) 2024},
   file = {/Users/preetams/Zotero/storage/SGC3JAED/Zhu et al. - 2024 - Dynamic Evaluation of Large Language Models by Meta Probing Agents.pdf;/Users/preetams/Zotero/storage/QN3IKAYQ/2402.html}
+}
+
+@misc{zhuDynamicEvaluationLarge2024a,
+  title = {Dynamic {{Evaluation}} of {{Large Language Models}} by {{Meta Probing Agents}}},
+  author = {Zhu, Kaijie and Wang, Jindong and Zhao, Qinlin and Xu, Ruochen and Xie, Xing},
+  year = {2024},
+  month = jun,
+  number = {arXiv:2402.14865},
+  eprint = {2402.14865},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2402.14865},
+  urldate = {2025-09-26},
+  abstract = {Evaluation of large language models (LLMs) has raised great concerns in the community due to the issue of data contamination. Existing work designed evaluation protocols using well-defined algorithms for specific tasks, which cannot be easily extended to diverse scenarios. Moreover, current evaluation benchmarks can only provide the overall benchmark results and cannot support a fine-grained and multifaceted analysis of LLMs' abilities. In this paper, we propose meta probing agents (MPA), a general dynamic evaluation protocol inspired by psychometrics to evaluate LLMs. MPA is the key component of DyVal 2, which naturally extends the previous DyVal{\textasciitilde}{\textbackslash}citep\{zhu2023dyval\}. MPA designs the probing and judging agents to automatically transform an original evaluation problem into a new one following psychometric theory on three basic cognitive abilities: language understanding, problem solving, and domain knowledge. These basic abilities are also dynamically configurable, allowing multifaceted analysis. We conducted extensive evaluations using MPA and found that most LLMs achieve poorer performance, indicating room for improvement. Our multifaceted analysis demonstrated the strong correlation between the basic abilities and an implicit Matthew effect on model size, i.e., larger models possess stronger correlations of the abilities. MPA can also be used as a data augmentation approach to enhance LLMs. Code is available at: https://github.com/microsoft/promptbench.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  note = {Comment: International Conference on Machine Learning (ICML) 2024},
+  file = {/Users/preetams/Zotero/storage/KW2PYMTQ/Zhu et al. - 2024 - Dynamic Evaluation of Large Language Models by Meta Probing Agents.pdf;/Users/preetams/Zotero/storage/74VXYA32/2402.html}
+}
+
+@misc{zhuDyVal2Dynamic2024,
+  title = {{{DyVal}} 2: {{Dynamic Evaluation}} of {{Large Language Models}} by {{Meta Probing Agents}}},
+  shorttitle = {{{DyVal}} 2},
+  author = {Zhu, Kaijie and Wang, Jindong and Zhao, Qinlin and Xu, Ruochen and Xie, Xing},
+  year = {2024},
+  month = feb,
+  number = {arXiv:2402.14865},
+  eprint = {2402.14865},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2402.14865},
+  urldate = {2025-09-26},
+  abstract = {Evaluation of large language models (LLMs) has raised great concerns in the community due to the issue of data contamination. Existing work designed evaluation protocols using well-defined algorithms for specific tasks, which cannot be easily extended to diverse scenarios. Moreover, current evaluation benchmarks can only provide the overall benchmark results and cannot support a fine-grained and multifaceted analysis of LLMs' abilities. In this paper, we propose meta probing agents (MPA), a general dynamic evaluation protocol inspired by psychometrics to evaluate LLMs. MPA is the key component of DyVal 2, which naturally extends the previous DyVal{\textasciitilde}{\textbackslash}citep\{zhu2023dyval\}. MPA designs the probing and judging agents to automatically transform an original evaluation problem into a new one following psychometric theory on three basic cognitive abilities: language understanding, problem solving, and domain knowledge. These basic abilities are also dynamically configurable, allowing multifaceted analysis. We conducted extensive evaluations using MPA and found that most LLMs achieve poorer performance, indicating room for improvement. Our multifaceted analysis demonstrated the strong correlation between the basic abilities and an implicit Matthew effect on model size, i.e., larger models possess stronger correlations of the abilities. MPA can also be used as a data augmentation approach to enhance LLMs.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  note = {Comment: Technical report; 20 pages},
+  file = {/Users/preetams/Zotero/storage/KRBVJ7L9/Zhu et al. - 2024 - DyVal 2 Dynamic Evaluation of Large Language Models by Meta Probing Agents.pdf;/Users/preetams/Zotero/storage/TFK9J9QL/2402.html}
 }
 
 @misc{zhuDyValDynamicEvaluation2024b,
