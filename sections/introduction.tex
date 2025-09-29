@@ -1,2 +1,14 @@
 \section{Introduction}
-TBD
+
+
+% Topic of the paragraph Benchmark Leakage
+
+Benchmark leakage refers to the contamination that occurs when a model has prior exposure to a benchmark's test items during pretraining, leading to inflated evaluation scores and undermining the benchmark's validity \cite{zhouDontMakeYour2023,zhuDyValDynamicEvaluation2024b}. Since most LLMs are pretrained indiscriminately on publicly available web content, there is a high likelihood that they might have encountered benchmark datasets hosted on platforms like HuggingFace, GitHub, Kaggle, and similar sites. If the base LLM used in a WebQA agent has already seen the test examples during pretraining, the evaluation effectively becomes a case of testing on the training set — severely compromising the credibility of the reported results.
+
+% Topic of the paragraph Dynamic Benchmarking
+
+Dynamic benchmarking is an emerging evaluation paradigm that generates or adapts test samples at evaluation time, so models are scored on fresh, unseen data and testset contamination is avoided \cite{zhuDyValDynamicEvaluation2024b,kielaDynabenchRethinkingBenchmarking2021a,maDynaboardEvaluationAsAServicePlatform2021,zhuDynamicEvaluationLarge2024,zhangDARGDynamicEvaluation2024,rawlesAndroidWorldDynamicBenchmarking2025}. That means the agent does not see the same test sample twice, effectively addressing issues such as LLM memorization.
+
+% Topic of the paragraph Evolving Information
+
+In this work, we refer to information that can change over time, such as the stock price of Tesla, as evolving information. Arguably, this type of content could be labeled as dynamic content or temporal content, but that might cause confusion, since we are already using the term ``dynamic'' to describe an evaluation paradigm (dynamic benchmarking), and ``temporal'' might lead readers to associate it with time-series data. To avoid such confusion, we adopt the term evolving information to specifically denote factual content that may shift over time without implying a particular format or evaluation framework.
