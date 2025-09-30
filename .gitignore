@@ -32,6 +32,7 @@ samples/sample-*.pdf
 *.bbl
 *.run.xml
 *.rtf
+*.py
 samples/ACM-Reference-Format.bst
 samples/*.tex
 samples/*.bbx
