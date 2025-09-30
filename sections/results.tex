@@ -31,3 +31,20 @@
     \label{fig:model_performance_collage}
 \end{figure}
 
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}[t]{0.49\columnwidth}
+        \centering
+        \includegraphics[width=\columnwidth]{from_sandeep/plots_and_interpretations_contamination/analysis_20250831_221700/overall_contamination_rates_by_dataset.png}
+        \\[4pt]
+        {\small (a) Pretraining channel: contamination rates by dataset}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.49\columnwidth}
+        \centering
+        \includegraphics[width=\columnwidth]{from_sandeep/plots_and_interpretations_contamination/overall_retrieval_analysis_20250831_221712/overall_retrieval_contamination_rates_by_dataset.png}
+        \\[4pt]
+        {\small (b) Retrieval-time channel (web-RAG): contamination rates by dataset}
+    \end{minipage}
+    \caption{Contamination rates by dataset across the two leakage channels defined in the modeling framework: (a) pretraining contamination (source set $\mathcal{S}_{\text{pre}}{=}D_M$), and (b) retrieval-time contamination (source set $\mathcal{S}_{\text{ret}}{=}\mathcal{R}(q)$).}
+    \label{fig:contamination_rates_by_dataset_side_by_side}
+\end{figure}
