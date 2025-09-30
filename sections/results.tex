@@ -1,11 +1,6 @@
 \section{Results}
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\columnwidth]{res/model_performance_collage.pdf}
-    \caption{model\_performance\_collage.pdf}
-    \label{fig:model_performance_collage}
-\end{figure}
+\subsection{Contamination Modeling in QA Datasets}
 
 \begin{figure}[htbp]
     \centering
@@ -13,3 +8,26 @@
     \caption{Contamination rates by dataset across the two leakage channels defined in the modeling framework: (a) pretraining contamination (source set $\mathcal{S}_{\text{pre}}{=}D_M$), and (b) retrieval channel contamination (source set $\mathcal{S}_{\text{ret}}{=}\mathcal{R}(q)$).}
     \label{fig:contamination_rates_by_dataset}
 \end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\columnwidth]{res/contamination_sources_top_domains_all_datasets.pdf}
+    \caption{Top contamination sources (retrieval channel) for each dataset. For each dataset, we show the top-5 domains by number of contaminated instances (question+answer evidence where applicable), using dataset-specific x-axes to reflect differing scales; panels are right-aligned for readability.}
+    \label{fig:top_contamination_sources_by_dataset}
+\end{figure}
+
+
+\subsection{Model Performance}
+
+
+
+
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\columnwidth]{res/model_performance_collage.pdf}
+    \caption{model\_performance\_collage.pdf}
+    \label{fig:model_performance_collage}
+\end{figure}
+
