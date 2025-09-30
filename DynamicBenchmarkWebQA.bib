@@ -157,6 +157,23 @@
   file = {/Users/preetams/Zotero/storage/ZR9WCCWJ/Guu et al. - 2020 - Retrieval Augmented Language Model Pre-Training.pdf}
 }
 
+@misc{hanSearchTimeDataContamination2025,
+  title = {Search-{{Time Data Contamination}}},
+  author = {Han, Ziwen and Mankikar, Meher and Michael, Julian and Wang, Zifan},
+  year = {2025},
+  month = aug,
+  number = {arXiv:2508.13180},
+  eprint = {2508.13180},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2508.13180},
+  urldate = {2025-09-29},
+  abstract = {Data contamination refers to the leakage of evaluation data into model training data, resulting in overfitting to supposedly held-out test sets and compromising test validity. We identify an analogous issue, search-time contamination (STC), in evaluating search-based LLM agents which use tools to gather information from online sources when answering user queries. STC occurs when the retrieval step surfaces a source containing the test question (or a near-duplicate) alongside its answer, enabling agents to copy rather than genuinely infer or reason, undermining benchmark integrity. We find that HuggingFace, an online platform hosting evaluation datasets, appears among retrieved sources in search based agent logs. Consequently, agents often explicitly acknowledge discovering question answer pairs from HuggingFace within their reasoning chains. On three commonly used capability benchmarks: Humanity's Last Exam (HLE), SimpleQA, and GPQA, we demonstrate that for approximately 3\% of questions, search-based agents directly find the datasets with ground truth labels on HuggingFace. When millions of evaluation queries target the same benchmark, even small, repeated leaks can accelerate the benchmark's obsolescence, shortening its intended lifecycle. After HuggingFace is blocked, we observe a drop in accuracy on the contaminated subset of approximately 15\%. We further show through ablation experiments that publicly accessible evaluation datasets on HuggingFace may not be the sole source of STC. To this end, we conclude by proposing best practices for benchmark design and result reporting to address this novel form of leakage and ensure trustworthy evaluation of search-based LLM agents. To facilitate the auditing of evaluation results, we also publicly release the complete logs from our experiments.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Machine Learning},
+  file = {/Users/preetams/Zotero/storage/F5G7REY7/Han et al. - 2025 - Search-Time Data Contamination.pdf;/Users/preetams/Zotero/storage/B3AJKBDV/2508.html}
+}
+
 @misc{izacardAtlasFewshotLearning2022,
   title = {Atlas: {{Few-shot Learning}} with {{Retrieval Augmented Language Models}}},
   shorttitle = {Atlas},
@@ -367,6 +384,24 @@
   keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Cryptography and Security,Computer Science - Machine Learning},
   note = {Comment: Main text: 9 pages, 7 figures, 1 table. Appendix: 29 pages, 20 tables, 15 figures},
   file = {/Users/preetams/Zotero/storage/VS665U5A/Liu et al. - 2025 - Language Models May Verbatim Complete Text They Were Not Explicitly Trained On.pdf;/Users/preetams/Zotero/storage/33QEZMAR/2503.html}
+}
+
+@misc{liuLanguageModelsMay2025a,
+  title = {Language {{Models May Verbatim Complete Text They Were Not Explicitly Trained On}}},
+  author = {Liu, Ken Ziyu and {Choquette-Choo}, Christopher A. and Jagielski, Matthew and Kairouz, Peter and Koyejo, Sanmi and Liang, Percy and Papernot, Nicolas},
+  year = {2025},
+  month = mar,
+  number = {arXiv:2503.17514},
+  eprint = {2503.17514},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2503.17514},
+  urldate = {2025-09-29},
+  abstract = {An important question today is whether a given text was used to train a large language model (LLM). A {\textbackslash}emph\{completion\} test is often employed: check if the LLM completes a sufficiently complex text. This, however, requires a ground-truth definition of membership; most commonly, it is defined as a member based on the \$n\$-gram overlap between the target text and any text in the dataset. In this work, we demonstrate that this \$n\$-gram based membership definition can be effectively gamed. We study scenarios where sequences are {\textbackslash}emph\{non-members\} for a given \$n\$ and we find that completion tests still succeed. We find many natural cases of this phenomenon by retraining LLMs from scratch after removing all training samples that were completed; these cases include exact duplicates, near-duplicates, and even short overlaps. They showcase that it is difficult to find a single viable choice of \$n\$ for membership definitions. Using these insights, we design adversarial datasets that can cause a given target sequence to be completed without containing it, for any reasonable choice of \$n\$. Our findings highlight the inadequacy of \$n\$-gram membership, suggesting membership definitions fail to account for auxiliary information available to the training algorithm.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Cryptography and Security,Computer Science - Machine Learning},
+  note = {Comment: Main text: 9 pages, 7 figures, 1 table. Appendix: 29 pages, 20 tables, 15 figures},
+  file = {/Users/preetams/Zotero/storage/R36B7R4N/Liu et al. - 2025 - Language Models May Verbatim Complete Text They Were Not Explicitly Trained On.pdf;/Users/preetams/Zotero/storage/ZFXTASZK/2503.html}
 }
 
 @misc{liuOpenDomainQuestion2025,
@@ -621,6 +656,24 @@
   keywords = {Computer Science - Computation and Language},
   note = {Comment: Preprint, 26 pages, 10 figures, 5 tables; Added FreshEval},
   file = {/Users/preetams/Zotero/storage/2MRN3MA4/Vu et al. - 2023 - FreshLLMs Refreshing Large Language Models with Search Engine Augmentation.pdf;/Users/preetams/Zotero/storage/NQEWMY4Q/2310.html}
+}
+
+@misc{weiMeasuringShortformFactuality2024,
+  title = {Measuring Short-Form Factuality in Large Language Models},
+  author = {Wei, Jason and Karina, Nguyen and Chung, Hyung Won and Jiao, Yunxin Joy and Papay, Spencer and Glaese, Amelia and Schulman, John and Fedus, William},
+  year = {2024},
+  month = nov,
+  number = {arXiv:2411.04368},
+  eprint = {2411.04368},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2411.04368},
+  urldate = {2025-09-29},
+  abstract = {We present SimpleQA, a benchmark that evaluates the ability of language models to answer short, fact-seeking questions. We prioritized two properties in designing this eval. First, SimpleQA is challenging, as it is adversarially collected against GPT-4 responses. Second, responses are easy to grade, because questions are created such that there exists only a single, indisputable answer. Each answer in SimpleQA is graded as either correct, incorrect, or not attempted. A model with ideal behavior would get as many questions correct as possible while not attempting the questions for which it is not confident it knows the correct answer. SimpleQA is a simple, targeted evaluation for whether models "know what they know," and our hope is that this benchmark will remain relevant for the next few generations of frontier models. SimpleQA can be found at https://github.com/openai/simple-evals.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Computation and Language},
+  note = {Comment: Blog post: https://openai.com/index/introducing-simpleqa/},
+  file = {/Users/preetams/Zotero/storage/29L6JZAM/Wei et al. - 2024 - Measuring short-form factuality in large language models.pdf;/Users/preetams/Zotero/storage/QLZTV324/2411.html}
 }
 
 @misc{yangHotpotQADatasetDiverse2018a,
