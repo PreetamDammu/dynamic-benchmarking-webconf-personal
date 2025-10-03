@@ -1,0 +1,54 @@
+{
+  "experiment_info": {
+    "timestamp": "2025-10-02T01:27:55.243057",
+    "input_file": "data/grouped_variants/random_split_grouped_question_variants.json",
+    "model": "intfloat/e5-base-v2",
+    "total_items": 4996,
+    "total_rounds": 10,
+    "items_per_round": {
+      "0": 500,
+      "1": 500,
+      "2": 500,
+      "3": 500,
+      "4": 500,
+      "5": 500,
+      "6": 499,
+      "7": 499,
+      "8": 499,
+      "9": 499
+    },
+    "norm_mode": "l2",
+    "permanova_metric": "euclidean"
+  },
+  "omnibus_results": {
+    "method": "PERMANOVA",
+    "statistic": 0.6476152539253235,
+    "p_value": 1.0,
+    "permutations": 10000
+  },
+  "permanova_r2": {
+    "r2": 0.0011676156826687812,
+    "permutation_resolution": 9.999000099990002e-05
+  },
+  "pairwise_summary": {
+    "total_comparisons": 45,
+    "significant_comparisons": 0,
+    "mean_energy_effect": -0.0006576424712739107,
+    "std_energy_effect": 0.00020825060480042225,
+    "min_energy_effect": -0.0009122729836592087,
+    "max_energy_effect": 7.267437792093511e-05,
+    "median_energy_effect": -0.000710015672550843,
+    "max_abs_effect": 0.0009122729836592087
+  },
+  "files_saved": {
+    "embeddings": "outputs/random_split_10k_final/embeddings.npy",
+    "labels": "outputs/random_split_10k_final/labels.npy",
+    "distance_matrix": "outputs/random_split_10k_final/distance_matrix.npy",
+    "omnibus_result": "outputs/random_split_10k_final/omnibus_result.json",
+    "parameters": "outputs/random_split_10k_final/parameters.yaml",
+    "log_file": "outputs/random_split_10k_final/round_consistency.log",
+    "heatmap_matrix": "outputs/random_split_10k_final/heatmap_matrix.npy",
+    "round_names": "outputs/random_split_10k_final/round_names.json",
+    "pairwise_results": "outputs/random_split_10k_final/pairwise_drift_map.csv"
+  }
+}

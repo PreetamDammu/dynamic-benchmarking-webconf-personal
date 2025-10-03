@@ -1,0 +1,54 @@
+{
+  "experiment_info": {
+    "timestamp": "2025-10-02T01:03:35.109534",
+    "input_file": "data/grouped_variants/high_contamination_grouped_question_variants.json",
+    "model": "intfloat/e5-base-v2",
+    "total_items": 5000,
+    "total_rounds": 10,
+    "items_per_round": {
+      "0": 500,
+      "1": 500,
+      "2": 500,
+      "3": 500,
+      "4": 500,
+      "5": 500,
+      "6": 500,
+      "7": 500,
+      "8": 500,
+      "9": 500
+    },
+    "norm_mode": "l2",
+    "permanova_metric": "euclidean"
+  },
+  "omnibus_results": {
+    "method": "PERMANOVA",
+    "statistic": 0.7429487705230713,
+    "p_value": 1.0,
+    "permutations": 10000
+  },
+  "permanova_r2": {
+    "r2": 0.0013381945980812336,
+    "permutation_resolution": 9.999000099990002e-05
+  },
+  "pairwise_summary": {
+    "total_comparisons": 45,
+    "significant_comparisons": 0,
+    "mean_energy_effect": -0.0005141119165835785,
+    "std_energy_effect": 0.00031586483479493257,
+    "min_energy_effect": -0.0008962552321834128,
+    "max_energy_effect": 0.00044929400959722117,
+    "median_energy_effect": -0.0006305723571951802,
+    "max_abs_effect": 0.0008962552321834128
+  },
+  "files_saved": {
+    "embeddings": "outputs/high_contamination_10k_final/embeddings.npy",
+    "labels": "outputs/high_contamination_10k_final/labels.npy",
+    "distance_matrix": "outputs/high_contamination_10k_final/distance_matrix.npy",
+    "omnibus_result": "outputs/high_contamination_10k_final/omnibus_result.json",
+    "parameters": "outputs/high_contamination_10k_final/parameters.yaml",
+    "log_file": "outputs/high_contamination_10k_final/round_consistency.log",
+    "heatmap_matrix": "outputs/high_contamination_10k_final/heatmap_matrix.npy",
+    "round_names": "outputs/high_contamination_10k_final/round_names.json",
+    "pairwise_results": "outputs/high_contamination_10k_final/pairwise_drift_map.csv"
+  }
+}
