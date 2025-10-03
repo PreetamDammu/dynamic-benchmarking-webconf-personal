@@ -1,3 +1,21 @@
+@misc{asaiLearningRetrieveReasoning2020a,
+  title = {Learning to {{Retrieve Reasoning Paths}} over {{Wikipedia Graph}} for {{Question Answering}}},
+  author = {Asai, Akari and Hashimoto, Kazuma and Hajishirzi, Hannaneh and Socher, Richard and Xiong, Caiming},
+  year = {2020},
+  month = feb,
+  number = {arXiv:1911.10470},
+  eprint = {1911.10470},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.1911.10470},
+  urldate = {2025-10-03},
+  abstract = {Answering questions that require multi-hop reasoning at web-scale necessitates retrieving multiple evidence documents, one of which often has little lexical or semantic relationship to the question. This paper introduces a new graph-based recurrent retrieval approach that learns to retrieve reasoning paths over the Wikipedia graph to answer multi-hop open-domain questions. Our retriever model trains a recurrent neural network that learns to sequentially retrieve evidence paragraphs in the reasoning path by conditioning on the previously retrieved documents. Our reader model ranks the reasoning paths and extracts the answer span included in the best reasoning path. Experimental results show state-of-the-art results in three open-domain QA datasets, showcasing the effectiveness and robustness of our method. Notably, our method achieves significant improvement in HotpotQA, outperforming the previous best model by more than 14 points.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Computation and Language},
+  note = {Comment: Published as a conference paper at ICLR 2020. Code is available at https://github.com/AkariAsai/learning\_to\_retrieve\_reasoning\_paths},
+  file = {/Users/preetams/Zotero/storage/26N6GBNY/Asai et al. - 2020 - Learning to Retrieve Reasoning Paths over Wikipedia Graph for Question Answering.pdf;/Users/preetams/Zotero/storage/WNXKFDPW/1911.html}
+}
+
 @misc{bangHalluLensLLMHallucination2025,
   title = {{{HalluLens}}: {{LLM Hallucination Benchmark}}},
   shorttitle = {{{HalluLens}}},
@@ -301,6 +319,22 @@
   file = {/Users/preetams/Zotero/storage/LDMSS2GB/Joshi et al. - 2017 - TriviaQA A Large Scale Distantly Supervised Challenge Dataset for Reading Comprehension.pdf;/Users/preetams/Zotero/storage/WJQ3YIJA/1705.html}
 }
 
+@inproceedings{karpukhinDensePassageRetrieval2020b,
+  title = {Dense {{Passage Retrieval}} for {{Open-Domain Question Answering}}},
+  booktitle = {Proceedings of the 2020 {{Conference}} on {{Empirical Methods}} in {{Natural Language Processing}} ({{EMNLP}})},
+  author = {Karpukhin, Vladimir and Oguz, Barlas and Min, Sewon and Lewis, Patrick and Wu, Ledell and Edunov, Sergey and Chen, Danqi and Yih, Wen-tau},
+  editor = {Webber, Bonnie and Cohn, Trevor and He, Yulan and Liu, Yang},
+  year = {2020},
+  month = nov,
+  pages = {6769--6781},
+  publisher = {Association for Computational Linguistics},
+  address = {Online},
+  doi = {10.18653/v1/2020.emnlp-main.550},
+  urldate = {2025-10-03},
+  abstract = {Open-domain question answering relies on efficient passage retrieval to select candidate contexts, where traditional sparse vector space models, such as TF-IDF or BM25, are the de facto method. In this work, we show that retrieval can be practically implemented using dense representations alone, where embeddings are learned from a small number of questions and passages by a simple dual-encoder framework. When evaluated on a wide range of open-domain QA datasets, our dense retriever outperforms a strong Lucene-BM25 system greatly by 9\%-19\% absolute in terms of top-20 passage retrieval accuracy, and helps our end-to-end QA system establish new state-of-the-art on multiple open-domain QA benchmarks.},
+  file = {/Users/preetams/Zotero/storage/62D3ZD4T/Karpukhin et al. - 2020 - Dense Passage Retrieval for Open-Domain Question Answering.pdf}
+}
+
 @misc{kasaiRealTimeQAWhats2024,
   title = {{{RealTime QA}}: {{What}}'s the {{Answer Right Now}}?},
   shorttitle = {{{RealTime QA}}},
@@ -373,6 +407,22 @@
   urldate = {2025-09-26},
   abstract = {We present the Natural Questions corpus, a question answering data set. Questions consist of real anonymized, aggregated queries issued to the Google search engine. An annotator is presented with a question along with a Wikipedia page from the top 5 search results, and annotates a long answer (typically a paragraph) and a short answer (one or more entities) if present on the page, or marks null if no long/short answer is present. The public release consists of 307,373 training examples with single annotations; 7,830 examples with 5-way annotations for development data; and a further 7,842 examples with 5-way annotated sequestered as test data. We present experiments validating quality of the data. We also describe analysis of 25-way annotations on 302 examples, giving insights into human variability on the annotation task. We introduce robust metrics for the purposes of evaluating question answering systems; demonstrate high human upper bounds on these metrics; and establish baseline results using competitive methods drawn from related literature.},
   file = {/Users/preetams/Zotero/storage/CHBHYBZ6/Kwiatkowski et al. - 2019 - Natural Questions A Benchmark for Question Answering Research.pdf}
+}
+
+@inproceedings{leeLatentRetrievalWeakly2019,
+  title = {Latent {{Retrieval}} for {{Weakly Supervised Open Domain Question Answering}}},
+  booktitle = {Proceedings of the 57th {{Annual Meeting}} of the {{Association}} for {{Computational Linguistics}}},
+  author = {Lee, Kenton and Chang, Ming-Wei and Toutanova, Kristina},
+  editor = {Korhonen, Anna and Traum, David and M{\`a}rquez, Llu{\'i}s},
+  year = {2019},
+  month = jul,
+  pages = {6086--6096},
+  publisher = {Association for Computational Linguistics},
+  address = {Florence, Italy},
+  doi = {10.18653/v1/P19-1612},
+  urldate = {2025-10-03},
+  abstract = {Recent work on open domain question answering (QA) assumes strong supervision of the supporting evidence and/or assumes a blackbox information retrieval (IR) system to retrieve evidence candidates. We argue that both are suboptimal, since gold evidence is not always available, and QA is fundamentally different from IR. We show for the first time that it is possible to jointly learn the retriever and reader from question-answer string pairs and without any IR system. In this setting, evidence retrieval from all of Wikipedia is treated as a latent variable. Since this is impractical to learn from scratch, we pre-train the retriever with an Inverse Cloze Task. We evaluate on open versions of five QA datasets. On datasets where the questioner already knows the answer, a traditional IR system such as BM25 is sufficient. On datasets where a user is genuinely seeking an answer, we show that learned retrieval is crucial, outperforming BM25 by up to 19 points in exact match.},
+  file = {/Users/preetams/Zotero/storage/A6F94IBW/Lee et al. - 2019 - Latent Retrieval for Weakly Supervised Open Domain Question Answering.pdf}
 }
 
 @misc{leePlatypusQuickCheap2024,
@@ -684,6 +734,52 @@
   file = {/Users/preetams/Zotero/storage/DCU5SIYX/Rawles et al. - 2025 - AndroidWorld A Dynamic Benchmarking Environment for Autonomous Agents.pdf;/Users/preetams/Zotero/storage/GYW74UVJ/2405.html}
 }
 
+@inproceedings{saxenaImprovingMultihopQuestion2020,
+  title = {Improving {{Multi-hop Question Answering}} over {{Knowledge Graphs}} Using {{Knowledge Base Embeddings}}},
+  booktitle = {Proceedings of the 58th {{Annual Meeting}} of the {{Association}} for {{Computational Linguistics}}},
+  author = {Saxena, Apoorv and Tripathi, Aditay and Talukdar, Partha},
+  year = {2020},
+  pages = {4498--4507},
+  publisher = {Association for Computational Linguistics},
+  address = {Online},
+  doi = {10.18653/v1/2020.acl-main.412},
+  urldate = {2025-10-03},
+  abstract = {Knowledge Graphs (KG) are multi-relational graphs consisting of entities as nodes and relations among them as typed edges. Goal of the Question Answering over KG (KGQA) task is to answer natural language queries posed over the KG. Multi-hop KGQA requires reasoning over multiple edges of the KG to arrive at the right answer. KGs are often incomplete with many missing links, posing additional challenges for KGQA, especially for multi-hop KGQA. Recent research on multihop KGQA has attempted to handle KG sparsity using relevant external text, which isn't always readily available. In a separate line of research, KG embedding methods have been proposed to reduce KG sparsity by performing missing link prediction. Such KG embedding methods, even though highly relevant, have not been explored for multi-hop KGQA so far. We fill this gap in this paper and propose EmbedKGQA. EmbedKGQA is particularly effective in performing multi-hop KGQA over sparse KGs. EmbedKGQA also relaxes the requirement of answer selection from a prespecified neighborhood, a sub-optimal constraint enforced by previous multi-hop KGQA methods. Through extensive experiments on multiple benchmark datasets, we demonstrate EmbedKGQA's effectiveness over other stateof-the-art baselines.},
+  langid = {english},
+  file = {/Users/preetams/Zotero/storage/4LBI3MVD/Saxena et al. - 2020 - Improving Multi-hop Question Answering over Knowledge Graphs using Knowledge Base Embeddings.pdf}
+}
+
+@inproceedings{saxenaImprovingMultihopQuestion2020a,
+  title = {Improving {{Multi-hop Question Answering}} over {{Knowledge Graphs}} Using {{Knowledge Base Embeddings}}},
+  booktitle = {Proceedings of the 58th {{Annual Meeting}} of the {{Association}} for {{Computational Linguistics}}},
+  author = {Saxena, Apoorv and Tripathi, Aditay and Talukdar, Partha},
+  year = {2020},
+  pages = {4498--4507},
+  publisher = {Association for Computational Linguistics},
+  address = {Online},
+  doi = {10.18653/v1/2020.acl-main.412},
+  urldate = {2025-10-03},
+  abstract = {Knowledge Graphs (KG) are multi-relational graphs consisting of entities as nodes and relations among them as typed edges. Goal of the Question Answering over KG (KGQA) task is to answer natural language queries posed over the KG. Multi-hop KGQA requires reasoning over multiple edges of the KG to arrive at the right answer. KGs are often incomplete with many missing links, posing additional challenges for KGQA, especially for multi-hop KGQA. Recent research on multihop KGQA has attempted to handle KG sparsity using relevant external text, which isn't always readily available. In a separate line of research, KG embedding methods have been proposed to reduce KG sparsity by performing missing link prediction. Such KG embedding methods, even though highly relevant, have not been explored for multi-hop KGQA so far. We fill this gap in this paper and propose EmbedKGQA. EmbedKGQA is particularly effective in performing multi-hop KGQA over sparse KGs. EmbedKGQA also relaxes the requirement of answer selection from a prespecified neighborhood, a sub-optimal constraint enforced by previous multi-hop KGQA methods. Through extensive experiments on multiple benchmark datasets, we demonstrate EmbedKGQA's effectiveness over other stateof-the-art baselines.},
+  langid = {english},
+  file = {/Users/preetams/Zotero/storage/YRGDI8N4/Saxena et al. - 2020 - Improving Multi-hop Question Answering over Knowledge Graphs using Knowledge Base Embeddings.pdf}
+}
+
+@inproceedings{saxenaImprovingMultihopQuestion2020b,
+  title = {Improving {{Multi-hop Question Answering}} over {{Knowledge Graphs}} Using {{Knowledge Base Embeddings}}},
+  booktitle = {Proceedings of the 58th {{Annual Meeting}} of the {{Association}} for {{Computational Linguistics}}},
+  author = {Saxena, Apoorv and Tripathi, Aditay and Talukdar, Partha},
+  editor = {Jurafsky, Dan and Chai, Joyce and Schluter, Natalie and Tetreault, Joel},
+  year = {2020},
+  month = jul,
+  pages = {4498--4507},
+  publisher = {Association for Computational Linguistics},
+  address = {Online},
+  doi = {10.18653/v1/2020.acl-main.412},
+  urldate = {2025-10-03},
+  abstract = {Knowledge Graphs (KG) are multi-relational graphs consisting of entities as nodes and relations among them as typed edges. Goal of the Question Answering over KG (KGQA) task is to answer natural language queries posed over the KG. Multi-hop KGQA requires reasoning over multiple edges of the KG to arrive at the right answer. KGs are often incomplete with many missing links, posing additional challenges for KGQA, especially for multi-hop KGQA. Recent research on multi-hop KGQA has attempted to handle KG sparsity using relevant external text, which isn't always readily available. In a separate line of research, KG embedding methods have been proposed to reduce KG sparsity by performing missing link prediction. Such KG embedding methods, even though highly relevant, have not been explored for multi-hop KGQA so far. We fill this gap in this paper and propose EmbedKGQA. EmbedKGQA is particularly effective in performing multi-hop KGQA over sparse KGs. EmbedKGQA also relaxes the requirement of answer selection from a pre-specified neighborhood, a sub-optimal constraint enforced by previous multi-hop KGQA methods. Through extensive experiments on multiple benchmark datasets, we demonstrate EmbedKGQA's effectiveness over other state-of-the-art baselines.},
+  file = {/Users/preetams/Zotero/storage/DJLYM534/Saxena et al. - 2020 - Improving Multi-hop Question Answering over Knowledge Graphs using Knowledge Base Embeddings.pdf}
+}
+
 @misc{SearxngSearxng2025,
   title = {Searxng/Searxng},
   year = {2025},
@@ -711,6 +807,24 @@
   archiveprefix = {arXiv},
   keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
   file = {/Users/preetams/Zotero/storage/9B36MK6D/Su et al. - 2024 - API Is Enough Conformal Prediction for Large Language Models Without Logit-Access.pdf;/Users/preetams/Zotero/storage/LPLGCSJQ/2403.html}
+}
+
+@misc{sunOpenDomainQuestion2018,
+  title = {Open {{Domain Question Answering Using Early Fusion}} of {{Knowledge Bases}} and {{Text}}},
+  author = {Sun, Haitian and Dhingra, Bhuwan and Zaheer, Manzil and Mazaitis, Kathryn and Salakhutdinov, Ruslan and Cohen, William W.},
+  year = {2018},
+  month = sep,
+  number = {arXiv:1809.00782},
+  eprint = {1809.00782},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.1809.00782},
+  urldate = {2025-10-03},
+  abstract = {Open Domain Question Answering (QA) is evolving from complex pipelined systems to end-to-end deep neural networks. Specialized neural models have been developed for extracting answers from either text alone or Knowledge Bases (KBs) alone. In this paper we look at a more practical setting, namely QA over the combination of a KB and entity-linked text, which is appropriate when an incomplete KB is available with a large text corpus. Building on recent advances in graph representation learning we propose a novel model, GRAFT-Net, for extracting answers from a question-specific subgraph containing text and KB entities and relations. We construct a suite of benchmark tasks for this problem, varying the difficulty of questions, the amount of training data, and KB completeness. We show that GRAFT-Net is competitive with the state-of-the-art when tested using either KBs or text alone, and vastly outperforms existing methods in the combined setting. Source code is available at https://github.com/OceanskySun/GraftNet .},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Computation and Language,Computer Science - Machine Learning},
+  note = {Comment: EMNLP 2018},
+  file = {/Users/preetams/Zotero/storage/PKR3KY3C/Sun et al. - 2018 - Open Domain Question Answering Using Early Fusion of Knowledge Bases and Text.pdf;/Users/preetams/Zotero/storage/PIBWNX3P/1809.html}
 }
 
 @misc{thakurBEIRHeterogenousBenchmark2021,
@@ -804,6 +918,40 @@
   keywords = {Computer Science - Computation and Language},
   note = {Comment: Blog post: https://openai.com/index/introducing-simpleqa/},
   file = {/Users/preetams/Zotero/storage/29L6JZAM/Wei et al. - 2024 - Measuring short-form factuality in large language models.pdf;/Users/preetams/Zotero/storage/QLZTV324/2411.html}
+}
+
+@inproceedings{yangEndtoEndOpenDomainQuestion2019,
+  title = {End-to-{{End Open-Domain Question Answering}} with {{BERTserini}}},
+  booktitle = {Proceedings of the 2019 {{Conference}} of the {{North}}},
+  author = {Yang, Wei and Xie, Yuqing and Lin, Aileen and Li, Xingyu and Tan, Luchen and Xiong, Kun and Li, Ming and Lin, Jimmy},
+  year = {2019},
+  eprint = {1902.01718},
+  primaryclass = {cs},
+  pages = {72--77},
+  doi = {10.18653/v1/N19-4013},
+  urldate = {2025-10-03},
+  abstract = {We demonstrate an end-to-end question answering system that integrates BERT with the open-source Anserini information retrieval toolkit. In contrast to most question answering and reading comprehension models today, which operate over small amounts of input text, our system integrates best practices from IR with a BERT-based reader to identify answers from a large corpus of Wikipedia articles in an end-to-end fashion. We report large improvements over previous results on a standard benchmark test collection, showing that fine-tuning pretrained BERT with SQuAD is sufficient to achieve high accuracy in identifying answer spans.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Computation and Language,Computer Science - Information Retrieval},
+  note = {Comment: Published in the Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics (Demonstrations)},
+  file = {/Users/preetams/Zotero/storage/LPBMNQK3/Yang et al. - 2019 - End-to-End Open-Domain Question Answering with BERTserini.pdf;/Users/preetams/Zotero/storage/PTTB68SB/1902.html}
+}
+
+@inproceedings{yangEndtoEndOpenDomainQuestion2019a,
+  title = {End-to-{{End Open-Domain Question Answering}} with {{BERTserini}}},
+  booktitle = {Proceedings of the 2019 {{Conference}} of the {{North}}},
+  author = {Yang, Wei and Xie, Yuqing and Lin, Aileen and Li, Xingyu and Tan, Luchen and Xiong, Kun and Li, Ming and Lin, Jimmy},
+  year = {2019},
+  eprint = {1902.01718},
+  primaryclass = {cs},
+  pages = {72--77},
+  doi = {10.18653/v1/N19-4013},
+  urldate = {2025-10-03},
+  abstract = {We demonstrate an end-to-end question answering system that integrates BERT with the open-source Anserini information retrieval toolkit. In contrast to most question answering and reading comprehension models today, which operate over small amounts of input text, our system integrates best practices from IR with a BERT-based reader to identify answers from a large corpus of Wikipedia articles in an end-to-end fashion. We report large improvements over previous results on a standard benchmark test collection, showing that fine-tuning pretrained BERT with SQuAD is sufficient to achieve high accuracy in identifying answer spans.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Computation and Language,Computer Science - Information Retrieval},
+  note = {Comment: Published in the Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics (Demonstrations)},
+  file = {/Users/preetams/Zotero/storage/MZG2YFRW/Yang et al. - 2019 - End-to-End Open-Domain Question Answering with BERTserini.pdf;/Users/preetams/Zotero/storage/LYVQKKX4/1902.html}
 }
 
 @misc{yangHotpotQADatasetDiverse2018a,
