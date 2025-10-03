@@ -1,0 +1,159 @@
+\section*{Appendix}
+\label{appendix:prompts}
+
+\begin{tcolorbox}[
+    colback=lightgray!20, 
+    colframe=gray, 
+    title={\textbf{Claim Extraction Prompt}}, 
+    fonttitle=\bfseries,
+    sharp corners=southwest,
+    coltitle=black,
+    label=prompt:p3
+]
+\small
+
+You are given a passage of text. Your task is to extract one-sentence standalone factual claims from the passage.
+
+\textbf{Each claim must:}
+\begin{itemize}
+    \item Be self-contained (i.e., understandable on its own without requiring coreference resolution)
+    \item Not rely on ambiguous references like ``this'', ``that'', ``they'', etc.
+    \item Be phrased as a complete declarative sentence
+    \item Be verifiable (e.g., ``Riot Games has no plans for League of Legends 2.'' is acceptable; ``They have no plans for League of Legends 2'' is not)
+\end{itemize}
+
+For each claim, also provide the exact verbatim supporting text span from the original text that led you to extract the claim.
+
+\vspace{0.01cm}
+\textbf{Output JSON Keys:}
+\begin{itemize}
+    \item \texttt{"claim1"}: standalone claim
+    \item \texttt{"supporting\_text\_span1"}: verbatim supporting text span from original
+    \item \texttt{"claim2"}: standalone claim
+    \item \texttt{"supporting\_text\_span2"}: verbatim supporting text span from original
+    \item \texttt{...}
+\end{itemize}
+
+\vspace{0.01cm}
+\textbf{Task:} \newline
+Here is the input text: \texttt{\{text\}}
+
+\end{tcolorbox}
+
+\begin{tcolorbox}[
+    colback=lightgray!20, 
+    colframe=gray, 
+    title={\textbf{Temporal-Sequence Multi-Hop QA Prompt}}, 
+    fonttitle=\bfseries,
+    sharp corners=southwest,
+    coltitle=black,
+    label=prompt:p4
+]
+\small
+
+You are generating \texttt{\{n\_pairs\}} \textbf{temporal-sequence} multi-hop QA pairs. \\
+Buckets of claims (grouped by doc\_id) are below: \\
+\texttt{\{json.dumps(buckets, indent=2)\}}
+
+\vspace{0.2cm}
+\textbf{Rules for each QA pair:}
+\begin{itemize}
+    \item Combine claims from at least \textbf{\{min\_buckets\} different buckets}.
+    \item Each chosen claim must mention a year, date, or explicit timeframe.
+    \item Ask for an ordering or an interval (e.g., ``How many years after …?'').
+    \item Every referenced fact must be essential for the answer.
+    \item The question should not contain the answer or steps to get the answer.
+    \item The question should not refer to the documents, they should be general.
+    \item List every claim you used by its doc\_id and claim\_id.
+    \item Provide one concise answer (year, number of years, earlier event, etc.).
+\end{itemize}
+
+\vspace{0.2cm}
+\textbf{Output format (JSON list):}
+\begin{itemize}
+    \item \texttt{"used\_claims"}: list of \{\{doc\_id, claim\_id, claim\}\}
+    \item \texttt{"question"}: string
+    \item \texttt{"answer"}: string
+\end{itemize}
+
+Return only the JSON—no extra commentary.
+
+\end{tcolorbox}
+
+\begin{tcolorbox}[
+    colback=lightgray!20, 
+    colframe=gray, 
+    title={\textbf{Comparison-Style Multi-Hop QA Prompt}}, 
+    fonttitle=\bfseries,
+    sharp corners=southwest,
+    coltitle=black,
+    label=prompt:p5
+]
+\small
+
+You are generating \texttt{\{n\_pairs\}} \textbf{comparison-style} multi-hop QA pairs. \\
+Buckets of claims (grouped by doc\_id) are below: \\
+\texttt{\{json.dumps(buckets, indent=2)\}}
+
+\vspace{0.2cm}
+\textbf{Rules for each QA pair:}
+\begin{itemize}
+    \item Use claims from at least \textbf{\{min\_buckets\} different buckets}.
+    \item Frame the question so the solver must contrast values (higher, lower, difference, ratio, earlier, later).
+    \item Keep wording tight—only include values essential for the comparison.
+    \item The question should not contain the answer or steps to get the answer.
+    \item The question should not refer to the documents, they should be general.
+    \item List every claim you used by its doc\_id and claim\_id.
+    \item Provide a single, concise answer (number, entity, etc.).
+\end{itemize}
+
+\vspace{0.2cm}
+\textbf{Output format (JSON list):}
+\begin{itemize}
+    \item \texttt{"used\_claims"}: list of \{\{doc\_id, claim\_id, claim\}\}
+    \item \texttt{"question"}: string
+    \item \texttt{"answer"}: string
+\end{itemize}
+
+Return only the JSON—no extra commentary.
+
+\end{tcolorbox}
+
+\begin{tcolorbox}[
+    colback=lightgray!20, 
+    colframe=gray, 
+    title={\textbf{Conjunction-Style Multi-Hop QA Prompt}}, 
+    fonttitle=\bfseries,
+    sharp corners=southwest,
+    coltitle=black,
+    label=prompt:p6
+]
+\small
+
+You are generating \texttt{\{n\_pairs\}} \textbf{conjunction-style} multi-hop QA pairs. \\
+Buckets of claims (grouped by doc\_id) are below: \\
+\texttt{\{json.dumps(buckets, indent=2)\}}
+
+\vspace{0.2cm}
+\textbf{Rules for each QA pair:}
+\begin{itemize}
+    \item Combine facts from at least \textbf{\{min\_buckets\} different buckets} (can use more).
+    \item The answer must change if any referenced claim were false (logical AND).
+    \item No trivia—every fact must be essential.
+    \item The question should not contain the answer or steps to get the answer.
+    \item The question should not refer to the documents, they should be general.
+    \item List every claim you used by its doc\_id and claim\_id.
+    \item Provide a single, concise answer (entity, number, date, etc.).
+\end{itemize}
+
+\vspace{0.2cm}
+\textbf{Output format (JSON list):}
+\begin{itemize}
+    \item \texttt{"used\_claims"}: list of \{\{doc\_id, claim\_id, claim\}\}
+    \item \texttt{"question"}: string
+    \item \texttt{"answer"}: string
+\end{itemize}
+
+Return only the JSON—no extra commentary.
+
+\end{tcolorbox}

@@ -1,0 +1,110 @@
+## Appendix
+
+### Prompts Section
+
+
+#### Claim Extraction Prompt
+
+```
+def extract_standalone_claims_prompt(text):
+
+    PROMPT = f'''
+    You are given a passage of text. Your task is to extract one-sentence standalone factual claims from the passage.
+
+    Each claim must:
+    - Be self-contained (i.e., understandable on its own without requiring coreference resolution)
+    - Not rely on ambiguous references like "this", "that", "they", etc.
+    - Be phrased as a complete declarative sentence
+    - Be verifiable (e.g., "Riot Games has no plans for League of Legends 2." is acceptable; "They have no plans for League of Legends 2" is not)
+
+    For each claim, also provide the exact verbatim supporting text span from the original text that led you to extract the claim.
+
+    Return your answer in JSON format using the following keys numbered from 1 to n:
+    - "claim1": <standalone claim>,
+    - "supporting_text_span1": <verbatim supporting text span from original>,
+    ...
+
+
+    Here is the input text:
+    {text}
+    '''
+
+    return PROMPT
+```
+
+#### QA Generation Prompts and Helpers
+
+```
+
+
+def build_temporal_prompt(*buckets, n_pairs=3, min_buckets=2):
+    return textwrap.dedent(f"""
+    You are generating {n_pairs} **temporal-sequence** multi-hop QA pairs.
+    Buckets of claims (grouped by doc_id) are below:
+    {json.dumps(buckets, indent=2)}
+    **Rules for each QA pair**
+    - Combine claims from at least **{min_buckets} different buckets**.
+    - Each chosen claim must mention a year, date, or explicit timeframe.
+    - Ask for an ordering or an interval (e.g., "How many years after …?").
+    - Every referenced fact must be essential for the answer.
+    - The question should not contain the answer or steps to get the answer.
+    - The question should not refer to the documents, they should be general.
+    - List every claim you used by its doc_id and claim_id.
+    - Provide one concise answer (year, number of years, earlier event, etc.).
+    **Output format (JSON list)**
+    - "used_claims": list of {{doc_id, claim_id, claim}}
+    - "question":   string
+    - "answer":     string
+    Return only the JSON—no extra commentary.
+    """).strip()
+# Comparison QAs
+_NUM_RX = re.compile(r"\b\d[\d,]*(?:\.\d+)?\b")            # any numeral
+
+
+def build_comparison_prompt(*buckets, n_pairs=3, min_buckets=2):
+    return textwrap.dedent(f"""
+    You are generating {n_pairs} **comparison-style** multi-hop QA pairs.
+    Buckets of claims (grouped by doc_id) are below:
+    {json.dumps(buckets, indent=2)}
+    **Rules for each QA pair**
+    - Use claims from at least **{min_buckets} different buckets**.
+    - Frame the question so the solver must contrast values  
+      (higher, lower, difference, ratio, earlier, later).
+    - Keep wording tight—only include values essential for the comparison.
+    - The question should not contain the answer or steps to get the answer.
+    - The question should not refer to the documents, they should be general.
+    - List every claim you used by its doc_id and claim_id.
+    - Provide a single, concise answer (number, entity, etc.).
+    **Output format (JSON list)**
+    - "used_claims": list of {{doc_id, claim_id, claim}}
+    - "question":   string
+    - "answer":     string
+    Return only the JSON—no extra commentary.
+    """).strip()
+
+
+
+# Conjunction QAs
+
+
+def build_conjunction_prompt(*buckets, n_pairs=3, min_buckets=3):
+    return textwrap.dedent(f"""
+    You are generating {n_pairs} **conjunction-style** multi-hop QA pairs.
+    Buckets of claims (grouped by doc_id) are below:
+    {json.dumps(buckets, indent=2)}
+    **Rules for each QA pair**
+    - Combine facts from at least **{min_buckets} different buckets** (can use more).
+    - The answer must change if any referenced claim were false (logical AND).
+    - No trivia—every fact must be essential.
+    - The question should not contain the answer or steps to get the answer.
+    - The question should not refer to the documents, they should be general.
+    - List every claim you used by its doc_id and claim_id.
+    - Provide a single, concise answer (entity, number, date, etc.).
+    **Output format (JSON list)**
+    - "used_claims": list of {{doc_id, claim_id, claim}}
+    - "question":   string
+    - "answer":     string
+    Return only the JSON—no extra commentary.
+    """).strip()
+```
+
