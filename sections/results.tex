@@ -34,3 +34,96 @@
     \caption{Caption TBD}
     \label{fig:model_performance_collage}
 \end{figure}
+
+
+\subsection{Distributional Consistency: Results}
+\label{subsec:consistency-results}
+
+\textbf{Omnibus.} PERMANOVA detects no round effect in either split
+(Table~\ref{tab:omnibus}). With 10{,}000 permutations the $p$-value resolution is
+$10^{-4}$; both splits yield $p\geq 0.99$ and $R^2\leq 0.134\%$, indicating
+negligible variance explained by ``round''.
+
+\begin{table}[t]
+\centering
+\caption{Omnibus PERMANOVA across $K{=}10$ rounds (Euclidean on $\ell_2$-normalized embeddings; 10k permutations).}
+\label{tab:omnibus}
+\begin{tabular}{lrrrrr}
+\toprule
+Split & $N$ & Pseudo-$F$ & $R^2$ (\%) & Perms & $p$-value \\
+\midrule
+Highly Contaminated & 5{,}000 & 0.7429 & 0.1338 & 10{,}000 & $\geq 0.99$ \\
+Randomly Sampled    & 4{,}996 & 0.6476 & 0.1168 & 10{,}000 & $\geq 0.99$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Pairwise.} For the 45 round pairs per split, no comparison is significant
+after BH–FDR ($\alpha{=}0.05$). E-statistics are tiny ($10^{-4}$–$10^{-3}$) and centered
+near zero (Table~\ref{tab:pairwise-summary}); maxima are $<10^{-3}$.
+
+\begin{table}[t]
+\centering
+\caption{Summary of pairwise Energy tests (signed, U-centered E-statistic).}
+\label{tab:pairwise-summary}
+\begin{tabular}{lrrrrrrr}
+\toprule
+Split & \#Sig (FDR) & Mean & Median & Std & Min & Max & Max $|E|$ \\
+\midrule
+Highly Contaminated & 0/45 & $-5.14{\times}10^{-4}$ & $-6.31{\times}10^{-4}$ & $3.16{\times}10^{-4}$ & $-8.96{\times}10^{-4}$ & $4.49{\times}10^{-4}$ & $8.96{\times}10^{-4}$ \\
+Randomly Sampled    & 0/45 & $-6.58{\times}10^{-4}$ & $-7.10{\times}10^{-4}$ & $2.08{\times}10^{-4}$ & $-9.12{\times}10^{-4}$ & $7.27{\times}10^{-5}$ & $9.12{\times}10^{-4}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Visual evidence.} PCA projections (Figs.~\ref{fig:pca-high}, \ref{fig:pca-rand})
+show full intermixing by round (PC1/PC2 ${<}4\%$ explained each). Drift heatmaps of
+signed E-statistics (Figs.~\ref{fig:heat-high}, \ref{fig:heat-rand}) concentrate near zero
+without structure. Centered mean-distance maps and relative deviations
+(Figs.~\ref{fig:centered-high}, \ref{fig:centered-rand}) show max absolute effects
+$\leq 1.5{\times}10^{-3}$, i.e., ${<}0.25\%$ of the within-round scale.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=1\linewidth]{res/final_dist_check/high_contamination_10kperms/embedding_visualization.pdf}
+\caption{\textbf{PCA (Highly Contaminated).} 2D projection; colors denote rounds.
+No visible separation; PC1/PC2 ${<}4\%$ variance each.}
+\label{fig:pca-high}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=1\linewidth]{res/final_dist_check/random_split_10kperms/embedding_visualization.pdf}
+\caption{\textbf{PCA (Randomly Sampled).} Same as Fig.~\ref{fig:pca-high}.}
+\label{fig:pca-rand}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=1\linewidth]{res/final_dist_check/high_contamination_10kperms/energy_distance_heatmap_seaborn_max_text.pdf}
+\caption{\textbf{Pairwise drift heatmap (Highly Contaminated).} Signed E-statistic; diverging colormap centered at~0.}
+\label{fig:heat-high}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=1\linewidth]{res/final_dist_check/random_split_10kperms/energy_distance_heatmap_seaborn_max_text.pdf}
+\caption{\textbf{Pairwise drift heatmap (Randomly Sampled).} Same as Fig.~\ref{fig:heat-high}.}
+\label{fig:heat-rand}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=1\linewidth]{res/final_dist_check/high_contamination_10kperms/centered_mean_distances_max_text.pdf}
+\caption{\textbf{Centered mean distance (Highly Contaminated).} Cross-round mean
+distance minus within-round average; proportional to the biased energy distance.
+Values cluster near zero; max $|\Delta| \le 1.5{\times}10^{-3}$.}
+\label{fig:centered-high}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=1\linewidth]{res/final_dist_check/random_split_10kperms/centered_mean_distances_max_text.pdf}
+\caption{\textbf{Centered mean distance (Randomly Sampled).} Same pattern as Fig.~\ref{fig:centered-high}.}
+\label{fig:centered-rand}
+\end{figure}
