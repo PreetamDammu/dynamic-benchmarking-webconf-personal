@@ -108,9 +108,7 @@ indistinguishable once mapped into a semantics–preserving space. Sentence
 embeddings place short texts so that nearby points share topical content; consequently, a shift in topics should manifest as a change in the \emph{distribution of pairwise distances}—not
 just a mean shift.
 
-\textbf{Representation.}
 We concatenate each question–answer pair and compute a sentence embedding with \texttt{intfloat/e5-base-v2}. Vectors are $\ell_2$–normalized so Euclidean and cosine distances are monotone-equivalent.
 
-\textbf{Test protocol.}
 On the Euclidean distance matrix we run a $K$-sample omnibus test with
 PERMANOVA (10k label permutations; report pseudo-$F$, $p$, and $R^2$). To localize potential differences, we run the Energy two-sample test for all $\binom{K}{2}$ round pairs (10k permutations; Benjamini–Hochberg FDR at $\alpha{=}0.05$). We add two descriptive visuals: a 2D PCA of embeddings colored by round, and a \emph{centered mean-distance} map that removes within-round dispersion; this quantity is proportional to the biased energy distance and serves as an effect-size view.
