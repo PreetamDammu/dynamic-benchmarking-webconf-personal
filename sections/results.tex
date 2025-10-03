@@ -76,54 +76,31 @@ Randomly Sampled    & 0/45 & $-6.58{\times}10^{-4}$ & $-7.10{\times}10^{-4}$ & $
 \end{tabular}
 \end{table}
 
-\textbf{Visual evidence.} PCA projections (Figs.~\ref{fig:pca-high}, \ref{fig:pca-rand})
+\textbf{Visual evidence.} PCA projections (Fig.~\ref{fig:pca-grouped})
 show full intermixing by round (PC1/PC2 ${<}4\%$ explained each). Drift heatmaps of
-signed E-statistics (Figs.~\ref{fig:heat-high}, \ref{fig:heat-rand}) concentrate near zero
+signed E-statistics (Fig.~\ref{fig:heat-grouped}) concentrate near zero
 without structure. Centered mean-distance maps and relative deviations
-(Figs.~\ref{fig:centered-high}, \ref{fig:centered-rand}) show max absolute effects
+(Fig.~\ref{fig:centered-grouped}) show max absolute effects
 $\leq 1.5{\times}10^{-3}$, i.e., ${<}0.25\%$ of the within-round scale.
 
+
 \begin{figure}[t]
 \centering
-\includegraphics[width=1\linewidth]{res/final_dist_check/high_contamination_10kperms/embedding_visualization.pdf}
-\caption{\textbf{PCA (Highly Contaminated).} 2D projection; colors denote rounds.
-No visible separation; PC1/PC2 ${<}4\%$ variance each.}
-\label{fig:pca-high}
+\includegraphics[width=\linewidth]{res/final_dist_check/embedding_visualization_grouped.pdf}
+\caption{PCA projections of $\ell_2$-normalized embeddings for Highly Contaminated (left) and Randomly Sampled (right) splits. Points are colored by round; both splits show full intermixing with PC1/PC2 each explaining ${<}4\%$ variance.}
+\label{fig:pca-grouped}
 \end{figure}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=1\linewidth]{res/final_dist_check/random_split_10kperms/embedding_visualization.pdf}
-\caption{\textbf{PCA (Randomly Sampled).} Same as Fig.~\ref{fig:pca-high}.}
-\label{fig:pca-rand}
+\includegraphics[width=\linewidth]{res/final_dist_check/pairwise_drift_heatmaps_grouped.pdf}
+\caption{Pairwise drift heatmaps. Left: Highly Contaminated; Right: Randomly Sampled. Cells show the \emph{E-statistic} from the Energy two-sample test (\texttt{hyppo.ksample.Energy}) computed on Euclidean distances of $\ell_2$-normalized embeddings; 10k permutations with BH–FDR over 45 round pairs.}
+\label{fig:heat-grouped}
 \end{figure}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=1\linewidth]{res/final_dist_check/high_contamination_10kperms/energy_distance_heatmap_seaborn_max_text.pdf}
-\caption{\textbf{Pairwise drift heatmap (Highly Contaminated).} Signed E-statistic; diverging colormap centered at~0.}
-\label{fig:heat-high}
-\end{figure}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=1\linewidth]{res/final_dist_check/random_split_10kperms/energy_distance_heatmap_seaborn_max_text.pdf}
-\caption{\textbf{Pairwise drift heatmap (Randomly Sampled).} Same as Fig.~\ref{fig:heat-high}.}
-\label{fig:heat-rand}
-\end{figure}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=1\linewidth]{res/final_dist_check/high_contamination_10kperms/centered_mean_distances_max_text.pdf}
-\caption{\textbf{Centered mean distance (Highly Contaminated).} Cross-round mean
-distance minus within-round average; proportional to the biased energy distance.
-Values cluster near zero; max $|\Delta| \le 1.5{\times}10^{-3}$.}
-\label{fig:centered-high}
-\end{figure}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=1\linewidth]{res/final_dist_check/random_split_10kperms/centered_mean_distances_max_text.pdf}
-\caption{\textbf{Centered mean distance (Randomly Sampled).} Same pattern as Fig.~\ref{fig:centered-high}.}
-\label{fig:centered-rand}
+\includegraphics[width=\linewidth]{res/final_dist_check/mean_distance_centered_grouped.pdf}
+\caption{Centered mean distance across rounds. Left: Highly Contaminated; Right: Randomly Sampled. Each cell shows cross-round mean distance minus the average within-round distance (proportional to the biased Energy distance). Values cluster near zero with maxima $\leq 1.7{\times}10^{-3}$.}
+\label{fig:centered-grouped}
 \end{figure}
