@@ -103,3 +103,10 @@ For all $\binom{K}{2}$ round pairs, the energy two-sample test is applied on $D$
 \paragraph{Descriptive visuals.}
 (i) A 2D PCA of embeddings colored by round (descriptive intermixing).  
 (ii) An energy–distance heat map summarizing cross-round separation after accounting for within-round dispersion; larger off-diagonal values indicate greater separation.
+
+\subsection{LLM-as-a-Judge for Annotations}
+\label{subsec:annotationLLM}
+
+Automated annotation is performed with three independent LLMs acting as judges  using a fixed \emph{LLM-as-Judge} prompt (Appendix). For each QA instance, the prompt elicits a brief rationale and returns four binary flags with the convention that 1 denotes a desirable property: Logical Structure (well-formed and unambiguous question), Non-Redundancy (the question does not contain or tautologically imply its answer), Evidence Support (the answer is supported by the cited claims and source spans from the graph’s document nodes), and Answer Adequacy (the answer fully addresses the question and is of the correct type). Rationales are collected for auditing and are motivated by prior findings that explanations can improve judgment quality, but only the binary flags are used for filtering \cite{wei2022chain,kojima2022large}.
+
+Aggregation requires unanimous agreement: all three judges must set all four flags to 1. In addition, the item must pass schema validation, citation traceability (document and claim identifiers with spans), and operator-specific checks such as hop-count bounds. Items failing any condition are discarded, and generation is retried for that graph until one item passes. This procedure ensures that each graph contributes exactly one accepted QA pair per round, preserving equal per-graph weighting in reporting and maintaining the distributional assumptions stated earlier.
