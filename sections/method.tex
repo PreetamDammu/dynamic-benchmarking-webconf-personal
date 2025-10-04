@@ -6,14 +6,7 @@ We propose a method that leverages \emph{seed graphs} to anchor future question 
 
 At evaluation round $t$, we maintain a set $\mathcal{S}_t = \{ G_1^{(t)}, \ldots, G_{n_t}^{(t)} \}$ of seed graphs. Each graph encodes the evidence trail (e.g., queries, retrieved documents, answer node) for a distinct information need. To support evolving information, graphs are constructed at evaluation time.
 
-% \subsection{QA Generation}
 
-% The generation function $\text{Gen}$ takes a seed graph $G_i^{(t)}$, a random seed $r_{i,t} \sim \mathcal{R}$, and a fixed generation configuration to produce one QA pair:
-% \begin{equation}
-%     (q_{i,t}, a_{i,t}) = \text{Gen}(G_i^{(t)}; r_{i,t}, \theta)
-% \end{equation}
-
-% Here, $\text{Gen}$ is an LLM-based generator that bundles a frozen prompt template and fixed decoding settings (e.g., temperature, top-$p$, stop tokens). $r_{i,t}$ is an i.i.d.\ sample from randomness source $\mathcal{R}$, introducing per-sample stochasticity. Holding $\theta$ constant and varying only $r_{i,t}$ ensures that each system sees independent but identically distributed QA samples.
 
 \subsection{QA Generation}
 

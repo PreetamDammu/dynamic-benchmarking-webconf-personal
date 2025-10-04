@@ -1,6 +1,6 @@
 \section{Modeling Contamination in RAG-Based QA}
 
-Retrieval-Augmented Generation (RAG) systems combine a parametric model $M$ with external sources retrieved at inference. This creates two leakage channels: (i) \emph{pretraining contamination}, where an evaluation item (or a close paraphrase / answer-bearing span) appears in the corpus used to pretrain $M$; and (ii) \emph{retrieval-time contamination}, where the retriever surfaces such material during evaluation, enabling lookup rather than reasoning. Our experiments instantiate web-enabled RAG (``web-RAG''), but the formalism below applies to RAG broadly.
+RAG systems combine a parametric model $M$ with external sources retrieved at inference. This creates two leakage channels: (i) \emph{pretraining contamination}, where an evaluation item (or a close paraphrase / answer-bearing span) appears in the corpus used to pretrain $M$; and (ii) \emph{retrieval-time contamination}, where the retriever surfaces such material during evaluation, enabling lookup rather than reasoning. Our experiments instantiate web-enabled RAG ``Web-RAG'', but the formalism below applies to RAG broadly.
 
 \subsection{Definitions}
 
@@ -56,132 +56,7 @@ We instantiate $f$ using five auditable open-data detectors frequently used in L
 Span-based detectors scale to long documents, handle the length mismatch between short questions and web pages, and yield concrete evidence spans. While semantic detectors (embeddings / paraphrase) may increase recall, they are harder to audit and become infeasible across disparate lengths; we therefore adopt span-based methods as primary signals, consistent with cautions in \cite{liuLanguageModelsMay2025} and common audit practice \cite{ravautComprehensiveSurveyContamination2025a}.
 
 \paragraph{Pretraining channel (candidate retrieval).}
-Full-membership testing against all datapoints in web-scale pretraining corpora is infeasible. Following the candidate-set approximation in open-data audits \cite{liOpenSourceData2024}, we index the CommonCrawl C4 corpus in an Elastic-compatible service (AWS OpenSearch). For each $x=(q,a)$, we retrieve top-$k$ candidates with BM25 (default $k{=}1000$) and apply the detectors between $\pi_{\text{in}}$ or $\pi_{\text{in+lab}}$ and each candidate document. Any positive flag indicates potential pretraining contamination.
+Full membership tests against all datapoints in web-scale pretraining corpora are infeasible. Following candidate-set approximations in open-data audits \cite{liOpenSourceData2024}, we index the Common Crawl C4 corpus in an Elasticsearch-compatible service (AWS OpenSearch). For each $x=(q,a)$, we retrieve top-$k$ candidates with BM25 (default $k{=}1000$) and compute contamination using Eq.~\eqref{eq:unified} for \emph{both views} ($\pi_{\text{in}}$ and $\pi_{\text{in+lab}}$), as well as the \emph{answer-bearing} variant Eq.~\eqref{eq:answer-bearing} (question view with $g(a,d)$). Any positive flag indicates potential pretraining contamination. This candidate pool serves as $S_{\text{pre}}(x)$.
 
 \paragraph{Retrieval-time channel (web-RAG).}
-For each $q$, we query SearxNG \cite{SearxngSearxng2025} with the raw question string, pool results from the first three result pages across underlying engines, and define $\mathcal{R}(q)$ accordingly. We (i) compute contamination using \eqref{eq:unified} and, when needed, \eqref{eq:answer-bearing} over this pool, and (ii) use the same pool as retrieval context for answer generation. This isolates run-time leakage introduced by search from memorization in $M$.
-
-\paragraph{Reporting.}
-For each dataset and channel we provide: (a) question-only and question+answer contamination rates; (b) per-detector breakdowns; and (c) overlap between pretraining and retrieval-time hits.
-
-
-
-% \section{Modeling Contamination in RAG-Based QA}
-% \label{sec:modeling-contamination}
-
-% Retrieval-Augmented Generation (RAG) systems answer queries by combining parametric knowledge in $M$ with external sources brought in by a retriever. This introduces two avenues for leakage: (i) \emph{pretraining} contamination, where an evaluation item (or close paraphrase / answer-bearing span) already exists in the corpus used to pretrain $M$; and (ii) \emph{retrieval-time} contamination, where the retriever surfaces that same material during evaluation, enabling lookup rather than reasoning. Our focus is the common web-enabled instantiation of RAG (``web-RAG''), but the definitions below apply to RAG generally.
-
-% \subsection{A unified formalization}
-
-% Let $M$ be a model pretrained on corpus $D_M$. Let $D_{\mathrm{eval}}$ be an evaluation set with items $x=(q,a)$ for question $q$ and answer $a$. Let $\mathcal{R}(q)$ denote the set of documents the retriever returns when issued $q$. Following \citet{ravautComprehensiveSurveyContamination2025a}, let $f:\Sigma^\*\!\times\!\Sigma^\*\!\rightarrow[0,1]$ be a similarity function with threshold $\tau\in(0,1]$; $\tau{=}1$ corresponds to \emph{strict/verbatim} contamination.
-
-% We consider two \emph{views} of an item:
-% \[
-% \pi_{\text{in}}(q,a)=q \quad\text{(\emph{question-only}; aligns with input-only in prior work)},\qquad
-% \pi_{\text{in+lab}}(q,a)=q\,\Vert\,a \quad\text{(\emph{question+answer}; aligns with input+label)}.
-% \]
-% Contamination holds for channel $C\in\{\text{pre},\text{ret}\}$ and view $v\in\{\text{in},\text{in+lab}\}$ if
-% \begin{equation}
-% \exists x\in D_{\mathrm{eval}},\; \exists d\in \mathcal{S}_C(x) \;\; \text{s.t.}\;\; f\!\left(\pi_v(x),\, d\right)\ge \tau,
-% \label{eq:unified-contam}
-% \end{equation}
-% with source sets
-% \[
-% \mathcal{S}_{\text{pre}}(x)=D_M, \qquad \mathcal{S}_{\text{ret}}(x)=\mathcal{R}(q).
-% \]
-% When a study requires the contamination evidence to be \emph{answer-bearing}, we couple \eqref{eq:unified-contam} with a predicate $g(a,d)\in\{0,1\}$ (e.g., answer mention or high-overlap similarity) and report positives of
-% \begin{equation}
-% \exists x, d \;\; \text{s.t.}\;\; f\!\left(q,d\right)\ge \tau_q \;\wedge\; g(a,d)=1.
-% \label{eq:answer-bearing}
-% \end{equation}
-% We report both \emph{question-only} and \emph{question+answer} leakage, as \citet{liOpenSourceData2024} show that even input-only (question-only) leakage can alter measured performance.
-
-% \subsection{Detectors (naming aligned with \textit{LLMSanitize})}
-
-% We instantiate $f$ using five high-precision, auditable open-data detectors frequently used in \emph{LLM pre-training studies} and consolidated by the \textit{LLMSanitize} survey:
-% \begin{itemize}
-% \item \textbf{Exact Match (EM)} \cite{dodgeDocumentingLargeWebtext2021}.
-% \item \textbf{$k$-gram word overlap (8-gram words)} as in the GPT-2 pre-training study \cite{radfordLanguageModelsAre}.
-% \item \textbf{$k$-gram word overlap (13-gram words)} as in the GPT-3 pre-training study \cite{brownLanguageModelsAre2020}.
-% \item \textbf{Character $n$-gram (50-character substring)} as in the GPT-4 technical report \cite{openaiGPT4TechnicalReport2024}.
-% \item \textbf{$k$-gram with proportion threshold (8-gram words, 70\%)} as in the PaLM pre-training study \cite{chowdheryPaLMScalingLanguage2022}.
-% \end{itemize}
-% These span-based detectors are scalable to long documents, robust to length mismatch between short questions and web pages, and produce concrete evidence spans. While semantic detectors (embeddings or paraphrase models) may improve recall, they are harder to audit and can be brittle in cross-length comparisons; we therefore adopt string/character methods as primary signals, consistent with cautions in \citet{liuLanguageModelsMay2025} and common practice in contamination audits \cite{ravautComprehensiveSurveyContamination2025}.
-
-% \subsection{Implementation: sources and approximations}
-
-% \paragraph{Pretraining channel (candidate-set approximation).}
-% Testing \eqref{eq:unified-contam} against full pretraining corpora is infeasible. Following the \emph{candidate retrieval} strategy used in open-data audits (e.g., \citealt{liOpenSourceData2024}), we index the CommonCrawl C4 corpus in an Elastic-compatible engine (AWS OpenSearch). For each $x=(q,a)$ we retrieve top-$k$ candidates by BM25 (default $k{=}1000$) and apply the detectors above between $\pi_{\text{in}}$ or $\pi_{\text{in+lab}}$ and each candidate document. Any positive flag indicates potential pretraining contamination.
-
-% \paragraph{Retrieval-time channel (web-RAG).}
-% For each question $q$ we query SearxNG with the raw question string, pool results from the first three result pages across underlying engines, and define $\mathcal{R}(q)$ as this pool. We (i) compute contamination using \eqref{eq:unified-contam} and, when required, \eqref{eq:answer-bearing} over $\mathcal{R}(q)$, and (ii) use the same pool as retrieval context for answer generation in our web-RAG baseline. This separates run-time leakage introduced by search from memorization in $M$.
-
-% \paragraph{Reporting.}
-% For each dataset and channel we provide: (a) question-only and question+answer contamination rates; (b) per-detector breakdowns; and (c) overlap between pretraining and retrieval-time hits. Together these statistics ground the empirical results that follow.
-
-
-
-
-
-% For the sake of clarity, some definitions before the updates/results:
-
-% ## Contamination
-
-% Following the formal definition of contamination in [1], we say that the dataset Devalis **contaminated** by the dataset DMif: 
-
-% xDeval,xDM,f(x,x)>=
-
-
-% where f is a similarity function, and a similarity threshold. =1 corresponds to **verbatim** or **strict** contamination.
-
-
-% * Contamination signs often include inflated performance on evaluation benchmarks, and model memorization of entire substrings. 
-% * **Contamination *detection*** refers to techniques assessing whether contamination holds true or not. 
-
-
-
-% ### Contamination Detection Techniques
-
-% Contamination detection methods can be open data (assumes pretraining data is accessible) or closed data (assumes pretraining data is unaccessible) \cite{ravautComprehensiveSurveyContamination2025}. We work with open data techniques since they are more accurate and transparent (we can directly pinpoint the exact leaked instance). On the other hand, closed-data techniques are approximations, and can be problematic \cite{liuLanguageModelsMay2025}.
-
-% Open-data methods are string- or token-based. There are a few practical reasons for this: N-gram or token-based contamination detection methods allow us to work with text samples of any length. For instance, you can apply these methods to check for the contamination of a one-sentence text string across large documents containing thousands of sentences (like a web page or a textbook). This is important since pretraining datasets typically comprise such text documents.
-
-% Contamination detection methods from the literature:
-
-%     * Exact match \cite{dodgeDocumentingLargeWebtext2021}(https://arxiv.org/pdf/2104.08758)
-%     * 8-gram words, GPT-2 paper \cite{radfordLanguageModelsAre}(https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)
-%     * 13-gram words, GPT-3 paper \cite{brownLanguageModelsAre2020} (https://arxiv.org/pdf/2005.14165)
-%     * 50-gram characters, GPT-4 paper \cite{openaiGPT4TechnicalReport2024} (https://arxiv.org/pdf/2303.08774.pdf)
-%     * 8-gram words with 70\% threshold, PaLM paper \cite{chowdheryPaLMScalingLanguage2022} (https://arxiv.org/pdf/2204.02311.pdf)
-
-
-
-% We also consider two levels of contamination, as outlined in \cite{liOpenSourceData2024}, which are:
-
-%     * **Input-only** (question contamination)
-%     * **Input-and-label** (question and answer contamination)
-
-% ## Contamination in the context of QA agents with search access
-
-% We present that contamination can happen at two stages in QA agents with web access (or most RAG systems). These are:
-
-% * Pretraining contamination: occurs when the test sample is included in the pretraining corpus.
-% * Retrieval contamination: occurs when the test sample is present in the retrieved results (from web engine).
-
-
-
-% Updates from Aug 21
-
-% * CommonCrawl C4 (a pretraining set, link: https://huggingface.co/datasets/allenai/c4) is now fully indexed in an AWS OpenSearch VPC endpoint. We are using this endpoint to retrieve top-k (for now, 1000 datapoints) for each test sample in a QA benchmark (like SQuAD, WebQuestions, TriviaQA, etc.) from the pretraining dataset. This step is required to keep things feasible, as pairwise comparisons between each test sample and large pretraining datasets are not scalable. Previous works maintain similar vector DBs (ref: https://arxiv.org/pdf/2311.04850).
-% * We now have implementations for contamination detection methods discussed in this survey ready (ref: https://arxiv.org/pdf/2404.00699). These are standard contamination detection metrics from the original papers and model release reports of base LLMs and pretraining datasets. The authors of the survey paper have shared their re-implementation scripts (https://github.com/ntunlp/LLMSanitize/tree/main/llmsanitize/open_data_methods), but some of their code cannot be applied directly to our problem:
-%     * Exact match \cite{dodgeDocumentingLargeWebtext2021}(https://arxiv.org/pdf/2104.08758)
-%     * 8-gram words, GPT-2 paper \cite{radfordLanguageModelsAre}(https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)
-%     * 13-gram words, GPT-3 paper \cite{brownLanguageModelsAre2020} (https://arxiv.org/pdf/2005.14165)
-%     * 50-gram characters, GPT-4 paper \cite{openaiGPT4TechnicalReport2024} (https://arxiv.org/pdf/2303.08774.pdf)
-%     * 8-gram words with 70\% threshold, PaLM paper \cite{chowdheryPaLMScalingLanguage2022} (https://arxiv.org/pdf/2204.02311.pdf)
-
-% * As you would notice, all but the last method are string- or token-based. There are a few practical reasons for this:
-%     * N-gram or token-based contamination detection methods allow us to work with text samples of any length. For instance, you can apply these methods to check for the contamination of a one-sentence text string across large documents containing thousands of sentences (like a web page or a textbook). This is important since pretraining datasets typically comprise such text documents.
-%     * However, with embedding-based methods or other LLM-paraphrase detection methods (https://arxiv.org/pdf/2311.04850), both entities (the sample being evaluated and the reference sample) need to be of similar length. This may work in special cases, like math or coding datasets such as The Stack (https://huggingface.co/datasets/bigcode/the-stack), and will work when evaluating coding benchmarks like CodeAlpaca, since even the pretraining datapoints are roughly similar in nature to the benchmark datapoints.
-%     * When it comes to QA datasets, or other NLP tasks such as NLI or Fact Verification, we typically see that the source documents are much larger than the test samples.
-% * For our experiments and our specific study, I think it makes sense to start with the word- or token-based metrics while we explore new options to possibly incorporate semantic matching. I say this because while string-based methods have high precision, they may not have as strong recall as semantic methods (potentially high false negatives, which could make the contamination look less severe than it actually is). However, string-based techniques are still the SOTA and the standard way to measure contamination in applications like QA.
+For each $q$, we query SearxNG \cite{SearxngSearxng2025} with the raw question string, pool results from the first three results pages across underlying engines, and define $\mathcal{R}(q)$ accordingly. We compute contamination over this pool using Eq.~\eqref{eq:unified} for \emph{both views} and Eq.~\eqref{eq:answer-bearing} (answer-bearing, question view), and we also use the same pool as retrieval context for answer generation. This isolates run-time leakage introduced by search from memorization in $M$. Here $S_{\text{ret}}(x)=\mathcal{R}(q)$.
