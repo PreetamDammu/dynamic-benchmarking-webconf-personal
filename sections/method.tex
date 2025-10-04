@@ -1,107 +1,105 @@
-\section{Method}
+\section{\textsc{DynamicWebQA} Framework}
 
-We propose a method that leverages \emph{seed graphs} to anchor future question generation, avoiding reliance on static datapoints that are vulnerable to memorization or data contamination. Each evaluation round produces a fresh QA pair from every graph, ensuring that no fixed test items can be leaked in advance while maintaining semantic comparability across rounds through the shared anchors.
+We propose a method that leverages \emph{seed graphs} to anchor future question generation while avoiding fixed test items that are easy to memorize or contaminate. At each evaluation round, every graph yields a fresh QA pair produced from the same underlying anchors, so rounds are semantically comparable without reusing static instances.
 
 \subsection{Seed Graphs}
+At evaluation round $t$, we maintain a set $\mathcal{S}_t=\{G_1^{(t)},\ldots,G_{n_t}^{(t)}\}$ of seed graphs. Each graph $G_i^{(t)}=(V_i^{(t)},E_i^{(t)},\Xi_i^{(t)})$ contains:
+(i) a node set $V_i^{(t)}$ of \emph{documents} retrieved at evaluation time,
+(ii) an edge set $E_i^{(t)}$ that records how documents have been jointly used to form past questions, and
+(iii) metadata $\Xi_i^{(t)}$ (timestamps, operator labels, usage counts).
+We initialize each graph with document nodes. As new QA items are generated from the graph, we \emph{add edges} between the documents used in that item and label those edges with the applied operator and round. This builds a usage history over time, supports collision control, and keeps nodes aligned with current web sources when refreshed at later rounds.
 
-At evaluation round $t$, we maintain a set $\mathcal{S}_t = \{ G_1^{(t)}, \ldots, G_{n_t}^{(t)} \}$ of seed graphs. Each graph encodes the evidence trail (e.g., queries, retrieved documents, answer node) for a distinct information need. To support evolving information, graphs are constructed at evaluation time.
+\subsection{Claim Extraction}
+Given the current document nodes $V_i^{(t)}$, we extract one-sentence, verifiable claims and their supporting spans using a fixed LLM prompt (``Claim Extraction Prompt''). Let
+\[
+\mathcal{C}_i^{(t)}=\bigcup_{d\in V_i^{(t)}}\{(d,\text{claim},\text{span})\}
+\]
+denote the set of extracted claims, bucketed by their source document $d$. This step yields atomic, referenceable units that we later compose into questions.
 
 
+\subsection{Operator-Controlled QA Composition}
+Question complexity and the type of reasoning required are jointly controlled by (i) a small set of composition operators $\mathcal{O}$=\{\textsf{conjunction},\ \textsf{temporal},\ \textsf{comparison}\} and (ii) the hop count $h$ -- the number of distinct document buckets used -- constrained to $h\in[h_{\min},h_{\max}]$.
+
+Each operator is realized by a fixed prompt template (see Appendix): \textsf{conjunction} enforces a logical AND so the answer changes if any referenced claim were false; \textsf{temporal} asks for an ordering or interval over time; and \textsf{comparison} requires a contrast (e.g., higher/lower, earlier/later, ratio). We specify $h\in[h_{\min},h_{\max}]$ to bound multi-hop complexity, with operator-specific constraints enforced by the templates.
 
 \subsection{QA Generation}
-
-The generation function $\text{Gen}$ takes a seed graph $G_i^{(t)}$, a random seed $r_{i,t} \sim \mathcal{R}$, and a fixed generation configuration $\theta$ to produce one QA pair:
+The generation function $\Gen$ takes the graph, a random seed, and fixed configuration to produce one QA pair:
 \begin{equation}
-    (q_{i,t}, a_{i,t}) = \text{Gen}(G_i^{(t)}; r_{i,t}, \theta)
+(q_{i,t},a_{i,t},U_{i,t})=\Gen\!\big(G_i^{(t)};\ r_{i,t},\theta\big), \label{eq:gen}
 \end{equation}
+where $\theta$ fixes the prompt templates and decoding settings (temperature, top-$p$, stop tokens), and $r_{i,t}\sim\mathcal{R}$ supplies per-sample stochasticity. Internally, $\Gen$:
+(1) samples an operator $o\in\mathcal{O}$ and a hop count $h$ within the configured range;
+(2) selects $h$ document buckets from $\mathcal{C}_i^{(t)}$ and assembles the operator-specific template with the selected claims; and
+(3) invokes an LLM to return a JSON object containing the list of used claims, the question, and a single concise answer. We write $U_{i,t}$ for the generation trace (operator $o$, documents used, and claim identifiers). Holding $\theta$ fixed and varying only $r_{i,t}$ produces i.i.d.\ samples per graph while keeping composition policy constant.
 
-Here, $\theta$ denotes the fixed generation configuration (frozen prompt template and decoding settings, e.g., temperature, top-$p$, stop tokens). $\text{Gen}$ is an LLM-based generator. $r_{i,t}$ is an i.i.d.\ sample from the randomness source $\mathcal{R}$, introducing per-sample stochasticity. Holding $\theta$ constant and varying only $r_{i,t}$ ensures that each system sees independent but identically distributed QA samples.
+\subsection{Graph Update and History}
+After generation, we update the graph to record usage:
+\[
+G_i^{(t+1)}=\Update\!\big(G_i^{(t)},U_{i,t}\big),
+\]
+which adds edges between all documents referenced in $U_{i,t}$ and annotates each edge with $(o,\text{round }t,\text{QA id})$. This history supports two practical goals: (i) tracking how documents have been combined across rounds and operators, and (ii) reducing collisions by allowing downstream filters to avoid reusing the same document combinations. The node set $V_i^{(t)}$ can also be refreshed to reflect changing sources.
 
 
 \subsection{Sampling and Distributional Properties}
 
-Sampling an independent seed $r_{i,t} \sim \mathcal{R}$ for each graph yields the per-graph distribution:
+In round $t$, with the configuration $\theta$ held fixed (prompts, operator/hop ranges, decoding settings), the only randomness comes from per-graph seeds $r_{i,t}\!\sim\!\mathcal{R}$, which drive operator/hop selection, claim selection, and decoding inside $\Gen$. For each graph, this induces a distribution over QA pairs:
 \begin{equation}
-    \mathcal{P}_{i,t} = \text{Dist}(\text{Gen}(G_i^{(t)}; r, \theta))
+    \mathcal{P}_{i,t} = \Dist\!\big(\Gen(G_i^{(t)}; r_{i,t}, \theta)\big).
 \end{equation}
 
-Because seeds are independent across graphs, the round-$t$ dataset 
-$D_t = \{ (q_{1,t}, a_{1,t}), \ldots, (q_{n_t,t}, a_{n_t,t}) \}$ 
-is an i.i.d.\ sample from the product measure:
+With independent seeds, the round-$t$ dataset
+$D_t=\{(q_{1,t},a_{1,t}),$ $\ldots,(q_{n_t,t},a_{n_t,t})\}$
+is an independent draw from the product measure
 \begin{equation}
-    \mathcal{P}_t = \prod_{i=1}^{n_t} \mathcal{P}_{i,t}
+    \mathcal{P}_t \;=\; \bigotimes_{i=1}^{n_t}\, \mathcal{P}_{i,t}.
 \end{equation}
 
-For a model $M$ under evaluation, let $\text{score}((q, a), M)$ be any per-question metric (e.g., exact match, F1, log-loss). The aggregate dataset score is defined as:
+For a model $M$ and any per-question metric $\text{score}((q,a),M)$ (e.g., EM, F1, log-loss), the aggregate dataset score is
 \begin{equation}
-    \text{Agg}(D_t, M) = \frac{1}{n_t} \sum_{i=1}^{n_t} \text{score}((q_{i,t}, a_{i,t}), M)
+    \text{Agg}(D_t,M) \;=\; \frac{1}{n_t}\sum_{i=1}^{n_t}\text{score}((q_{i,t},a_{i,t}),M).
 \end{equation}
-
-By linearity of expectation and independence of $(q_{i,t}, a_{i,t}) \sim \mathcal{P}_{i,t}$:
+By linearity of expectation,
 \begin{equation}
-    \mathbb{E}_{D_t \sim \mathcal{P}_t}[\text{Agg}(D_t, M)] 
-    = \frac{1}{n_t} \sum_{i=1}^{n_t} \mathbb{E}_{(q,a) \sim \mathcal{P}_{i,t}}[\text{score}((q,a), M)]
+    \mathbb{E}_{D_t\sim\mathcal{P}_t}\!\left[\text{Agg}(D_t,M)\right]
+    \;=\; \frac{1}{n_t}\sum_{i=1}^{n_t}\;
+    \mathbb{E}_{(q,a)\sim\mathcal{P}_{i,t}}\!\left[\text{score}((q,a),M)\right],
 \end{equation}
+so the expected aggregate is the average of the per-graph expectations, giving each seed graph equal weight.
 
-This shows that the expected accuracy is simply the average of the per-graph expectations—so every seed graph contributes equally.
 
-\subsection{Collision Bound}
-
-Assume for every seed graph $G_i^{(t)}$, the generator can produce $K$ distinct question–answer pairs:
-\[
-\mathcal{C}_{i,t} = \{ (q, a) \in \mathcal{P}_{i,t} \mid \Pr((q, a)) > 0 \}, \quad |\mathcal{C}_{i,t}| = K
-\]
-
-To characterize overlap across rounds $u < v$, define:
-\[
-J_{i,u,v} = |\mathcal{C}_{i,u} \cap \mathcal{C}_{i,v}|, \quad J_{\max} = \max_{u < v} J_{i,u,v}
-\]
-
-Because answers and evidence evolve over time, $J_{\max}$ tends to remain small for fast-changing topics.
-
-\paragraph{Collision Probability.} Sampling one QA pair per round, the probability that seed graph $i$ produces the same QA pair twice within $t$ rounds satisfies:
-\begin{equation}
-    \Pr[\text{collision within } t] \leq \frac{t(t-1)}{2K^2} J_{\max}
-\end{equation}
-
-\paragraph{Collision Control.} To guarantee that this probability is at most $\delta \in (0,1)$, it suffices to choose $K$ such that:
-\begin{equation}
-    K \geq \sqrt{ \frac{t(t-1)}{2\delta} J_{\max} }
-\end{equation}
-
-Equation (7) captures key trade-offs:
-\begin{itemize}
-    \item Larger $K$ (richer candidate pool) reduces collision probability for fixed $t$.
-    \item Fewer evaluation rounds $t$ allow a smaller $K$ for the same error tolerance $\delta$.
-    \item Smaller $J_{\max}$ (i.e., greater semantic drift) reduces required $K$.
-\end{itemize}
-
-Because each seed graph is rebuilt from fresh evidence each round, its candidate set changes, helping keep $J_{\max}$ small. Equation (6) quantifies the collision risk, while Equation (7) provides a tunable design guideline for selecting $K$.
 
 \subsection{Cross-Round Reporting and Compatibility}
 
-Because each round rebuilds the seed graph set $\mathcal{S}_t$, the underlying distribution 
-$\mathcal{P}_t = \prod_i \mathcal{P}_{i,t}$ may drift over time, especially for evolving topics. Consequently, raw accuracies from different rounds may not be directly comparable. We offer two strategies:
+Across rounds, the benchmark maintains a persistent set of seed graphs $\mathcal{S}$. As QA items are generated, edges and usage history accumulate. The design remains compatible with evolving sources: nodes represent current documents, so when a source changes, claims can be re-extracted the next time that graph is sampled. Within intervals where the node set and configuration $\theta$ are unchanged, successive generations for a given graph are i.i.d.; over longer horizons, the per-graph distribution $\mathcal{P}_{i,t}$ can drift with source evolution. To report results under these conditions, we use two complementary views:
 
-\paragraph{i) Snapshot Evaluation.} Fix a reference round $t^\ast$ and freeze its seed graphs $\mathcal{S}_{t^\ast}$. All systems are then evaluated on the same dataset $D_{t^\ast}$, ensuring identical test conditions.
+\paragraph{i) Snapshot Evaluation.}
+Choose a reference round $t^\ast$ and evaluate all systems on its realized dataset $D_{t^\ast}$. This fixes both the source set and the random draw, yielding identical test conditions.
 
-\paragraph{ii) Macro-Averaged Score.} For longitudinal tracking, aggregate performance across a window $\{t_1, \ldots, t_T\}$ (e.g., most recent $T$ rounds) using:
+\paragraph{ii) Macro-Averaged Score.}
+For longitudinal tracking over a window $W=\{t_1,\ldots,t_T\}$ (e.g., the most recent $T$ rounds), compute
 \begin{equation}
-    \text{Score}_{\text{macro}} = \frac{1}{T} \sum_{j=1}^{T} \text{Agg}(D_{t_j}, M)
+    \text{Score}_{\text{macro}}(M) \;=\; \frac{1}{T}\sum_{j=1}^{T}\,\text{Agg}\!\big(D_{t_j}, M\big).
 \end{equation}
+Each $D_{t_j}$ is an i.i.d.\ draw from its round-specific $\mathcal{P}_{t_j}$, so this macro-average summarizes average effectiveness under natural benchmark evolution without letting any single round dominate.
 
-Each $D_{t_j}$ is i.i.d.\ from its own $\mathcal{P}_{t_j}$, so Eq.\ (8) summarizes average effectiveness under the benchmark’s natural evolution, without letting any single round dominate.
 
 
 \subsection{Verifying Distributional Consistency}
 \label{subsec:consistency-method}
 
-If the generation is stable, items produced in different rounds should be
-indistinguishable once mapped into a semantics–preserving space. Sentence
-embeddings place short texts so that nearby points share topical content; consequently, a shift in topics should manifest as a change in the \emph{distribution of pairwise distances}—not
-just a mean shift.
+Under a stable generation policy (with $\theta$ held fixed), the embedding geometry should be invariant across rounds. Sentence embeddings are used as a practical proxy for topical relatedness, where proximity often reflects overlapping content or cues. Consequently, if the topic mix is stable, the distribution of pairwise distances should remain unchanged across rounds. Topic composition can change in ways that leave the average embedding unchanged—for example, similar topics in different proportions or broader within-topic spread—yet these changes alter the pattern of pairwise distances. Round-wise differences are therefore assessed using a distance-based permutation MANOVA (PERMANOVA) \cite{andersonNewMethodNonparametric2001} as the omnibus test, and pairwise differences using the energy two-sample test \cite{szekelyEnergyStatisticsClass2013}.
 
-We concatenate each question–answer pair and compute a sentence embedding with \texttt{intfloat/e5-base-v2}. Vectors are $\ell_2$–normalized so Euclidean and cosine distances are monotone-equivalent.
+\paragraph{Embedding and distances.}
+Each QA pair is concatenated and embedded with a sentence embedding model (\texttt{intfloat/e5-base-v2} \cite{wangTextEmbeddingsWeaklySupervised2024} in our experiments). Embeddings are $\ell_2$-normalized, so Euclidean and cosine distances are monotone-equivalent. Let $D$ denote the Euclidean distance matrix over all items.
 
-On the Euclidean distance matrix we run a $K$-sample omnibus test with
-PERMANOVA (10k label permutations; report pseudo-$F$, $p$, and $R^2$). To localize potential differences, we run the Energy two-sample test for all $\binom{K}{2}$ round pairs (10k permutations; Benjamini–Hochberg FDR at $\alpha{=}0.05$). We add two descriptive visuals: a 2D PCA of embeddings colored by round, and a \emph{centered mean-distance} map that removes within-round dispersion; this quantity is proportional to the biased energy distance and serves as an effect-size view.
+\paragraph{Omnibus test across $K$ rounds.}
+PERMANOVA is applied to $D$ with round labels (10{,}000 permutations). Reported statistics are the pseudo-$F$, permutation $p$-value, and $R^2$. This serves as a $K$-sample omnibus test for differences in location and dispersion in the distance space.
+
+\paragraph{Pairwise localization.}
+For all $\binom{K}{2}$ round pairs, the energy two-sample test is applied on $D$ (10{,}000 permutations) with Benjamini–Hochberg FDR control at $\alpha{=}0.05$. Reported quantities are the E-statistic and permutation $p$-value.
+
+
+
+\paragraph{Descriptive visuals.}
+(i) A 2D PCA of embeddings colored by round (descriptive intermixing).  
+(ii) An energy–distance heat map summarizing cross-round separation after accounting for within-round dispersion; larger off-diagonal values indicate greater separation.
