@@ -38,3 +38,4 @@ samples/*.tex
 samples/*.bbx
 samples/*.cbx
 samples/*.dbx
+resources/results_table.tex
