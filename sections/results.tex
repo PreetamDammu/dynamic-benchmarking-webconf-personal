@@ -30,6 +30,7 @@
 \end{figure}
 
 \subsection{Modeling Contamination in RAG-Based QA}
+
 We quantify leakage along the two channels formalized in \S\ref{sec:methods-contam}: \emph{pretraining} (matches to $D_M$) and \emph{retrieval-time} (matches in $\mathcal{R}(q)$). For each item $x{=}(q,a)$, we query web search with the raw question string only (we never concatenate the answer) to form $\mathcal{R}(q)$, and apply span-based, auditable detectors to two views, question-only $\pi_{\text{in}}$ and question+answer $\pi_{\text{in+lab}}$, recording a positive if any detector fires (Eq.~\eqref{eq:unified}) and, where required, the answer-bearing variant (Eq.~\eqref{eq:answer-bearing}). For pretraining, we approximate full-membership tests by retrieving a candidate pool from C4 with BM25 (default $k{=}1000$) and evaluating the same criteria over that pool.
 
 \paragraph{Dataset-level rates.}
@@ -43,97 +44,6 @@ Figure~\ref{fig:rank_distribution_collage} shows rank distributions for the cont
 
 \paragraph{Curated evaluation splits.}
 For downstream analyses we construct two 500-example splits per the protocol in \S\ref{sec:methods-contam}: a \emph{Highly Contaminated (HC)} split and a \emph{Randomly Sampled (RS)} split. Both splits include an equal number of items from each dataset (100 per dataset; 5 datasets; 500 total), and are stratified so that both contamination channels are represented within each dataset. The aggregate compositions are shown in Figure~\ref{fig:contamination_nested_donut_combined}. In the HC split, most items are flagged in at least one channel (pretraining: 52.2\%, retrieval-time: 32.4\%, both: 5.6\%, none: 9.8\%). In the RS split, the majority show no detected leakage (none: 88.8\%), with small fractions flagged for retrieval-time (4.0\%), pretraining (6.4\%), or both (0.8\%). These two splits let us separately study performance where leakage is likely versus typical random sampling, and we use them throughout the subsequent subsections.
-
-
-\subsection{Performance Analysis on Original, Paraphrase, and Dynamic Variants}
-\label{sec:perf-analysis}
-
-We evaluate two 500-item seed splits—\emph{Highly Contaminated (HC)} and \emph{Randomly Sampled (RS)}—under Base (LLM-only) and Web-RAG modes, using the question string for search only (\S\ref{sec:methods-contam}). For each seed item we consider three views: the \emph{Original} question, a \emph{Paraphrase} baseline (surface rewording), and a \emph{Dynamic} variant produced by \textsc{DynamicWebQA} over ten rounds with a fixed operator policy (conjunction, temporal, comparison) and decoding configuration (\S\ref{sec:methods}). We report accuracies and the Web-RAG gain $\Delta=\text{Web-RAG}-\text{Base}$. Because HC and RS contain different items, all comparisons are made \emph{within} a split and model.
-
-\paragraph{Aggregate accuracy patterns across views.}
-Table. \ref{tab:dataset-view-3view-colored} summarizes results by model and split. Three consistent trends hold across systems. (i) Paraphrases yield modest reductions in Base and larger reductions in Web-RAG. (ii) Dynamic variants generally incur penalties comparable to or smaller than paraphrases in Base while retaining more of the Web-RAG gain. (iii) On the HC split, the Web-RAG gain on Original items is typically the largest; paraphrasing reduces this gain the most on that split. These patterns are consistent with surface changes mainly affecting retrieval pathways, whereas dynamic rewrites preserve topic and evidence regime in a way that Web-RAG can still exploit.
-
-\paragraph{Round-wise stability of generated variants.}
-Per-round curves in Figure. \ref{fig:round-curves-base-web} show that Dynamic variants (blue) are stable over ten rounds for a fixed model and split—the series are flat and tightly banded—indicating the generator yields question sets of comparable difficulty without drift. Under Base, paraphrases (yellow) remain below Dynamic for most models and preserve the seed-split gap, suggesting they inherit properties of the seed (including residual leakage and intrinsic difficulty). Under Web-RAG, Original seeds show a clear lift over Base, while paraphrasing produces a sharper drop than in Base—most noticeably on HC—consistent with the removal of direct-hit pages that previously inflated Web-RAG scores. The Dynamic–paraphrase separation widens under Web-RAG, highlighting the brittleness of retrieval to surface rewordings relative to dynamic rewrites.
-
-
-\paragraph{Within-split penalties and Web-RAG gains.}
-Within each split, Table. \ref{tab:dataset-view-3view-colored} reports \textit{Paraphrase–Orig} and \textit{Dynamic–Orig} changes for Base and Web-RAG, and lists Web-RAG gains $\Delta$ for Original, Paraphrase, and Dynamic views. Across models, $\Delta$ is largest on Original HC items and decreases after paraphrasing; Dynamic variants preserve a higher $\Delta$ than paraphrases. The direction and magnitude of these effects are consistent over rounds.
-
-\paragraph{Implications for contamination-aware evaluation.}
-Dynamic variants provide fresh instances that keep difficulty stable across rounds and reduce dependence on leakage-driven shortcuts while preserving the benefit of Web-RAG. Paraphrase-only controls reduce verbatim overlap but leave measurable retrieval-time seed leakage, producing larger Web-RAG penalties—particularly on HC. 
-
-\subsection{Distributional Consistency: Results}
-\label{subsec:consistency-results}
-
-\textbf{Omnibus.} PERMANOVA detects no round effect in either split
-(Table~\ref{tab:omnibus}). With 10{,}000 permutations the $p$-value resolution is
-$10^{-4}$; both splits yield $p\geq 0.99$ and $R^2\leq 0.134\%$, indicating
-negligible variance explained by ``round''.
-
-\begin{table}[t]
-\centering
-\caption{Omnibus PERMANOVA across $K{=}10$ rounds (Euclidean on $\ell_2$-normalized embeddings; 10k permutations).}
-\label{tab:omnibus}
-\begin{tabular}{lrrrrr}
-\toprule
-Split & $N$ & Pseudo-$F$ & $R^2$ (\%) & Perms & $p$-value \\
-\midrule
-Highly Contaminated & 5{,}000 & 0.7429 & 0.1338 & 10{,}000 & $\geq 0.99$ \\
-Randomly Sampled    & 4{,}996 & 0.6476 & 0.1168 & 10{,}000 & $\geq 0.99$ \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\textbf{Pairwise.} For the 45 round pairs per split, no comparison is significant
-after BH–FDR ($\alpha{=}0.05$). E-statistics are tiny ($10^{-4}$–$10^{-3}$) and centered
-near zero (Table~\ref{tab:pairwise-summary}); maxima are $<10^{-3}$.
-
-\begin{table}[t]
-\centering
-\caption{Summary of pairwise Energy tests (signed, U-centered E-statistic).}
-\label{tab:pairwise-summary}
-\begin{tabular}{lrrrrrrr}
-\toprule
-Split & \#Sig (FDR) & Mean & Median & Std & Min & Max & Max $|E|$ \\
-\midrule
-Highly Contaminated & 0/45 & $-5.14{\times}10^{-4}$ & $-6.31{\times}10^{-4}$ & $3.16{\times}10^{-4}$ & $-8.96{\times}10^{-4}$ & $4.49{\times}10^{-4}$ & $8.96{\times}10^{-4}$ \\
-Randomly Sampled    & 0/45 & $-6.58{\times}10^{-4}$ & $-7.10{\times}10^{-4}$ & $2.08{\times}10^{-4}$ & $-9.12{\times}10^{-4}$ & $7.27{\times}10^{-5}$ & $9.12{\times}10^{-4}$ \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\textbf{Visual evidence.} PCA projections (Fig.~\ref{fig:pca-grouped})
-show full intermixing by round (PC1/PC2 ${<}4\%$ explained each). Drift heatmaps of
-signed E-statistics (Fig.~\ref{fig:heat-grouped}) concentrate near zero
-without structure. Centered mean-distance maps and relative deviations
-(Fig.~\ref{fig:centered-grouped}) show max absolute effects
-$\leq 1.5{\times}10^{-3}$, i.e., ${<}0.25\%$ of the within-round scale.
-
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{res/final_dist_check/embedding_visualization_grouped.pdf}
-\caption{PCA projections of $\ell_2$-normalized embeddings for Highly Contaminated (left) and Randomly Sampled (right) splits. Points are colored by round; both splits show full intermixing with PC1/PC2 each explaining ${<}4\%$ variance.}
-\label{fig:pca-grouped}
-\end{figure}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{res/final_dist_check/pairwise_drift_heatmaps_grouped.pdf}
-\caption{Pairwise drift heatmaps. Left: Highly Contaminated; Right: Randomly Sampled. Cells show the \emph{E-statistic} from the Energy two-sample test (\texttt{hyppo.ksample.Energy}) computed on Euclidean distances of $\ell_2$-normalized embeddings; 10k permutations with BH–FDR over 45 round pairs.}
-\label{fig:heat-grouped}
-\end{figure}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{res/final_dist_check/mean_distance_centered_grouped.pdf}
-\caption{Centered mean distance across rounds. Left: Highly Contaminated; Right: Randomly Sampled. Each cell shows cross-round mean distance minus the average within-round distance (proportional to the biased Energy distance). Values cluster near zero with maxima $\leq 1.7{\times}10^{-3}$.}
-\label{fig:centered-grouped}
-\end{figure}
-
-
-% \clearpage
 
 
 
@@ -213,9 +123,170 @@ Llama4 Maverick 17B & HC &
 \end{table*}
 
 
-Table \ref{tab:dataset-view-3view-colored} summarizes performance by model and seed split. For each variant of the seed item -- Original, Paraphrase (mean R1-R10), and Dynamic (mean R1-R10) -- we report Base and Web-RAG accuracies, the change relative to the Original within the split (Para-Orig, Dyn-Orig), and the Web gain $\Delta$ defined as Web-Base.
+
+\subsection{Performance Analysis on Original, Paraphrase, and Dynamic Variants}
+\label{sec:perf-analysis}
 
 
-Across models, three patterns are apparent. (i) Paraphrases are typically associated with modest reductions under Base and larger reductions under Web-RAG. (ii) Dynamic variants generally show penalties that are comparable to or smaller than paraphrases, while retaining more of the Web gain. (iii) On the highly contaminated split, the Web gain for Original items is often larger than for paraphrase or dynamic variants; paraphrasing reduces this gain more strongly on that split.
 
-These observations are consistent with a view in which surface form changes mainly affect retrieval pathways, whereas dynamic rewrites alter the question while preserving topic and evidence regime in a way that remains useful to retrieval. All comparisons are made within split; we do not draw conclusions from between-split mean differences.
+
+
+
+We evaluate two 500-item seed splits—\emph{Highly Contaminated (HC)} and \emph{Randomly Sampled (RS)}—under Base (LLM-only) and Web-RAG modes, using the question string for search only (\S\ref{sec:methods-contam}). For each seed item we consider three views: the \emph{Original} question, a \emph{Paraphrase} baseline (surface rewording), and a \emph{Dynamic} variant produced by \textsc{DynamicWebQA} over ten rounds with a fixed operator policy (conjunction, temporal, comparison) and decoding configuration (\S\ref{sec:methods}). We report accuracies and the Web-RAG gain $\Delta=\text{Web-RAG}-\text{Base}$. Because HC and RS contain different items, all comparisons are made \emph{within} a split and model.
+
+\paragraph{Aggregate accuracy patterns across views.}
+Table. \ref{tab:dataset-view-3view-colored} summarizes results by model and split. Three consistent trends hold across systems. (i) Paraphrases yield modest reductions in Base and larger reductions in Web-RAG. (ii) Dynamic variants generally incur penalties comparable to or smaller than paraphrases in Base while retaining more of the Web-RAG gain. (iii) On the HC split, the Web-RAG gain on Original items is typically the largest; paraphrasing reduces this gain the most on that split. These patterns are consistent with surface changes mainly affecting retrieval pathways, whereas dynamic rewrites preserve topic and evidence regime in a way that Web-RAG can still exploit.
+
+\paragraph{Round-wise stability of generated variants.}
+Per-round curves in Figure. \ref{fig:round-curves-base-web} show that Dynamic variants (blue) are stable over ten rounds for a fixed model and split—the series are flat and tightly banded—indicating the generator yields question sets of comparable difficulty without drift. Under Base, paraphrases (yellow) remain below Dynamic for most models and preserve the seed-split gap, suggesting they inherit properties of the seed (including residual leakage and intrinsic difficulty). Under Web-RAG, Original seeds show a clear lift over Base, while paraphrasing produces a sharper drop than in Base—most noticeably on HC—consistent with the removal of direct-hit pages that previously inflated Web-RAG scores. The Dynamic–paraphrase separation widens under Web-RAG, highlighting the brittleness of retrieval to surface rewordings relative to dynamic rewrites.
+
+
+\paragraph{Within-split penalties and Web-RAG gains.}
+Within each split, Table. \ref{tab:dataset-view-3view-colored} reports \textit{Paraphrase–Orig} and \textit{Dynamic–Orig} changes for Base and Web-RAG, and lists Web-RAG gains $\Delta$ for Original, Paraphrase, and Dynamic views. Across models, $\Delta$ is largest on Original HC items and decreases after paraphrasing; Dynamic variants preserve a higher $\Delta$ than paraphrases. The direction and magnitude of these effects are consistent over rounds.
+
+\paragraph{Implications for contamination-aware evaluation.}
+Dynamic variants provide fresh instances that keep difficulty stable across rounds and reduce dependence on leakage-driven shortcuts while preserving the benefit of Web-RAG. Paraphrase-only controls reduce verbatim overlap but leave measurable retrieval-time seed leakage, producing larger Web-RAG penalties—particularly on HC. 
+
+
+\subsection{Verifying Distributional Consistency}
+\label{subsec:consistency-results}
+
+\paragraph{Omnibus round effect.}
+PERMANOVA detects no round effect in either split (Table. \ref{tab:omnibus}). Using Euclidean distances on $\ell_2$-normalized \texttt{e5-base-v2} embeddings with 10{,}000 permutations, both splits yield $p \geq 0.99$ and $R^2 \leq 0.134\%$, indicating that “round’’ explains negligible variance in the embedding space.
+
+\begin{table}[t]
+\centering
+\setlength{\tabcolsep}{5pt}
+% \footnotesize
+\caption{PERMANOVA across $K{=}10$ rounds. Distances: Euclidean on $\ell_2$-normalized \texttt{e5-base-v2} embeddings; permutations: 10k.}
+\label{tab:omnibus}
+\begin{tabular}{lrrrrr}
+\toprule
+Split & $N$ & Pseudo-$F$ & $R^2$ (\%) & Perms & $p$ \\
+\midrule
+HC & 5{,}000 & 0.7429 & 0.1338 & 10{,}000 & $\geq 0.99$ \\
+RS & 4{,}996 & 0.6476 & 0.1168 & 10{,}000 & $\geq 0.99$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Pairwise localization.}
+Across the 45 round pairs per split, no comparison is significant after Benjamini–Hochberg FDR at $\alpha{=}0.05$. E-statistics are small ($10^{-4}$–$10^{-3}$) and centered near zero, with maxima below $10^{-3}$ (Table. \ref{tab:pairwise-summary}).
+
+
+\begin{table}[t]
+\centering
+\setlength{\tabcolsep}{4pt}
+% \footnotesize
+\caption{Energy two-sample tests over 45 round pairs (Benjamini–Hochberg FDR, $\alpha{=}0.05$). Values scaled for readability: Mean/Median/SD/Min/Max in $10^{-4}$; $\max|E|$ in $10^{-3}$.}
+\label{tab:pairwise-summary}
+\begin{tabular}{lrrrrrrr}
+\toprule
+Split & \#Sig/45 & Mean & Median & SD & Min & Max & $\max|E|$ \\
+\midrule
+HC & 0 & $-5.14$ & $-6.31$ & $3.16$ & $-8.96$ & $4.49$  & $0.896$ \\
+RS & 0 & $-6.58$ & $-7.10$ & $2.08$ & $-9.12$ & $0.727$ & $0.912$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Geometry and descriptive diagnostics.}
+PCA projections show full intermixing by round in both splits, with PC1 and PC2 each explaining less than $4\%$ of variance (Figure. \ref{fig:pca-grouped}). Pairwise drift heatmaps of the E-statistic concentrate near zero without structure (Figure. \ref{fig:heat-grouped}). Centered mean-distance maps (Figure. \ref{fig:centered-grouped}) remain close to zero with maxima $\leq 1.7{\times}10^{-3}$, which is under $0.25\%$ of the within-round scale.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{res/final_dist_check/embedding_visualization_grouped.pdf}
+\caption{PCA projections of $\ell_2$-normalized embeddings for Highly Contaminated (left) and Randomly Sampled (right) splits. Points are colored by round; both splits show full intermixing with PC1/PC2 each explaining ${<}4\%$ variance.}
+\label{fig:pca-grouped}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{res/final_dist_check/pairwise_drift_heatmaps_grouped.pdf}
+\caption{Pairwise drift heatmaps. Left: Highly Contaminated; Right: Randomly Sampled. Cells show the \emph{E-statistic} from the Energy two-sample test computed on Euclidean distances of $\ell_2$-normalized embeddings; 10k permutations with BH–FDR over 45 round pairs.}
+\label{fig:heat-grouped}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{res/final_dist_check/mean_distance_centered_grouped.pdf}
+\caption{Centered mean distance across rounds. Left: Highly Contaminated; Right: Randomly Sampled. Each cell shows cross-round mean distance minus the average within-round distance (proportional to the biased Energy distance). Values cluster near zero with maxima $\leq 1.7{\times}10^{-3}$.}
+\label{fig:centered-grouped}
+\end{figure}
+
+
+Together, the omnibus tests, pairwise Energy statistics, and descriptive geometry indicate stable round-to-round distributions for both splits under a fixed generation policy. DynamicWebQA produces fresh instances without inducing detectable drift in topical composition or embedding dispersion, supporting longitudinal reporting across rounds.
+
+
+
+
+% \subsection{Distributional Consistency: Results}
+% \label{subsec:consistency-results}
+
+% \textbf{Omnibus.} PERMANOVA detects no round effect in either split
+% (Table~\ref{tab:omnibus}). With 10{,}000 permutations the $p$-value resolution is
+% $10^{-4}$; both splits yield $p\geq 0.99$ and $R^2\leq 0.134\%$, indicating
+% negligible variance explained by ``round''.
+
+% \begin{table}[t]
+% \centering
+% \caption{Omnibus PERMANOVA across $K{=}10$ rounds (Euclidean on $\ell_2$-normalized embeddings; 10k permutations).}
+% \label{tab:omnibus}
+% \begin{tabular}{lrrrrr}
+% \toprule
+% Split & $N$ & Pseudo-$F$ & $R^2$ (\%) & Perms & $p$-value \\
+% \midrule
+% Highly Contaminated & 5{,}000 & 0.7429 & 0.1338 & 10{,}000 & $\geq 0.99$ \\
+% Randomly Sampled    & 4{,}996 & 0.6476 & 0.1168 & 10{,}000 & $\geq 0.99$ \\
+% \bottomrule
+% \end{tabular}
+% \end{table}
+
+% \textbf{Pairwise.} For the 45 round pairs per split, no comparison is significant
+% after BH–FDR ($\alpha{=}0.05$). E-statistics are tiny ($10^{-4}$–$10^{-3}$) and centered
+% near zero (Table~\ref{tab:pairwise-summary}); maxima are $<10^{-3}$.
+
+% \begin{table}[t]
+% \centering
+% \caption{Summary of pairwise Energy tests (signed, U-centered E-statistic).}
+% \label{tab:pairwise-summary}
+% \begin{tabular}{lrrrrrrr}
+% \toprule
+% Split & \#Sig (FDR) & Mean & Median & Std & Min & Max & Max $|E|$ \\
+% \midrule
+% Highly Contaminated & 0/45 & $-5.14{\times}10^{-4}$ & $-6.31{\times}10^{-4}$ & $3.16{\times}10^{-4}$ & $-8.96{\times}10^{-4}$ & $4.49{\times}10^{-4}$ & $8.96{\times}10^{-4}$ \\
+% Randomly Sampled    & 0/45 & $-6.58{\times}10^{-4}$ & $-7.10{\times}10^{-4}$ & $2.08{\times}10^{-4}$ & $-9.12{\times}10^{-4}$ & $7.27{\times}10^{-5}$ & $9.12{\times}10^{-4}$ \\
+% \bottomrule
+% \end{tabular}
+% \end{table}
+
+% \textbf{Visual evidence.} PCA projections (Fig.~\ref{fig:pca-grouped})
+% show full intermixing by round (PC1/PC2 ${<}4\%$ explained each). Drift heatmaps of
+% signed E-statistics (Fig.~\ref{fig:heat-grouped}) concentrate near zero
+% without structure. Centered mean-distance maps and relative deviations
+% (Fig.~\ref{fig:centered-grouped}) show max absolute effects
+% $\leq 1.5{\times}10^{-3}$, i.e., ${<}0.25\%$ of the within-round scale.
+
+
+% \begin{figure}[t]
+% \centering
+% \includegraphics[width=\linewidth]{res/final_dist_check/embedding_visualization_grouped.pdf}
+% \caption{PCA projections of $\ell_2$-normalized embeddings for Highly Contaminated (left) and Randomly Sampled (right) splits. Points are colored by round; both splits show full intermixing with PC1/PC2 each explaining ${<}4\%$ variance.}
+% \label{fig:pca-grouped}
+% \end{figure}
+
+% \begin{figure}[t]
+% \centering
+% \includegraphics[width=\linewidth]{res/final_dist_check/pairwise_drift_heatmaps_grouped.pdf}
+% \caption{Pairwise drift heatmaps. Left: Highly Contaminated; Right: Randomly Sampled. Cells show the \emph{E-statistic} from the Energy two-sample test (\texttt{hyppo.ksample.Energy}) computed on Euclidean distances of $\ell_2$-normalized embeddings; 10k permutations with BH–FDR over 45 round pairs.}
+% \label{fig:heat-grouped}
+% \end{figure}
+
+% \begin{figure}[t]
+% \centering
+% \includegraphics[width=\linewidth]{res/final_dist_check/mean_distance_centered_grouped.pdf}
+% \caption{Centered mean distance across rounds. Left: Highly Contaminated; Right: Randomly Sampled. Each cell shows cross-round mean distance minus the average within-round distance (proportional to the biased Energy distance). Values cluster near zero with maxima $\leq 1.7{\times}10^{-3}$.}
+% \label{fig:centered-grouped}
+% \end{figure}
+
+
