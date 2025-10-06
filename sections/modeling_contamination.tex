@@ -1,4 +1,6 @@
 \section{Modeling Contamination in RAG-Based QA}
+\label{sec:methods-contam}
+
 
 RAG systems combine a parametric model $M$ with external sources retrieved at inference. This creates two leakage channels: (i) \emph{pretraining contamination}, where an evaluation item (or a close paraphrase / answer-bearing span) appears in the corpus used to pretrain $M$; and (ii) \emph{retrieval-time contamination}, where the retriever surfaces such material during evaluation, enabling lookup rather than reasoning. Our experiments instantiate web-enabled RAG ``Web-RAG'', but the formalism below applies to RAG broadly.
 

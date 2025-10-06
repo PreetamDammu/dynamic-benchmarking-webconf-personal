@@ -1,8 +1,4 @@
-\clearpage
-
-\section{Results}
-
-\subsection{Contamination Modeling in QA Datasets}
+\section{Experiments \& Results}
 
 \begin{figure}[htbp]
     \centering
@@ -10,6 +6,8 @@
     \caption{Contamination rates by dataset across the two leakage channels defined in the modeling framework: (a) pretraining contamination (source set $\mathcal{S}_{\text{pre}}{=}D_M$), and (b) retrieval channel contamination (source set $\mathcal{S}_{\text{ret}}{=}\mathcal{R}(q)$).}
     \label{fig:contamination_rates_by_dataset}
 \end{figure}
+
+
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\columnwidth]{res/contamination_sources_top_domains_all_datasets.pdf}
@@ -24,8 +22,30 @@
     \label{fig:rank_distribution_collage}
 \end{figure}
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\columnwidth]{res/contamination_nested_donut_combined.pdf}
+    \caption{Composition of the curated splits. Inner ring: per-dataset balance (100 items each). Outer ring: breakdown by contamination type (None / Retrieval / Pretraining / Both). Left: Highly Contaminated (HC). Right: Randomly Sampled (RS). We always form $\mathcal{R}(q)$ by searching with the question string only.}
+    \label{fig:contamination_nested_donut_combined}
+\end{figure}
 
-\subsection{Model Performance}
+\subsection{Modeling Contamination in RAG-Based QA}
+We quantify leakage along the two channels formalized in \S\ref{sec:methods-contam}: \emph{pretraining} (matches to $D_M$) and \emph{retrieval-time} (matches in $\mathcal{R}(q)$). For each item $x{=}(q,a)$, we query web search with the raw question string only (we never concatenate the answer) to form $\mathcal{R}(q)$, and apply span-based, auditable detectors to two views, question-only $\pi_{\text{in}}$ and question+answer $\pi_{\text{in+lab}}$, recording a positive if any detector fires (Eq.~\eqref{eq:unified}) and, where required, the answer-bearing variant (Eq.~\eqref{eq:answer-bearing}). For pretraining, we approximate full-membership tests by retrieving a candidate pool from C4 with BM25 (default $k{=}1000$) and evaluating the same criteria over that pool.
+
+\paragraph{Dataset-level rates.}
+Figure~\ref{fig:contamination_rates_by_dataset} summarizes per-dataset prevalence under both channels and both views. Several consistent patterns emerge. First, question-only detectors flag more often than question+answer detectors across channels, reflecting that near-duplicates or paraphrases of the question are more common than full question+answer co-occurrences. In the pretraining channel, the highest question-only rates are observed for \textsc{SimpleQA} (11.5\%) and \textsc{FreshQA} (9.6\%), followed by \textsc{HotpotQA} (9.4\%), with lower rates for \textsc{WebQuestions} (7.7\%) and \textsc{SQuAD} (3.9\%); the corresponding question+answer rates are smaller (4.2\%, 4.2\%, 5.0\%, 3.6\%, and 2.6\%, respectively). In the retrieval-time channel, \textsc{SQuAD} shows the largest exposure (11.0\% question-only; 9.2\% question+answer), followed by \textsc{HotpotQA} (7.2\%; 5.8\%), \textsc{SimpleQA} (5.4\%; 4.6\%), \textsc{WebQuestions} (2.6\%; 1.5\%), and \textsc{FreshQA} (2.0\%; 1.8\%). Because our procedure uses span-based audits and finite candidate pools, these figures are conservative and should be read as lower bounds.
+
+\paragraph{Where contamination comes from.}
+Figure~\ref{fig:top_contamination_sources_by_dataset} breaks down the top retrieval sources per dataset. Wikipedia is a common contributor across datasets; \textsc{SQuAD} additionally surfaces dataset-hosting pages (e.g., \texttt{rajpurkar.github.io}) alongside Wikipedia; \textsc{HotpotQA} often surfaces model or paper aggregation sites (e.g., \texttt{huggingface.co}, arXiv, ACL Anthology); \textsc{SimpleQA} likewise shows \texttt{huggingface.co} and Wikipedia. These sources illustrate that retrieval-time leakage can arrive via encyclopedic sites as well as pages that mirror or discuss benchmark content.
+
+\paragraph{How early it appears in search.}
+Figure~\ref{fig:rank_distribution_collage} shows rank distributions for the contaminated pages surfaced during retrieval. Across all datasets, answer-bearing contamination (question+answer view) appears substantially earlier in the list than question-only matches. Mean contaminated ranks (question-only vs.\ question+answer) are $23.7$ vs.\ $7.4$ for \textsc{WebQuestions}, $16.3$ vs.\ $7.9$ for \textsc{SQuAD}, $15.8$ vs.\ $9.7$ for \textsc{HotpotQA}, $15.0$ vs.\ $2.8$ for \textsc{FreshQA}, and $19.9$ vs.\ $8.1$ for \textsc{SimpleQA}. Thus, when answer-bearing material is retrievable, it typically occurs within the first page of results, increasing the risk that a Web-RAG system can rely on lookup.
+
+\paragraph{Curated evaluation splits.}
+For downstream analyses we construct two 500-example splits per the protocol in \S\ref{sec:methods-contam}: a \emph{Highly Contaminated (HC)} split and a \emph{Randomly Sampled (RS)} split. Both splits include an equal number of items from each dataset (100 per dataset; 5 datasets; 500 total), and are stratified so that both contamination channels are represented within each dataset. The aggregate compositions are shown in Figure~\ref{fig:contamination_nested_donut_combined}. In the HC split, most items are flagged in at least one channel (pretraining: 52.2\%, retrieval-time: 32.4\%, both: 5.6\%, none: 9.8\%). In the RS split, the majority show no detected leakage (none: 88.8\%), with small fractions flagged for retrieval-time (4.0\%), pretraining (6.4\%), or both (0.8\%). These two splits let us separately study performance where leakage is likely versus typical random sampling, and we use them throughout the subsequent subsections.
+
+
+\subsection{Performance Analysis}
 
 
 
