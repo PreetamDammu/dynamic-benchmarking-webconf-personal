@@ -110,37 +110,10 @@ $\leq 1.5{\times}10^{-3}$, i.e., ${<}0.25\%$ of the within-round scale.
 
 \clearpage
 
-% Main results table summarizing model means and originals (inlined)
-
-
-\begin{table*}[t]
-\centering
-\small
-\sisetup{table-format=1.3,detect-weight=true}
-\begin{tabular}{l c c c c c c c c c c}
-\toprule
-& \multicolumn{3}{c}{Dynamic (R1--R10 mean)} & \multicolumn{3}{c}{Paraphrased (R1--R10 mean)} & \multicolumn{2}{c}{Original High} & \multicolumn{2}{c}{Original Random} \\
-\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-9}\cmidrule(lr){10-11}
-Model & Base & Web-RAG & $\Delta$ & Base & Web-RAG & $\Delta$ & Base & Web-RAG & Base & Web-RAG \\ \midrule
-openai.gpt-oss-20b-1:0            & 0.277 & \bfseries 0.494 & \bfseries +0.217 & 0.339 & \bfseries 0.626 & \bfseries +0.287 & 0.384 & \bfseries 0.774 & 0.356 & \bfseries 0.684 \\
-\addlinespace[1pt]
-openai.gpt-oss-120b-1:0           & 0.396 & \bfseries 0.526 & \bfseries +0.130 & 0.442 & \bfseries 0.653 & \bfseries +0.211 & 0.486 & \bfseries 0.792 & 0.438 & \bfseries 0.680 \\
-\midrule
-mistral.mistral-7b-instruct-v0:2  & 0.171 & \bfseries 0.278 & \bfseries +0.107 & 0.301 & \bfseries 0.551 & \bfseries +0.250 & 0.342 & \bfseries 0.714 & 0.318 & \bfseries 0.602 \\
-\addlinespace[1pt]
-mistral.mistral-large-2402-v1:0   & 0.317 & \bfseries 0.429 & \bfseries +0.112 & 0.431 & \bfseries 0.603 & \bfseries +0.172 & 0.496 & \bfseries 0.772 & 0.434 & \bfseries 0.660 \\
-\midrule
-us.meta.llama4-scout-17b-instruct-v1:0    & 0.277 & \bfseries 0.485 & \bfseries +0.208 & 0.388 & \bfseries 0.629 & \bfseries +0.241 & 0.434 & \bfseries 0.780 & 0.398 & \bfseries 0.688 \\
-\addlinespace[1pt]
-us.meta.llama4-maverick-17b-instruct-v1:0 & 0.362 & \bfseries 0.523 & \bfseries +0.161 & 0.470 & \bfseries 0.648 & \bfseries +0.178 & 0.534 & \bfseries 0.796 & 0.500 & \bfseries 0.710 \\
-\bottomrule
-\end{tabular}
-\caption{Means over rounds 1--10 (Dynamic, Paraphrased) and single-shot Original Splits (High contamination, Random). $\Delta$ is Web-RAG minus Base. Ordering follows plots: GPT (small $\rightarrow$ large), Mistral (small $\rightarrow$ large), Llama (small $\rightarrow$ large).}
-
-\label{tab:results-main}
-\end{table*}
+% Dataset-centric table (auto-generated from script)
+\input{res/dataset_results_table}
 
 
 
 
-\paragraph{Model performance summary.} Retrieval consistently improves accuracy across all models and settings. Gains on Dynamic range from $+0.107$ to $+0.217$ and on Paraphrased from $+0.172$ to $+0.287$. The largest lifts occur for mid-size models (e.g., $+0.217$ for GPT-20B Dynamic; $+0.208$ for Llama4-Scout-17B Dynamic), while larger models still benefit but less. Paraphrased is uniformly easier than Dynamic for a fixed setting, indicating sensitivity to the distribution shifts introduced by dynamic variants. Original Split scores are substantially higher than evolving rounds; High-contamination is highest, Random is lower but still above Dynamic/Paraphrased, underscoring the challenge posed by our dynamic evaluation.
+\paragraph{Dataset-centric takeaways.} For each model we compare only within the same split (HC or RS). Within a split: (i) Paraphrase and Dynamic variants consistently reduce accuracy relative to the Original seed; (ii) the Dynamic penalty is larger than the Paraphrase penalty; (iii) Web-RAG generally improves all three variants but also increases sensitivity to these manipulations (larger absolute penalties under Web-RAG). These trends are stable across rounds (means over R1--R10) and hold for all models in the plot order (GPT 20B $\rightarrow$ GPT 120B $\rightarrow$ Mistral 7B $\rightarrow$ Mistral Large $\rightarrow$ Llama4 Scout 17B $\rightarrow$ Llama4 Maverick 17B). Importantly, we do not compare HC vs RS means directly; we only examine the behavior of the same system within each split.
