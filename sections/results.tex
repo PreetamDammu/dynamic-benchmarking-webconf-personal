@@ -45,18 +45,23 @@ Figure~\ref{fig:rank_distribution_collage} shows rank distributions for the cont
 For downstream analyses we construct two 500-example splits per the protocol in \S\ref{sec:methods-contam}: a \emph{Highly Contaminated (HC)} split and a \emph{Randomly Sampled (RS)} split. Both splits include an equal number of items from each dataset (100 per dataset; 5 datasets; 500 total), and are stratified so that both contamination channels are represented within each dataset. The aggregate compositions are shown in Figure~\ref{fig:contamination_nested_donut_combined}. In the HC split, most items are flagged in at least one channel (pretraining: 52.2\%, retrieval-time: 32.4\%, both: 5.6\%, none: 9.8\%). In the RS split, the majority show no detected leakage (none: 88.8\%), with small fractions flagged for retrieval-time (4.0\%), pretraining (6.4\%), or both (0.8\%). These two splits let us separately study performance where leakage is likely versus typical random sampling, and we use them throughout the subsequent subsections.
 
 
-\subsection{Performance Analysis}
+\subsection{Performance Analysis on Original, Paraphrase, and Dynamic Variants}
+\label{sec:perf-analysis}
+
+We evaluate two 500-item seed splits—\emph{Highly Contaminated (HC)} and \emph{Randomly Sampled (RS)}—under Base (LLM-only) and Web-RAG modes, using the question string for search only (\S\ref{sec:methods-contam}). For each seed item we consider three views: the \emph{Original} question, a \emph{Paraphrase} baseline (surface rewording), and a \emph{Dynamic} variant produced by \textsc{DynamicWebQA} over ten rounds with a fixed operator policy (conjunction, temporal, comparison) and decoding configuration (\S\ref{sec:methods}). We report accuracies and the Web-RAG gain $\Delta=\text{Web-RAG}-\text{Base}$. Because HC and RS contain different items, all comparisons are made \emph{within} a split and model.
+
+\paragraph{Aggregate accuracy patterns across views.}
+Table. \ref{tab:dataset-view-3view-colored} summarizes results by model and split. Three consistent trends hold across systems. (i) Paraphrases yield modest reductions in Base and larger reductions in Web-RAG. (ii) Dynamic variants generally incur penalties comparable to or smaller than paraphrases in Base while retaining more of the Web-RAG gain. (iii) On the HC split, the Web-RAG gain on Original items is typically the largest; paraphrasing reduces this gain the most on that split. These patterns are consistent with surface changes mainly affecting retrieval pathways, whereas dynamic rewrites preserve topic and evidence regime in a way that Web-RAG can still exploit.
+
+\paragraph{Round-wise stability of generated variants.}
+Per-round curves in Figure. \ref{fig:round-curves-base-web} show that Dynamic variants (blue) are stable over ten rounds for a fixed model and split—the series are flat and tightly banded—indicating the generator yields question sets of comparable difficulty without drift. Under Base, paraphrases (yellow) remain below Dynamic for most models and preserve the seed-split gap, suggesting they inherit properties of the seed (including residual leakage and intrinsic difficulty). Under Web-RAG, Original seeds show a clear lift over Base, while paraphrasing produces a sharper drop than in Base—most noticeably on HC—consistent with the removal of direct-hit pages that previously inflated Web-RAG scores. The Dynamic–paraphrase separation widens under Web-RAG, highlighting the brittleness of retrieval to surface rewordings relative to dynamic rewrites.
 
 
+\paragraph{Within-split penalties and Web-RAG gains.}
+Within each split, Table. \ref{tab:dataset-view-3view-colored} reports \textit{Paraphrase–Orig} and \textit{Dynamic–Orig} changes for Base and Web-RAG, and lists Web-RAG gains $\Delta$ for Original, Paraphrase, and Dynamic views. Across models, $\Delta$ is largest on Original HC items and decreases after paraphrasing; Dynamic variants preserve a higher $\Delta$ than paraphrases. The direction and magnitude of these effects are consistent over rounds.
 
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\columnwidth]{res/model_performance_collage.pdf}
-    \caption{Caption TBD}
-    \label{fig:model_performance_collage}
-\end{figure}
-
+\paragraph{Implications for contamination-aware evaluation.}
+Dynamic variants provide fresh instances that keep difficulty stable across rounds and reduce dependence on leakage-driven shortcuts while preserving the benefit of Web-RAG. Paraphrase-only controls reduce verbatim overlap but leave measurable retrieval-time seed leakage, producing larger Web-RAG penalties—particularly on HC. 
 
 \subsection{Distributional Consistency: Results}
 \label{subsec:consistency-results}
