@@ -108,12 +108,89 @@ $\leq 1.5{\times}10^{-3}$, i.e., ${<}0.25\%$ of the within-round scale.
 \end{figure}
 
 
-\clearpage
-
-% Dataset-centric table (auto-generated from script)
-\input{res/dataset_results_table}
+% \clearpage
 
 
 
 
-\paragraph{Dataset-centric takeaways.} For each model we compare only within the same split (HC or RS). Within a split: (i) Paraphrase and Dynamic variants consistently reduce accuracy relative to the Original seed; (ii) the Dynamic penalty is larger than the Paraphrase penalty; (iii) Web-RAG generally improves all three variants but also increases sensitivity to these manipulations (larger absolute penalties under Web-RAG). These trends are stable across rounds (means over R1--R10) and hold for all models in the plot order (GPT 20B $\rightarrow$ GPT 120B $\rightarrow$ Mistral 7B $\rightarrow$ Mistral Large $\rightarrow$ Llama4 Scout 17B $\rightarrow$ Llama4 Maverick 17B). Importantly, we do not compare HC vs RS means directly; we only examine the behavior of the same system within each split.
+\begin{table*}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l c r r r r r r r r r r r r r}
+\toprule
+ & & \multicolumn{6}{c}{\textbf{Accuracies}} & \multicolumn{4}{c}{\textbf{Penalties vs Orig}} & \multicolumn{3}{c}{\textbf{Web-RAG gain $(\Delta)$}} \\
+\cmidrule(lr){3-8}\cmidrule(lr){9-12}\cmidrule(lr){13-15}
+Model & Split &
+\multicolumn{2}{c}{Orig} & \multicolumn{2}{c}{Para} & \multicolumn{2}{c}{Dyn} &
+\multicolumn{2}{c}{Para$-$Orig} & \multicolumn{2}{c}{Dyn$-$Orig} &
+{$\Delta$O} & {$\Delta$P} & {$\Delta$D} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}\cmidrule(lr){9-10}\cmidrule(lr){11-12}
+ & & Base & Web & Base & Web & Base & Web & Base & Web & Base & Web & & & \\
+\midrule
+GPT-OSS-20B & HC &
+\AccCell{0.384} & \AccCell{0.774} & \AccCell{0.360} & \AccCell{0.652} & \AccCell{0.278} & \AccCell{0.483} &
+\PenCell{-0.024} & \PenCell{-0.122} & \PenCell{-0.106} & \PenCell{-0.291} &
+\DelCell{+0.390} & \DelCell{+0.292} & \DelCell{+0.205} \\
+ & RS &
+\AccCell{0.356} & \AccCell{0.684} & \AccCell{0.318} & \AccCell{0.601} & \AccCell{0.276} & \AccCell{0.504} &
+\PenCell{-0.038} & \PenCell{-0.083} & \PenCell{-0.080} & \PenCell{-0.180} &
+\DelCell{+0.328} & \DelCell{+0.283} & \DelCell{+0.228} \\
+\addlinespace[1pt]
+GPT-OSS-120B & HC &
+\AccCell{0.486} & \AccCell{0.792} & \AccCell{0.470} & \AccCell{0.681} & \AccCell{0.398} & \AccCell{0.517} &
+\PenCell{-0.016} & \PenCell{-0.111} & \PenCell{-0.088} & \PenCell{-0.275} &
+\DelCell{+0.306} & \DelCell{+0.211} & \DelCell{+0.119} \\
+ & RS &
+\AccCell{0.438} & \AccCell{0.680} & \AccCell{0.413} & \AccCell{0.625} & \AccCell{0.395} & \AccCell{0.535} &
+\PenCell{-0.025} & \PenCell{-0.055} & \PenCell{-0.043} & \PenCell{-0.145} &
+\DelCell{+0.242} & \DelCell{+0.212} & \DelCell{+0.140} \\
+\addlinespace[1pt]
+Mistral-7B & HC &
+\AccCell{0.342} & \AccCell{0.714} & \AccCell{0.319} & \AccCell{0.580} & \AccCell{0.171} & \AccCell{0.266} &
+\PenCell{-0.023} & \PenCell{-0.134} & \PenCell{-0.171} & \PenCell{-0.448} &
+\DelCell{+0.372} & \DelCell{+0.261} & \DelCell{+0.095} \\
+ & RS &
+\AccCell{0.318} & \AccCell{0.602} & \AccCell{0.283} & \AccCell{0.522} & \AccCell{0.170} & \AccCell{0.291} &
+\PenCell{-0.035} & \PenCell{-0.080} & \PenCell{-0.148} & \PenCell{-0.311} &
+\DelCell{+0.284} & \DelCell{+0.239} & \DelCell{+0.121} \\
+\addlinespace[1pt]
+Mistral Large & HC &
+\AccCell{0.496} & \AccCell{0.772} & \AccCell{0.462} & \AccCell{0.629} & \AccCell{0.317} & \AccCell{0.428} &
+\PenCell{-0.034} & \PenCell{-0.143} & \PenCell{-0.179} & \PenCell{-0.344} &
+\DelCell{+0.276} & \DelCell{+0.167} & \DelCell{+0.111} \\
+ & RS &
+\AccCell{0.434} & \AccCell{0.660} & \AccCell{0.400} & \AccCell{0.577} & \AccCell{0.317} & \AccCell{0.429} &
+\PenCell{-0.034} & \PenCell{-0.083} & \PenCell{-0.117} & \PenCell{-0.231} &
+\DelCell{+0.226} & \DelCell{+0.177} & \DelCell{+0.112} \\
+\addlinespace[1pt]
+Llama4 Scout 17B & HC &
+\AccCell{0.434} & \AccCell{0.780} & \AccCell{0.419} & \AccCell{0.658} & \AccCell{0.277} & \AccCell{0.478} &
+\PenCell{-0.015} & \PenCell{-0.122} & \PenCell{-0.157} & \PenCell{-0.302} &
+\DelCell{+0.346} & \DelCell{+0.239} & \DelCell{+0.201} \\
+ & RS &
+\AccCell{0.398} & \AccCell{0.688} & \AccCell{0.356} & \AccCell{0.599} & \AccCell{0.278} & \AccCell{0.493} &
+\PenCell{-0.042} & \PenCell{-0.089} & \PenCell{-0.120} & \PenCell{-0.195} &
+\DelCell{+0.290} & \DelCell{+0.243} & \DelCell{+0.215} \\
+\addlinespace[1pt]
+Llama4 Maverick 17B & HC &
+\AccCell{0.534} & \AccCell{0.796} & \AccCell{0.485} & \AccCell{0.673} & \AccCell{0.364} & \AccCell{0.514} &
+\PenCell{-0.049} & \PenCell{-0.123} & \PenCell{-0.170} & \PenCell{-0.282} &
+\DelCell{+0.262} & \DelCell{+0.188} & \DelCell{+0.150} \\
+ & RS &
+\AccCell{0.500} & \AccCell{0.710} & \AccCell{0.455} & \AccCell{0.622} & \AccCell{0.360} & \AccCell{0.532} &
+\PenCell{-0.045} & \PenCell{-0.088} & \PenCell{-0.140} & \PenCell{-0.178} &
+\DelCell{+0.210} & \DelCell{+0.167} & \DelCell{+0.172} \\
+\bottomrule
+\end{tabular}
+\caption{Accuracies under Base and Web-RAG for Original, Paraphrase (mean R1--R10), and Dynamic (mean R1--R10), with within-split penalties relative to the Original (Para$-$Orig, Dyn$-$Orig) and Web-RAG gain $\Delta=$ Web-RAG--Base for each variant. Shading indicates magnitude on fixed scales. We summarize patterns within each split and avoid between-split mean comparisons.}
+\label{tab:dataset-view-3view-colored}
+\end{table*}
+
+
+Table \ref{tab:dataset-view-3view-colored} summarizes performance by model and seed split. For each variant of the seed item -- Original, Paraphrase (mean R1-R10), and Dynamic (mean R1-R10) -- we report Base and Web-RAG accuracies, the change relative to the Original within the split (Para-Orig, Dyn-Orig), and the Web gain $\Delta$ defined as Web-Base.
+
+
+Across models, three patterns are apparent. (i) Paraphrases are typically associated with modest reductions under Base and larger reductions under Web-RAG. (ii) Dynamic variants generally show penalties that are comparable to or smaller than paraphrases, while retaining more of the Web gain. (iii) On the highly contaminated split, the Web gain for Original items is often larger than for paraphrase or dynamic variants; paraphrasing reduces this gain more strongly on that split.
+
+These observations are consistent with a view in which surface form changes mainly affect retrieval pathways, whereas dynamic rewrites alter the question while preserving topic and evidence regime in a way that remains useful to retrieval. All comparisons are made within split; we do not draw conclusions from between-split mean differences.

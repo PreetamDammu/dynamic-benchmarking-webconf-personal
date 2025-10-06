@@ -75,13 +75,45 @@
 
 \usepackage{subcaption}
 \usepackage{booktabs}
-\usepackage{siunitx}
+% \usepackage{siunitx}
 \usepackage{tcolorbox}
 \usepackage{xcolor}
 \usepackage{amsmath}
 \DeclareMathOperator{\Gen}{Gen}
 \DeclareMathOperator{\Update}{Update}
 \newcommand{\Dist}{\operatorname{Dist}}
+
+% --- deps
+\usepackage{booktabs,xcolor,colortbl,pgf} % pgf for \pgfmathsetmacro
+
+% --- palette
+\definecolor{AccGreen}{RGB}{49,163,84}   % accuracy (level)
+\definecolor{GainBlue}{RGB}{33,113,181}  % retrieval gains Δ
+\definecolor{PenRed}{RGB}{204,24,30}     % penalties (drops)
+
+% --- robust cell painters (build color spec first, then apply)
+\newcommand{\AccCell}[1]{%
+  \pgfmathsetmacro{\accpct}{min(100,max(0,100*(#1)))}%
+  \edef\colspec{AccGreen!\accpct!white}%
+  \expandafter\cellcolor\expandafter{\colspec}#1%
+}
+\newcommand{\DelCell}[1]{% Δ: assume up to ~0.33
+  \pgfmathsetmacro{\delpct}{min(100,max(0,300*(#1)))}%
+  \edef\colspec{GainBlue!\delpct!white}%
+  \expandafter\cellcolor\expandafter{\colspec}#1%
+}
+\newcommand{\PenCell}[1]{% negative=red, positive=green
+  \pgfmathsetmacro{\penmag}{min(100,max(0,400*abs(#1)))}%
+  \ifdim #1pt<0pt
+    \edef\colspec{PenRed!\penmag!white}%
+  \else
+    \edef\colspec{AccGreen!\penmag!white}%
+  \fi
+  \expandafter\cellcolor\expandafter{\colspec}#1%
+}
+
+
+
 
 %%
 %% Submission ID.
