@@ -108,39 +108,91 @@ $\leq 1.5{\times}10^{-3}$, i.e., ${<}0.25\%$ of the within-round scale.
 \end{figure}
 
 
-\clearpage
+% \clearpage
 
-% Main results table summarizing model means and originals (inlined)
+
+
+
 
 
 \begin{table*}[t]
 \centering
 \small
-\sisetup{table-format=1.3,detect-weight=true}
-\begin{tabular}{l c c c c c c c c c c}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l c r r r r r r r r r r r r r}
 \toprule
-& \multicolumn{3}{c}{Dynamic (R1--R10 mean)} & \multicolumn{3}{c}{Paraphrased (R1--R10 mean)} & \multicolumn{2}{c}{Original High} & \multicolumn{2}{c}{Original Random} \\
-\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-9}\cmidrule(lr){10-11}
-Model & Base & Web-RAG & $\Delta$ & Base & Web-RAG & $\Delta$ & Base & Web-RAG & Base & Web-RAG \\ \midrule
-openai.gpt-oss-20b-1:0            & 0.277 & \bfseries 0.494 & \bfseries +0.217 & 0.339 & \bfseries 0.626 & \bfseries +0.287 & 0.384 & \bfseries 0.774 & 0.356 & \bfseries 0.684 \\
-\addlinespace[1pt]
-openai.gpt-oss-120b-1:0           & 0.396 & \bfseries 0.526 & \bfseries +0.130 & 0.442 & \bfseries 0.653 & \bfseries +0.211 & 0.486 & \bfseries 0.792 & 0.438 & \bfseries 0.680 \\
+ & & \multicolumn{6}{c}{\textbf{Accuracies}} & \multicolumn{4}{c}{\textbf{Penalties vs Orig}} & \multicolumn{3}{c}{\textbf{Web-RAG gain $(\Delta)$}} \\
+\cmidrule(lr){3-8}\cmidrule(lr){9-12}\cmidrule(lr){13-15}
+Model & Split &
+\multicolumn{2}{c}{Orig} & \multicolumn{2}{c}{Para} & \multicolumn{2}{c}{Dyn} &
+\multicolumn{2}{c}{Para$-$Orig} & \multicolumn{2}{c}{Dyn$-$Orig} &
+{$\Delta$O} & {$\Delta$P} & {$\Delta$D} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}\cmidrule(lr){9-10}\cmidrule(lr){11-12}
+ & & Base & Web & Base & Web & Base & Web & Base & Web & Base & Web & & & \\
 \midrule
-mistral.mistral-7b-instruct-v0:2  & 0.171 & \bfseries 0.278 & \bfseries +0.107 & 0.301 & \bfseries 0.551 & \bfseries +0.250 & 0.342 & \bfseries 0.714 & 0.318 & \bfseries 0.602 \\
+GPT-OSS-20B & HC &
+\AccCell{0.384} & \AccCell{0.774} & \AccCell{0.360} & \AccCell{0.652} & \AccCell{0.278} & \AccCell{0.483} &
+\PenCell{-0.024} & \PenCell{-0.122} & \PenCell{-0.106} & \PenCell{-0.291} &
+\DelCell{+0.390} & \DelCell{+0.292} & \DelCell{+0.205} \\
+ & RS &
+\AccCell{0.356} & \AccCell{0.684} & \AccCell{0.318} & \AccCell{0.601} & \AccCell{0.276} & \AccCell{0.504} &
+\PenCell{-0.038} & \PenCell{-0.083} & \PenCell{-0.080} & \PenCell{-0.180} &
+\DelCell{+0.328} & \DelCell{+0.283} & \DelCell{+0.228} \\
 \addlinespace[1pt]
-mistral.mistral-large-2402-v1:0   & 0.317 & \bfseries 0.429 & \bfseries +0.112 & 0.431 & \bfseries 0.603 & \bfseries +0.172 & 0.496 & \bfseries 0.772 & 0.434 & \bfseries 0.660 \\
-\midrule
-us.meta.llama4-scout-17b-instruct-v1:0    & 0.277 & \bfseries 0.485 & \bfseries +0.208 & 0.388 & \bfseries 0.629 & \bfseries +0.241 & 0.434 & \bfseries 0.780 & 0.398 & \bfseries 0.688 \\
+GPT-OSS-120B & HC &
+\AccCell{0.486} & \AccCell{0.792} & \AccCell{0.470} & \AccCell{0.681} & \AccCell{0.398} & \AccCell{0.517} &
+\PenCell{-0.016} & \PenCell{-0.111} & \PenCell{-0.088} & \PenCell{-0.275} &
+\DelCell{+0.306} & \DelCell{+0.211} & \DelCell{+0.119} \\
+ & RS &
+\AccCell{0.438} & \AccCell{0.680} & \AccCell{0.413} & \AccCell{0.625} & \AccCell{0.395} & \AccCell{0.535} &
+\PenCell{-0.025} & \PenCell{-0.055} & \PenCell{-0.043} & \PenCell{-0.145} &
+\DelCell{+0.242} & \DelCell{+0.212} & \DelCell{+0.140} \\
 \addlinespace[1pt]
-us.meta.llama4-maverick-17b-instruct-v1:0 & 0.362 & \bfseries 0.523 & \bfseries +0.161 & 0.470 & \bfseries 0.648 & \bfseries +0.178 & 0.534 & \bfseries 0.796 & 0.500 & \bfseries 0.710 \\
+Mistral-7B & HC &
+\AccCell{0.342} & \AccCell{0.714} & \AccCell{0.319} & \AccCell{0.580} & \AccCell{0.171} & \AccCell{0.266} &
+\PenCell{-0.023} & \PenCell{-0.134} & \PenCell{-0.171} & \PenCell{-0.448} &
+\DelCell{+0.372} & \DelCell{+0.261} & \DelCell{+0.095} \\
+ & RS &
+\AccCell{0.318} & \AccCell{0.602} & \AccCell{0.283} & \AccCell{0.522} & \AccCell{0.170} & \AccCell{0.291} &
+\PenCell{-0.035} & \PenCell{-0.080} & \PenCell{-0.148} & \PenCell{-0.311} &
+\DelCell{+0.284} & \DelCell{+0.239} & \DelCell{+0.121} \\
+\addlinespace[1pt]
+Mistral Large & HC &
+\AccCell{0.496} & \AccCell{0.772} & \AccCell{0.462} & \AccCell{0.629} & \AccCell{0.317} & \AccCell{0.428} &
+\PenCell{-0.034} & \PenCell{-0.143} & \PenCell{-0.179} & \PenCell{-0.344} &
+\DelCell{+0.276} & \DelCell{+0.167} & \DelCell{+0.111} \\
+ & RS &
+\AccCell{0.434} & \AccCell{0.660} & \AccCell{0.400} & \AccCell{0.577} & \AccCell{0.317} & \AccCell{0.429} &
+\PenCell{-0.034} & \PenCell{-0.083} & \PenCell{-0.117} & \PenCell{-0.231} &
+\DelCell{+0.226} & \DelCell{+0.177} & \DelCell{+0.112} \\
+\addlinespace[1pt]
+Llama4 Scout 17B & HC &
+\AccCell{0.434} & \AccCell{0.780} & \AccCell{0.419} & \AccCell{0.658} & \AccCell{0.277} & \AccCell{0.478} &
+\PenCell{-0.015} & \PenCell{-0.122} & \PenCell{-0.157} & \PenCell{-0.302} &
+\DelCell{+0.346} & \DelCell{+0.239} & \DelCell{+0.201} \\
+ & RS &
+\AccCell{0.398} & \AccCell{0.688} & \AccCell{0.356} & \AccCell{0.599} & \AccCell{0.278} & \AccCell{0.493} &
+\PenCell{-0.042} & \PenCell{-0.089} & \PenCell{-0.120} & \PenCell{-0.195} &
+\DelCell{+0.290} & \DelCell{+0.243} & \DelCell{+0.215} \\
+\addlinespace[1pt]
+Llama4 Maverick 17B & HC &
+\AccCell{0.534} & \AccCell{0.796} & \AccCell{0.485} & \AccCell{0.673} & \AccCell{0.364} & \AccCell{0.514} &
+\PenCell{-0.049} & \PenCell{-0.123} & \PenCell{-0.170} & \PenCell{-0.282} &
+\DelCell{+0.262} & \DelCell{+0.188} & \DelCell{+0.150} \\
+ & RS &
+\AccCell{0.500} & \AccCell{0.710} & \AccCell{0.455} & \AccCell{0.622} & \AccCell{0.360} & \AccCell{0.532} &
+\PenCell{-0.045} & \PenCell{-0.088} & \PenCell{-0.140} & \PenCell{-0.178} &
+\DelCell{+0.210} & \DelCell{+0.167} & \DelCell{+0.172} \\
 \bottomrule
 \end{tabular}
-\caption{Means over rounds 1--10 (Dynamic, Paraphrased) and single-shot Original Splits (High contamination, Random). $\Delta$ is Web-RAG minus Base. Ordering follows plots: GPT (small $\rightarrow$ large), Mistral (small $\rightarrow$ large), Llama (small $\rightarrow$ large).}
-
-\label{tab:results-main}
+\caption{Accuracies under Base and Web-RAG for Original, Paraphrase (mean R1--R10), and Dynamic (mean R1--R10), with within-split penalties relative to the Original (Para$-$Orig, Dyn$-$Orig) and Web-RAG gain $\Delta=$ Web-RAG--Base for each variant. Shading indicates magnitude on fixed scales. We summarize patterns within each split and avoid between-split mean comparisons.}
+\label{tab:dataset-view-3view-colored}
 \end{table*}
 
 
+Table \ref{tab:dataset-view-3view-colored} summarizes performance by model and seed split. For each variant of the seed item -- Original, Paraphrase (mean R1-R10), and Dynamic (mean R1-R10) -- we report Base and Web-RAG accuracies, the change relative to the Original within the split (Para-Orig, Dyn-Orig), and the Web gain $\Delta$ defined as Web-Base.
 
 
-\paragraph{Model performance summary.} Retrieval consistently improves accuracy across all models and settings. Gains on Dynamic range from $+0.107$ to $+0.217$ and on Paraphrased from $+0.172$ to $+0.287$. The largest lifts occur for mid-size models (e.g., $+0.217$ for GPT-20B Dynamic; $+0.208$ for Llama4-Scout-17B Dynamic), while larger models still benefit but less. Paraphrased is uniformly easier than Dynamic for a fixed setting, indicating sensitivity to the distribution shifts introduced by dynamic variants. Original Split scores are substantially higher than evolving rounds; High-contamination is highest, Random is lower but still above Dynamic/Paraphrased, underscoring the challenge posed by our dynamic evaluation.
+Across models, three patterns are apparent. (i) Paraphrases are typically associated with modest reductions under Base and larger reductions under Web-RAG. (ii) Dynamic variants generally show penalties that are comparable to or smaller than paraphrases, while retaining more of the Web gain. (iii) On the highly contaminated split, the Web gain for Original items is often larger than for paraphrase or dynamic variants; paraphrasing reduces this gain more strongly on that split.
+
+These observations are consistent with a view in which surface form changes mainly affect retrieval pathways, whereas dynamic rewrites alter the question while preserving topic and evidence regime in a way that remains useful to retrieval. All comparisons are made within split; we do not draw conclusions from between-split mean differences.
